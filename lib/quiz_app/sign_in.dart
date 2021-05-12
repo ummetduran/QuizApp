@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/home_page.dart';
 import 'package:untitled1/quiz_app/login_signup.dart';
+import 'package:untitled1/quiz_app/teacher_home_page.dart';
 
 import 'backend/Student.dart';
 
@@ -136,7 +137,7 @@ class _SignInPageState extends State<SignInPage> {
           debugPrint("Email onaylı");
           student= new Student(1, "sds", _email);
           Navigator.push(
-              context, MaterialPageRoute( builder: (context) => HomePage(student: student)));
+              context, MaterialPageRoute( builder: (context) => TeacherHomePage(student: student)));
         }else{
           debugPrint("Lütfen emailinizi onaylayınız");
           _auth.signOut();

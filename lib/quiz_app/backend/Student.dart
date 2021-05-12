@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
- class Student{
-  int id;
-  String userName;
-  String email;
+import 'Ders.dart';
+import 'Users.dart';
 
-  Student(this.id, this.userName, this.email);
+
+ class Student extends Users{
+
+  List<Ders> alinanDersler;
+  Student(int id, String name, String email) : super(id,name, email){
+   alinanDersler = []; // ????
+  }
 }

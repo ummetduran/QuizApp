@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,11 @@ import 'package:untitled1/quiz_app/home_page.dart';
 import 'package:untitled1/quiz_app/sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:untitled1/quiz_app/backend/Users.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
+final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+
 
 class LoginSignUp extends StatefulWidget {
   @override
@@ -17,6 +21,7 @@ class LoginSignUp extends StatefulWidget {
 class _LoginSignUpState extends State<LoginSignUp> {
   String fullName, _sifre, _email = "";
   int userType=0;
+
 
   //Color switchButton= Colors.grey;
   //List<String> switched=["/SignIn","/SignUp"];
@@ -34,6 +39,12 @@ class _LoginSignUpState extends State<LoginSignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+
+        backgroundColor: Color.fromARGB(230, 11, 65, 150),
+        centerTitle: true,
+        title: Text("Quiz App", style: TextStyle(color: Colors.white),),
+      ),
       body: Stack(children: [
         Container(
           decoration: BoxDecoration(
@@ -158,7 +169,7 @@ class _LoginSignUpState extends State<LoginSignUp> {
       return null;
   }
 
-  void _girisBilgileriniOnayla() async{
+  Future<User> _girisBilgileriniOnayla() async{
     await Firebase.initializeApp();
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
@@ -168,18 +179,43 @@ class _LoginSignUpState extends State<LoginSignUp> {
         UserCredential _credential = await _auth.createUserWithEmailAndPassword(email: _email, password: _sifre);
         User _newUser= _credential.user;
         await _newUser.sendEmailVerification();
+
+
+
+
+       // _fireStore.collection("Users").add({'name' : 'Ummfdsran'});
         if(_auth.currentUser!=null){
           debugPrint("Lütfen emailinizi doğrulayın");
+
+          Map<String, dynamic> userEkle = Map();
+          userEkle['name'] = fullName;
+          userEkle['email'] = _email;
+          //Users _user = Users(int.parse(_newUser.uid), fullName, _newUser.email);
+
+          await _fireStore.collection("Users").doc("${_newUser.uid}").set(userEkle).then((value) => debugPrint("$_email eklendi"));
+
+
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => SignInPage()));        }
-        debugPrint(_newUser.toString());
+                  builder: (context) => SignInPage()));}
+
+
+
+        //debugPrint(_newUser.toString());
       }catch(e){
         debugPrint("***********HATA**********");
         debugPrint(e.toString());
 
       }
+
+
+
+
+   /*   await _fireStore.collection("users").add({
+        "name": fullName,
+        "email": _email
+      });*/
 
     }else{
       setState(() {
