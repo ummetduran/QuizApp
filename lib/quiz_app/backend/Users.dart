@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Users{
-  int id;
+  String id;
   String name;
   String email;
 

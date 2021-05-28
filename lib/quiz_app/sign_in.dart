@@ -1,21 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled1/quiz_app/backend/Teacher.dart';
 import 'package:untitled1/quiz_app/home_page.dart';
 import 'package:untitled1/quiz_app/login_signup.dart';
+import 'package:untitled1/quiz_app/student_home_page.dart';
 import 'package:untitled1/quiz_app/teacher_home_page.dart';
 
 import 'backend/Student.dart';
+import 'backend/Users.dart';
 
 
 FirebaseAuth _auth = FirebaseAuth.instance;
+final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+
 class SignInPage extends StatefulWidget {
   @override
   _SignInPageState createState() => _SignInPageState();
 }
 
 class _SignInPageState extends State<SignInPage> {
-  Student student;
+
+  static int userType;
+  Users signInUser;
   String _email, password;
   Widget err = Text("");
   final formKey = GlobalKey<FormState>();
@@ -58,9 +66,9 @@ class _SignInPageState extends State<SignInPage> {
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.mail),
-                          labelText: "Email",
-                          labelStyle: TextStyle(fontSize: 20)
+                            prefixIcon: Icon(Icons.mail),
+                            labelText: "Email",
+                            labelStyle: TextStyle(fontSize: 20)
 
                         ),
                         onChanged: (mail) => _email = mail,
@@ -96,11 +104,11 @@ class _SignInPageState extends State<SignInPage> {
                           _girisYap();
                         },
 
-                            child: Text("Sign In", style: TextStyle(fontSize: 20),),
-                            textColor: Colors.white,
-                            color: Colors.indigo,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50)), ),
+                          child: Text("Sign In", style: TextStyle(fontSize: 20),),
+                          textColor: Colors.white,
+                          color: Colors.indigo,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50)), ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 20),
@@ -111,7 +119,7 @@ class _SignInPageState extends State<SignInPage> {
                       ),
 
 
-                    
+
                     ],
                   ),
                 )
@@ -125,6 +133,9 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
+
+
+
   void _girisYap() async{
     if(formKey.currentState.validate()) {
       formKey.currentState.save();
@@ -135,9 +146,34 @@ class _SignInPageState extends State<SignInPage> {
 
         if(user.emailVerified){
           debugPrint("Email onaylı");
-          student= new Student(1, "sds", _email);
-          Navigator.push(
-              context, MaterialPageRoute( builder: (context) => TeacherHomePage(student: student)));
+
+
+          String name;
+          var fireUser= _auth.currentUser;
+         await _fireStore.collection("Users").doc(fireUser.uid).get().then((value){
+            debugPrint("${value.data()["userType"]}");
+
+              userType=value.data()["userType"];
+              name = value.data()["name"];
+
+
+            debugPrint("${value.data()["name"]}");
+            debugPrint(name);
+            debugPrint("$userType");
+
+          });
+          if(userType == 0){
+            signInUser = new Student(user.uid, name, _email);
+            Navigator.push(
+                context, MaterialPageRoute( builder: (context) => StudentHomePage(student: signInUser)));
+          }
+          else{
+            signInUser = new Teacher(user.uid, name, _email);
+            Navigator.push(
+                context, MaterialPageRoute( builder: (context) => TeacherHomePage(teacher: signInUser)));
+          }
+
+
         }else{
           debugPrint("Lütfen emailinizi onaylayınız");
           _auth.signOut();
@@ -158,8 +194,8 @@ class _SignInPageState extends State<SignInPage> {
   void _resetPassword() async {
     await Firebase.initializeApp();
     try{
-     await _auth.sendPasswordResetEmail(email: _email);
-     debugPrint("Resetleme maili gönderildi.");
+      await _auth.sendPasswordResetEmail(email: _email);
+      debugPrint("Resetleme maili gönderildi.");
     }catch(e){
       debugPrint("Şifre resetlenirken hata $e");
 

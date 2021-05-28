@@ -3,30 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/ders_ekle.dart';
 
 import 'backend/Ders.dart';
-import 'backend/Student.dart';
+
 import 'backend/Teacher.dart';
 
 class TeacherHomePage extends StatefulWidget {
-  Student student;
+  Teacher teacher;
 
-  TeacherHomePage({this.student});
+  TeacherHomePage({this.teacher});
 
   @override
-  _TeacherHomePageState createState() => _TeacherHomePageState(student);
+  _TeacherHomePageState createState() => _TeacherHomePageState(teacher);
 }
 
 class _TeacherHomePageState extends State<TeacherHomePage> {
   final formKey = GlobalKey<FormState>();
-  Student student;
+  Teacher teacher;
   int sayac=0;
   List<Ders> dersler;
 
-  _TeacherHomePageState(this.student);
+  _TeacherHomePageState(this.teacher);
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    dersler=[new Ders("mat", new Teacher(1, "t1", "e1"))];
+  //  dersler=[new Ders("mat", new Teacher(1, "t1", "e1"))];
   }
 
   @override
@@ -54,7 +54,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
-                      child: Text("${student.email}",
+                      child: Text("${teacher.email}",
                           style: TextStyle(color: Colors.white)),
                     ),
                   ],
@@ -73,27 +73,27 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
       ),
       body: Container(
         child: Column(
-          children: [
-            Container(
-              height: 65,
-              width: 700,
-              margin: EdgeInsets.all(10),
-              child:  RaisedButton(onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => DersEkle()));
-              },
-                
-                child: Text("Ders Ekle", style: TextStyle(fontSize: 20),),
-                textColor: Colors.white,
-                color: Colors.indigo,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)), ),
+            children: [
+              Container(
+                height: 65,
+                width: 700,
+                margin: EdgeInsets.all(10),
+                child:  RaisedButton(onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => DersEkle()));
+                },
 
-            ),
-          //   ListView.builder(itemBuilder: listeElemaniOlustur,
-          // itemCount: dersler.length ,
-          // ),
-        ]
+                  child: Text("Ders Ekle", style: TextStyle(fontSize: 20),),
+                  textColor: Colors.white,
+                  color: Colors.indigo,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50)), ),
+
+              ),
+              //   ListView.builder(itemBuilder: listeElemaniOlustur,
+              // itemCount: dersler.length ,
+              // ),
+            ]
         ),
       ),
     );
@@ -131,4 +131,3 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
 
 
 }
-

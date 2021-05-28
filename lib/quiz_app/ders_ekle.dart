@@ -59,7 +59,7 @@ class _DersEkleState extends State<DersEkle> {
                       RaisedButton(onPressed: (){
 
                       },
-                      child: Text("İptal"),
+                        child: Text("İptal"),
                       )
                     ],
                   ),
@@ -71,4 +71,6 @@ class _DersEkleState extends State<DersEkle> {
       ),
     );
   }
+
+
 }

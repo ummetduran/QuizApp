@@ -183,13 +183,14 @@ class _LoginSignUpState extends State<LoginSignUp> {
 
 
 
-       // _fireStore.collection("Users").add({'name' : 'Ummfdsran'});
+        // _fireStore.collection("Users").add({'name' : 'Ummfdsran'});
         if(_auth.currentUser!=null){
           debugPrint("Lütfen emailinizi doğrulayın");
 
           Map<String, dynamic> userEkle = Map();
           userEkle['name'] = fullName;
           userEkle['email'] = _email;
+          userEkle['userType'] = userType;
           //Users _user = Users(int.parse(_newUser.uid), fullName, _newUser.email);
 
           await _fireStore.collection("Users").doc("${_newUser.uid}").set(userEkle).then((value) => debugPrint("$_email eklendi"));
@@ -212,7 +213,7 @@ class _LoginSignUpState extends State<LoginSignUp> {
 
 
 
-   /*   await _fireStore.collection("users").add({
+      /*   await _fireStore.collection("users").add({
         "name": fullName,
         "email": _email
       });*/
