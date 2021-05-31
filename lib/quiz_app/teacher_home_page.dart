@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/ders_ekle.dart';
@@ -5,6 +7,9 @@ import 'package:untitled1/quiz_app/ders_ekle.dart';
 import 'backend/Ders.dart';
 
 import 'backend/Teacher.dart';
+
+FirebaseAuth _auth = FirebaseAuth.instance;
+final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
 class TeacherHomePage extends StatefulWidget {
   Teacher teacher;
@@ -16,17 +21,22 @@ class TeacherHomePage extends StatefulWidget {
 }
 
 class _TeacherHomePageState extends State<TeacherHomePage> {
+
   final formKey = GlobalKey<FormState>();
   Teacher teacher;
-  int sayac=0;
-  List<Ders> dersler;
+  int sayac = 0;
+  List<String> dersler = <String>[];
 
   _TeacherHomePageState(this.teacher);
+
+
   @override
   void initState() {
     // TODO: implement initState
+    dersleriGetir();
     super.initState();
-  //  dersler=[new Ders("mat", new Teacher(1, "t1", "e1"))];
+
+
   }
 
   @override
@@ -78,28 +88,50 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                 height: 65,
                 width: 700,
                 margin: EdgeInsets.all(10),
-                child:  RaisedButton(onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => DersEkle()));
-                },
+                child: RaisedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DersEkle()));
+                  },
 
                   child: Text("Ders Ekle", style: TextStyle(fontSize: 20),),
                   textColor: Colors.white,
                   color: Colors.indigo,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)), ),
+                      borderRadius: BorderRadius.circular(50)),),
 
               ),
-              //   ListView.builder(itemBuilder: listeElemaniOlustur,
-              // itemCount: dersler.length ,
-              // ),
+                Container(
+                  child: Expanded(
+                    child: ListView.builder(itemBuilder: listeElemaniOlustur,
+              itemCount: dersler.length ,
+              ),
+                  ),
+                ),
+
             ]
         ),
       ),
     );
   }
 
-  Widget listeElemaniOlustur(BuildContext context, int index) {
+
+  void dersleriGetir() async {
+
+    var fireUser = _auth.currentUser;
+    await _fireStore.collection("Users").doc(fireUser.uid).get().then((value) {
+      setState(() {
+        dersler = List.from(value['dersler']);
+      });
+
+      debugPrint("${dersler}");
+
+    });
+  }
+
+
+ Widget listeElemaniOlustur(BuildContext context, int index) {
     sayac++;
     return Dismissible(
         key: Key(sayac.toString()),
@@ -112,7 +144,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
 
           decoration: BoxDecoration(
               border: Border.all(width: 2),
-              borderRadius: BorderRadius.circular(10)),
+              borderRadius: BorderRadius.circular(20)),
           margin: EdgeInsets.all(5),
           child: ListTile(
             leading: Icon(
@@ -120,7 +152,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
               size: 36,
 
             ),
-            title: Text(dersler[index].name),
+            title: Text(dersler[index]),
             trailing: Icon(
               Icons.keyboard_arrow_right,
 

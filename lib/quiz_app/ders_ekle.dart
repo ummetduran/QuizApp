@@ -50,7 +50,7 @@ class _DersEkleState extends State<DersEkle> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       RaisedButton(onPressed: (){
-
+                        dersEkle();
                       },
                         child: Text("Kaydet"),
 
@@ -70,6 +70,10 @@ class _DersEkleState extends State<DersEkle> {
         ),
       ),
     );
+  }
+
+  void dersEkle() {
+
   }
 
 
