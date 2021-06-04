@@ -9,15 +9,17 @@ import 'backend/Teacher.dart';
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 class DersEkle extends StatefulWidget {
+  final Teacher teacher;
+  const DersEkle({Key key, this.teacher}):super(key: key);
 
   @override
   _DersEkleState createState() => _DersEkleState();
 }
- Ders ders;
+ Ders ders = Ders.empty();
 
 class _DersEkleState extends State<DersEkle> {
   final formKey = GlobalKey<FormState>();
-  Teacher teacher = TeacherHomePage().teacher;
+  //Teacher teacher = TeacherHomePage().teacher;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,26 +47,30 @@ class _DersEkleState extends State<DersEkle> {
                     //suffixStyle: TextStyle(color: Colors.white)
 
                   ),
-                  onSaved: (name) => ders = new Ders(name, teacher)
-
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Row(
+                  onChanged: (name) {
+                    ders.setName(name);
+                    debugPrint("printli $name");
+                    debugPrint(ders.getName());
+                  }
+                    ),
+                    Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      RaisedButton(onPressed: (){
+                    RaisedButton(onPressed: (){
 
-                          dersEkle();
+                    dersEkle();
 
-                      },
-                        child: Text("Kaydet"),
+                    },
+                    child: Text("Kaydet"),
 
-                      ),
-                      SizedBox(width: 15,),
-                      RaisedButton(onPressed: (){
+                    ),
+                    SizedBox(width: 15,),
+                    RaisedButton(onPressed: (){
 
-                      },
+                    }
+                  ,
                         child: Text("İptal"),
                       )
                     ],
@@ -79,21 +85,19 @@ class _DersEkleState extends State<DersEkle> {
   }
 
   Future dersEkle() async {
-    debugPrint(ders.name.toString());
-    if(formKey.currentState.validate()) {
-      formKey.currentState.save();
+
       //var fireUser = _auth.currentUser;
       //Map<String, dynamic> dersEkle = Map();
       //dersEkle['dersler'] = ders.name;
       List<String> list = new List<String>();
-      list.add("${ders.name}");
+      list.add("${ders.getName()}");
       //Users _user = Users(int.parse(_newUser.uid), fullName, _newUser.email);
-      await _fireStore.collection("Users").doc("${ders.teacher.id}").update(
+      await _fireStore.collection("Users").doc("${widget.teacher.id}").update(
           {'dersler': FieldValue.arrayUnion(list)});
 //    await _fireStore.collection("Users").doc("${ders.teacher.id}").set('dersler': ).then((value) => debugPrint("eklendi"));
       // await _fireStore.collection("Users").doc("${_newUser.uid}").collection("dersler").add(dersEkle);
 
-    }
+
   }
 
 

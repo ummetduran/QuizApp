@@ -16,6 +16,12 @@ class Ders {
     _dersiAlanOgrenciler = [];
     _quizList =  [];
   }
+  Ders.empty(){
+    _name="";
+    _teacher =null;
+  }
+
+
 
   List<Quiz> get quizList => _quizList;
 
@@ -35,9 +41,11 @@ class Ders {
     _teacher = value;
   }
 
-  String get name => _name;
+  String getName(){
+    return _name;
+  }
 
-  set name(String value) {
+  void setName(String value) {
     _name = value;
   }
 }

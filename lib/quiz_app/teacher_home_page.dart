@@ -12,18 +12,18 @@ FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
 class TeacherHomePage extends StatefulWidget {
-  Teacher teacher;
+  final Teacher teacher;
 
-  TeacherHomePage({this.teacher});
+   const TeacherHomePage({Key key, this.teacher}): super(key: key);
 
   @override
   _TeacherHomePageState createState() => _TeacherHomePageState(teacher);
 }
 
 class _TeacherHomePageState extends State<TeacherHomePage> {
-
-  final formKey = GlobalKey<FormState>();
   Teacher teacher;
+  final formKey = GlobalKey<FormState>();
+
   int sayac = 0;
   List<String> dersler = <String>[];
 
@@ -64,7 +64,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
-                      child: Text("${teacher.email}",
+                      child: Text("${widget.teacher.email}",
                           style: TextStyle(color: Colors.white)),
                     ),
                   ],
@@ -92,7 +92,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                   onPressed: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => DersEkle()));
+                        MaterialPageRoute(builder: (context) => DersEkle(teacher: widget.teacher)));
                   },
 
                   child: Text("Ders Ekle", style: TextStyle(fontSize: 20),),

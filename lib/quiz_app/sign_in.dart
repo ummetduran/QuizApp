@@ -16,6 +16,7 @@ FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
 class SignInPage extends StatefulWidget {
+
   @override
   _SignInPageState createState() => _SignInPageState();
 }
