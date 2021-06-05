@@ -134,10 +134,21 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
  Widget listeElemaniOlustur(BuildContext context, int index) {
     sayac++;
     return Dismissible(
-        key: Key(sayac.toString()),
+        key: UniqueKey(),
         direction: DismissDirection.startToEnd,
+
         onDismissed: (direction){
-          dersler.removeAt(index);
+
+  //SİLERKEN İNDEXLERİ KONTROL ET
+       var val =[];
+       val.add(dersler[index]);
+       _fireStore.collection("Users").doc(_auth.currentUser.uid).update({
+         'dersler' : FieldValue.arrayRemove(val)
+       });
+       setState(() {
+         dersler.removeAt(index);
+
+       });
         },
 
         child: Container(

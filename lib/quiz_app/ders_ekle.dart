@@ -61,6 +61,8 @@ class _DersEkleState extends State<DersEkle> {
                     RaisedButton(onPressed: (){
 
                     dersEkle();
+                    Navigator.push(
+                        context, MaterialPageRoute( builder: (context) => TeacherHomePage(teacher: widget.teacher,)));
 
                     },
                     child: Text("Kaydet"),
@@ -68,7 +70,8 @@ class _DersEkleState extends State<DersEkle> {
                     ),
                     SizedBox(width: 15,),
                     RaisedButton(onPressed: (){
-
+                      Navigator.push(
+                          context, MaterialPageRoute( builder: (context) => TeacherHomePage(teacher: widget.teacher,)));
                     }
                   ,
                         child: Text("İptal"),
@@ -86,17 +89,10 @@ class _DersEkleState extends State<DersEkle> {
 
   Future dersEkle() async {
 
-      //var fireUser = _auth.currentUser;
-      //Map<String, dynamic> dersEkle = Map();
-      //dersEkle['dersler'] = ders.name;
       List<String> list = new List<String>();
       list.add("${ders.getName()}");
-      //Users _user = Users(int.parse(_newUser.uid), fullName, _newUser.email);
       await _fireStore.collection("Users").doc("${widget.teacher.id}").update(
           {'dersler': FieldValue.arrayUnion(list)});
-//    await _fireStore.collection("Users").doc("${ders.teacher.id}").set('dersler': ).then((value) => debugPrint("eklendi"));
-      // await _fireStore.collection("Users").doc("${_newUser.uid}").collection("dersler").add(dersEkle);
-
 
   }
 
