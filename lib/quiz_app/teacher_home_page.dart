@@ -7,6 +7,7 @@ import 'package:untitled1/quiz_app/ders_ekle.dart';
 import 'backend/Ders.dart';
 
 import 'backend/Teacher.dart';
+import 'ders_page.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
@@ -25,7 +26,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   final formKey = GlobalKey<FormState>();
 
   int sayac = 0;
-  List<String> dersler = <String>[];
+  List<Ders> dersler = <Ders>[];
 
   _TeacherHomePageState(this.teacher);
 
@@ -105,7 +106,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                 Container(
                   child: Expanded(
                     child: ListView.builder(itemBuilder: listeElemaniOlustur,
-              itemCount: dersler.length ,
+              itemCount: widget.teacher.verilenDersler.length ,
               ),
                   ),
                 ),
@@ -122,10 +123,24 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
     var fireUser = _auth.currentUser;
     await _fireStore.collection("Users").doc(fireUser.uid).get().then((value) {
       setState(() {
-        dersler = List.from(value['dersler']);
+        List<String> list = <String>[];
+        list= List.from(value['dersler']);
+        widget.teacher.verilenDersler.clear();
+
+        for(String s in list){
+          Ders ders = new Ders.empty();
+
+          ders.setName(s);
+          ders.setTeacher(widget.teacher);
+
+          widget.teacher.verilenDersler.add(ders);
+
+
+          //widget.teacher.verilenDersler.add(new Ders(s,widget.teacher));
+        }
       });
 
-      debugPrint("${dersler}");
+      debugPrint("${widget.teacher.verilenDersler.first.getName()}");
 
     });
   }
@@ -134,19 +149,20 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
  Widget listeElemaniOlustur(BuildContext context, int index) {
     sayac++;
     return Dismissible(
+
         key: UniqueKey(),
         direction: DismissDirection.startToEnd,
 
-        onDismissed: (direction){
+        onDismissed: (direction)  {
 
   //SİLERKEN İNDEXLERİ KONTROL ET
        var val =[];
-       val.add(dersler[index]);
-       _fireStore.collection("Users").doc(_auth.currentUser.uid).update({
+       val.add(widget.teacher.verilenDersler[index].getName());
+       _fireStore.collection("Users").doc(_auth.currentUser.uid).update({ //ASYNC ??
          'dersler' : FieldValue.arrayRemove(val)
        });
        setState(() {
-         dersler.removeAt(index);
+         widget.teacher.verilenDersler.removeAt(index);
 
        });
         },
@@ -158,12 +174,17 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
               borderRadius: BorderRadius.circular(20)),
           margin: EdgeInsets.all(5),
           child: ListTile(
+            onTap: (){
+              debugPrint("${widget.teacher.verilenDersler[index]} Basıldı");
+              Navigator.push(
+                  context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.teacher.verilenDersler[index])));
+            },
             leading: Icon(
               Icons.done,
               size: 36,
 
             ),
-            title: Text(dersler[index]),
+            title: Text(widget.teacher.verilenDersler[index].getName()),
             trailing: Icon(
               Icons.keyboard_arrow_right,
 
