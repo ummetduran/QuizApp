@@ -35,9 +35,11 @@ class Ders {
     _dersiAlanOgrenciler = value;
   }
 
-  Teacher get teacher => _teacher;
+  Teacher getTeacher(){
+    return _teacher;
+  }
 
-  set teacher(Teacher value) {
+  void setTeacher(Teacher value) {
     _teacher = value;
   }
 
