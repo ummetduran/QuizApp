@@ -154,7 +154,6 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
         direction: DismissDirection.startToEnd,
 
         onDismissed: (direction)  {
-
   //SİLERKEN İNDEXLERİ KONTROL ET
        var val =[];
        val.add(widget.teacher.verilenDersler[index].getName());
