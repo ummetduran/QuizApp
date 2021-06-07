@@ -121,27 +121,18 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   void dersleriGetir() async {
 
     var fireUser = _auth.currentUser;
-    await _fireStore.collection("Users").doc(fireUser.uid).get().then((value) {
+    await _fireStore.collection("Users").doc(fireUser.uid).collection("dersler").get().then((value) {
       setState(() {
-        List<String> list = <String>[];
-        list= List.from(value['dersler']);
         widget.teacher.verilenDersler.clear();
-
-        for(String s in list){
+        value.docs.forEach((element) {
           Ders ders = new Ders.empty();
-
-          ders.setName(s);
+          ders.setName(element.id);
           ders.setTeacher(widget.teacher);
-
           widget.teacher.verilenDersler.add(ders);
+        });
 
-
-          //widget.teacher.verilenDersler.add(new Ders(s,widget.teacher));
-        }
       });
-
       debugPrint("${widget.teacher.verilenDersler.first.getName()}");
-
     });
   }
 
