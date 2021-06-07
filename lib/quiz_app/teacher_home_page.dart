@@ -25,8 +25,6 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   Teacher teacher;
   final formKey = GlobalKey<FormState>();
 
-  int sayac = 0;
-  List<Ders> dersler = <Ders>[];
 
   _TeacherHomePageState(this.teacher);
 
@@ -138,7 +136,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
 
 
  Widget listeElemaniOlustur(BuildContext context, int index) {
-    sayac++;
+
     return Dismissible(
 
         key: UniqueKey(),
@@ -146,14 +144,10 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
 
         onDismissed: (direction)  {
   //SİLERKEN İNDEXLERİ KONTROL ET
-       var val =[];
-       val.add(widget.teacher.verilenDersler[index].getName());
-       _fireStore.collection("Users").doc(_auth.currentUser.uid).update({ //ASYNC ??
-         'dersler' : FieldValue.arrayRemove(val)
-       });
+       _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
+           .doc(widget.teacher.verilenDersler[index].getName()).delete();
        setState(() {
          widget.teacher.verilenDersler.removeAt(index);
-
        });
         },
 
