@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:imagebutton/imagebutton.dart';
@@ -39,33 +40,27 @@ class _QuizEkleState extends State<QuizEkle> {
                                 TextStyle(color: Colors.indigo, fontSize: 18))),
                   ),
                 ),
-                /*   Container(
-                  child: _image == null ? new Text(""): new Container(height:250,child: Image.file(_image))),
-                ElevatedButton(onPressed: getImage,child: Text("Bas"),)*/
-           /*     RaisedButton(onPressed: getImage,
-                child: Image(
-                  width: 250,
-                    height: 100,
-                  image: _image as ImageProvider,
 
-                ),
-                ),*/
-                Padding(
-                  padding: const EdgeInsets.all(25),
-                  child: GestureDetector(
-                    child: Container(
-                      width: 270,
-                        height: 150,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(image: AssetImage("assets/images/addImage.jpg"),
-                        fit: BoxFit.fill
-                        )
-                      ),
+               Padding(
+                 padding: const EdgeInsets.all(20.0),
+                 child: Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                    SizedBox(
+                      width: 250,
+                      height: 100,
+                      child:  _image ==null ? Text("") : (Image.file(_image, fit: BoxFit.fill,)),
                     ),
-                    onTap: getImage,
+                     Container(
 
-                  ),
-                ),
+                       child: FloatingActionButton(onPressed: getImage,
+                        child: Icon(Icons.add_a_photo),
+
+                       ),
+                     ),
+                   ],
+                 ),
+               )
 
               ],
             ),
@@ -77,7 +72,7 @@ class _QuizEkleState extends State<QuizEkle> {
 
   }
 
-  Future getImage() async {
+  Future<File> getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     setState(() {
