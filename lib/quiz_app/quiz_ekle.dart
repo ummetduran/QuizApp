@@ -63,6 +63,7 @@ class _QuizEkleState extends State<QuizEkle> {
                       ),
                     ),
                     onTap: getImage,
+
                   ),
                 ),
 
