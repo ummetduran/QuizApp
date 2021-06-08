@@ -73,6 +73,8 @@ class _QuizEkleState extends State<QuizEkle> {
         ),
       ),
     );
+
+
   }
 
   Future getImage() async {
