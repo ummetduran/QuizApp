@@ -30,15 +30,12 @@ dependencies:
   sqflite: ^2.0.0+3
 
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   #fluttertoast: ^2.2.3
   date_format: ^1.0.5
   toggle_switch: ^0.1.9
-  image_picker: ^0.6.7+22
-  imagebutton: ^0.0.6
 
 dev_dependencies:
   flutter_test:
