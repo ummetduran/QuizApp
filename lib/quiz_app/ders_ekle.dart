@@ -87,13 +87,11 @@ class _DersEkleState extends State<DersEkle> {
     );
   }
 
+
   Future dersEkle() async {
-
-      List<String> list = new List<String>();
-      list.add("${ders.getName()}");
-      await _fireStore.collection("Users").doc("${widget.teacher.id}").update(
-          {'dersler': FieldValue.arrayUnion(list)});
-
+      Map<String, dynamic> dersEkle = Map();
+      await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
+          .doc(ders.getName()).set(dersEkle);
   }
 
 

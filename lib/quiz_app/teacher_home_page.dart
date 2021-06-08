@@ -25,8 +25,6 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   Teacher teacher;
   final formKey = GlobalKey<FormState>();
 
-  int sayac = 0;
-  List<Ders> dersler = <Ders>[];
 
   _TeacherHomePageState(this.teacher);
 
@@ -121,49 +119,35 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   void dersleriGetir() async {
 
     var fireUser = _auth.currentUser;
-    await _fireStore.collection("Users").doc(fireUser.uid).get().then((value) {
+    await _fireStore.collection("Users").doc(fireUser.uid).collection("dersler").get().then((value) {
       setState(() {
-        List<String> list = <String>[];
-        list= List.from(value['dersler']);
         widget.teacher.verilenDersler.clear();
-
-        for(String s in list){
+        value.docs.forEach((element) {
           Ders ders = new Ders.empty();
-
-          ders.setName(s);
+          ders.setName(element.id);
           ders.setTeacher(widget.teacher);
-
           widget.teacher.verilenDersler.add(ders);
+        });
 
-
-          //widget.teacher.verilenDersler.add(new Ders(s,widget.teacher));
-        }
       });
-
       debugPrint("${widget.teacher.verilenDersler.first.getName()}");
-
     });
   }
 
 
  Widget listeElemaniOlustur(BuildContext context, int index) {
-    sayac++;
+
     return Dismissible(
 
         key: UniqueKey(),
         direction: DismissDirection.startToEnd,
 
         onDismissed: (direction)  {
-
   //SİLERKEN İNDEXLERİ KONTROL ET
-       var val =[];
-       val.add(widget.teacher.verilenDersler[index].getName());
-       _fireStore.collection("Users").doc(_auth.currentUser.uid).update({ //ASYNC ??
-         'dersler' : FieldValue.arrayRemove(val)
-       });
+       _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
+           .doc(widget.teacher.verilenDersler[index].getName()).delete();
        setState(() {
          widget.teacher.verilenDersler.removeAt(index);
-
        });
         },
 
