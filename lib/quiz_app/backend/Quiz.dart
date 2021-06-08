@@ -2,22 +2,15 @@ import 'package:untitled1/quiz_app/backend/Question.dart';
 import 'package:untitled1/quiz_app/backend/Student.dart';
 
 class Quiz {
-  String _quizName;
+  String _questionName;
   List<Question> _questions;
-  int _time;
-
-  int get time => _time;
-
-  set time(int value) {
-    _time = value;
-  }
 
   Quiz();
 
-  String get quizName => _quizName;
+  String get questionName => _questionName;
 
-  set quizName(String value) {
-    _quizName = value;
+  set questionName(String value) {
+    _questionName = value;
   }
 
   List<Question> get questions => _questions;
