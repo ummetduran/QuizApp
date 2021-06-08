@@ -19,6 +19,8 @@ class Ders {
   Ders.empty(){
     _name="";
     _teacher =null;
+    _quizList = [];
+    _dersiAlanOgrenciler = [];
   }
 
 
