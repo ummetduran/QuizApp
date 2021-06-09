@@ -14,6 +14,7 @@ class MultipleChoiceQuestion implements Question {
   @override
   int seconds;
 
+
   List<String> _choices;
 
 
@@ -25,5 +26,11 @@ class MultipleChoiceQuestion implements Question {
   set choices(List<String> value) {
     _choices = value;
   }
+
+  @override
+  String imagePath;
+
+  @override
+  List<String> options;
 
 }
