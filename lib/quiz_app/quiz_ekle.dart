@@ -24,8 +24,8 @@ class _QuizEkleState extends State<QuizEkle> {
   String dropDownValue = 'Çoktan Seçmeli';
   Quiz quiz = new Quiz();
   Question question;
-  String answer;
-  int radioGroupValue=0;
+  String answer = "";
+ bool checked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -171,6 +171,7 @@ class _QuizEkleState extends State<QuizEkle> {
                         ),
                       ]),
                 ),
+                SizedBox(height: 20,),
                 Container(
                   child: questionType(), // SORU TİPİNE GÖRE WİDGET GELCEK
                 ),
@@ -199,82 +200,87 @@ class _QuizEkleState extends State<QuizEkle> {
       return Container(
         child: Column(
           children: [
-            RadioListTile(
-                value: 0 ,
-                title: TextFormField(
-                  decoration: InputDecoration(
-                      contentPadding: new EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 20),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      labelText: "Option 1",
-                      labelStyle:
-                      TextStyle(color: Colors.indigo, fontSize: 18),
-                      hintStyle:
-                      TextStyle(color: Colors.indigo, fontSize: 18)),
-                  onSaved: (value) {
-                    question.options.add(value);
-                  },
-                ),
-                groupValue: radioGroupValue, onChanged: (value){
-                  setState(() {
-                    radioGroupValue = value;
-                    question.answer = value.toString();
+           Padding(
+             padding: const EdgeInsets.only(top: 20, bottom: 10),
+             child: Row(
+               children: [
+                 Padding(
+                   padding: const EdgeInsets.only(left: 20),
+                   child: Transform.scale(
+                     scale: 1.5,
+                     child: Checkbox(
+                       value: checked,
+                       onChanged: (value){
+                         setState(() {
+                           this.checked = value;
+                         });
+                       },
+                     ),
+                   ),
+                 ),
+                 Padding(
+                   padding: const EdgeInsets.only(right: 20),
+                   child: SizedBox(
+                     width: 300,
+                     child: TextFormField(
+                       decoration: InputDecoration(
+                           contentPadding: new EdgeInsets.symmetric(
+                               vertical: 20, horizontal: 20),
+                           border: OutlineInputBorder(
+                               borderRadius: BorderRadius.circular(20)),
+                           labelText: "Option 1",
+                           labelStyle: TextStyle(color: Colors.indigo, fontSize: 18),
+                           hintStyle: TextStyle(color: Colors.indigo, fontSize: 18)),
+                       onSaved: (value) {
 
-                  });
-            }),
+                       },
+                     ),
+                   ),
+                 ),
+               ],
+             ),
+           ),
 
-            RadioListTile(
-                value: 1 ,
-                title: TextFormField(
-                  decoration: InputDecoration(
-                      contentPadding: new EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 20),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      labelText: "Option 2",
-                      labelStyle:
-                      TextStyle(color: Colors.indigo, fontSize: 18),
-                      hintStyle:
-                      TextStyle(color: Colors.indigo, fontSize: 18)),
-                  onSaved: (value) {
-                    question.options.add(value);
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Transform.scale(
+                      scale: 1.5,
+                      child:Checkbox(
+                          value: checked,
+                          onChanged: (value){
+                            setState(() {
+                              this.checked = value;
+                            });
+                          },
+                        ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: SizedBox(
+                      width: 300,
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            contentPadding: new EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 20),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            labelText: "Option 2",
+                            labelStyle: TextStyle(color: Colors.indigo, fontSize: 18),
+                            hintStyle: TextStyle(color: Colors.indigo, fontSize: 18)),
+                        onSaved: (value) {
 
-                  },
-                ),
-                groupValue: radioGroupValue, onChanged: (value){
-              setState(() {
-                radioGroupValue = value;
-                question.answer = answer;
-
-              });
-            }),
-            RadioListTile(
-                value: 2 ,
-                title: TextFormField(
-                  decoration: InputDecoration(
-                      contentPadding: new EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 20),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      labelText: "Option 3",
-                      labelStyle:
-                      TextStyle(color: Colors.indigo, fontSize: 18),
-                      hintStyle:
-                      TextStyle(color: Colors.indigo, fontSize: 18)),
-                  onSaved: (value) {
-                    question.options.add(value);
-
-                  },
-                ),
-                groupValue: radioGroupValue, onChanged: (value){
-              setState(() {
-                radioGroupValue = value;
-                question.answer = answer;
-
-              });
-            }),
-
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       );
