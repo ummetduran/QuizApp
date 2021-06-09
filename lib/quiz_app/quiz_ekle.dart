@@ -26,7 +26,13 @@ class _QuizEkleState extends State<QuizEkle> {
                   padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
                   child: Container(
                     height: 100,
-                    child: TextFormField(
+                    child: TextFormField(validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Lütfen soruyu yazmayı unutmayınız!";
+                      }
+                      return null;
+                    },
+
                         maxLines: 12,
                         decoration: InputDecoration(
                             contentPadding: new EdgeInsets.symmetric(
@@ -60,7 +66,8 @@ class _QuizEkleState extends State<QuizEkle> {
                      ),
                    ],
                  ),
-               )
+               ),
+
 
               ],
             ),

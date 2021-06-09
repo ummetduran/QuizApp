@@ -98,7 +98,7 @@ class _DersPageState extends State<DersPage> {
               //Navigator.push(context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.teacher.verilenDersler[index])));
             },
             leading: Icon(
-              Icons.quiz,
+              Icons.add_circle_outline,
               size: 36,
             ),
             title: Text(widget.ders.quizList[index].quizName),
