@@ -5,10 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:imagebutton/imagebutton.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+import 'package:untitled1/quiz_app/backend/MultipleChoiceQuestion.dart';
+import 'package:untitled1/quiz_app/backend/OpenEndQuestion.dart';
 import 'dart:io';
 
 import 'package:untitled1/quiz_app/backend/Question.dart';
 import 'package:untitled1/quiz_app/backend/Quiz.dart';
+import 'package:untitled1/quiz_app/backend/TrueFalseQuestion.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
@@ -24,8 +28,11 @@ class _QuizEkleState extends State<QuizEkle> {
   String dropDownValue = 'Çoktan Seçmeli';
   Quiz quiz = new Quiz();
   Question question;
-  String answer = "";
- bool checked = false;
+  List<String> options = ["a","b","c","d"];
+  bool checked = false;
+  int _radioValue = -1;
+  String correctAnswer;
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,25 +45,23 @@ class _QuizEkleState extends State<QuizEkle> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
-                  child: Container(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          contentPadding: new EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 20),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          labelText: "Quiz Adı",
-                          labelStyle:
-                              TextStyle(color: Colors.indigo, fontSize: 18),
-                          hintStyle:
-                              TextStyle(color: Colors.indigo, fontSize: 18)),
-                      onSaved: (name) => quiz.quizName = name,
-                    ),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        contentPadding: new EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 20),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        labelText: "Quiz Adı",
+                        labelStyle:
+                        TextStyle(color: Colors.indigo, fontSize: 18),
+                        hintStyle:
+                        TextStyle(color: Colors.indigo, fontSize: 18)),
+                    onSaved: (name) => quiz.quizName = name,
                   ),
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                  const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                   child: DateTimePicker(
                     type: DateTimePickerType.dateTimeSeparate,
                     dateMask: 'd MMM, yyyy',
@@ -101,11 +106,11 @@ class _QuizEkleState extends State<QuizEkle> {
                               borderRadius: BorderRadius.circular(20)),
                           labelText: "Soruyu yazınız.",
                           labelStyle:
-                              TextStyle(color: Colors.indigo, fontSize: 18),
+                          TextStyle(color: Colors.indigo, fontSize: 18),
                           hintStyle:
-                              TextStyle(color: Colors.indigo, fontSize: 18)),
+                          TextStyle(color: Colors.indigo, fontSize: 18)),
                       onSaved: (questionText) =>
-                          question.question = questionText,
+                      question.question = questionText,
                     ),
                   ),
                 ),
@@ -120,9 +125,9 @@ class _QuizEkleState extends State<QuizEkle> {
                         child: _image == null
                             ? Text("")
                             : (Image.file(
-                                _image,
-                                fit: BoxFit.fill,
-                              )),
+                          _image,
+                          fit: BoxFit.fill,
+                        )),
                       ),
                       Container(
                         child: FloatingActionButton(
@@ -165,20 +170,35 @@ class _QuizEkleState extends State<QuizEkle> {
                             {
                               setState(() {
                                 this.dropDownValue = newValue;
+                                if(dropDownValue =="Çoktan Seçmeli")
+                                  question = new MultipleChoiceQuestion();
+                                else if(dropDownValue == "Doğru-Yanlış")
+                                  question = new TrueFalseQuestion();
+                                else
+                                  question = new OpenEndQuestion();
                               });
                             }
                           },
                         ),
                       ]),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
                   child: questionType(), // SORU TİPİNE GÖRE WİDGET GELCEK
                 ),
-                RaisedButton(
-                  onPressed: kaydet,
-                  child: Text("Kaydet"),
-                )
+                Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: RaisedButton(
+                    onPressed: kaydet,
+                    child: Text("Kaydet"),
+                  ),
+                ),
+
+                Container(
+                  child: listele(),
+                ),
               ],
             ),
           ),
@@ -196,98 +216,182 @@ class _QuizEkleState extends State<QuizEkle> {
   }
 
   Widget questionType() {
+
+
     if (dropDownValue == 'Çoktan Seçmeli') {
-      return Container(
-        child: Column(
-          children: [
-           Padding(
-             padding: const EdgeInsets.only(top: 20, bottom: 10),
-             child: Row(
-               children: [
-                 Padding(
-                   padding: const EdgeInsets.only(left: 20),
-                   child: Transform.scale(
-                     scale: 1.5,
-                     child: Checkbox(
-                       value: checked,
-                       onChanged: (value){
-                         setState(() {
-                           this.checked = value;
-                         });
-                       },
-                     ),
-                   ),
-                 ),
-                 Padding(
-                   padding: const EdgeInsets.only(right: 20),
-                   child: SizedBox(
-                     width: 300,
-                     child: TextFormField(
-                       decoration: InputDecoration(
-                           contentPadding: new EdgeInsets.symmetric(
-                               vertical: 20, horizontal: 20),
-                           border: OutlineInputBorder(
-                               borderRadius: BorderRadius.circular(20)),
-                           labelText: "Option 1",
-                           labelStyle: TextStyle(color: Colors.indigo, fontSize: 18),
-                           hintStyle: TextStyle(color: Colors.indigo, fontSize: 18)),
-                       onSaved: (value) {
-
-                       },
-                     ),
-                   ),
-                 ),
-               ],
-             ),
-           ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Transform.scale(
-                      scale: 1.5,
-                      child:Checkbox(
-                          value: checked,
-                          onChanged: (value){
-                            setState(() {
-                              this.checked = value;
-                            });
-                          },
-                        ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: SizedBox(
-                      width: 300,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            contentPadding: new EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 20),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            labelText: "Option 2",
-                            labelStyle: TextStyle(color: Colors.indigo, fontSize: 18),
-                            hintStyle: TextStyle(color: Colors.indigo, fontSize: 18)),
-                        onSaved: (value) {
-
-                        },
-                      ),
-                    ),
-                  ),
-                ],
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+            children: [
+              Radio(value: 0, groupValue: _radioValue, onChanged: onChanged),
+              SizedBox(
+                width: 300,
+                child: TextFormField(
+                  maxLines: 2,
+                  decoration: InputDecoration(
+                      contentPadding: new EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 20),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      labelText: "Options 1",
+                      labelStyle:
+                      TextStyle(color: Colors.indigo, fontSize: 18),
+                      hintStyle:
+                      TextStyle(color: Colors.indigo, fontSize: 18)),
+                  onChanged: (option1) {
+              setState(() {
+                options[0] = option1;
+              });
+                  }
+                ),
               ),
-            )
-          ],
+            ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                Radio(value: 1, groupValue: _radioValue, onChanged: onChanged),
+                SizedBox(
+                  width: 300,
+                  child: TextFormField(
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                        contentPadding: new EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 20),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        labelText: "Options 2",
+                        labelStyle:
+                        TextStyle(color: Colors.indigo, fontSize: 18),
+                        hintStyle:
+                        TextStyle(color: Colors.indigo, fontSize: 18)),
+                      onChanged: (option2) {
+                        setState(() {
+                          options[1] = option2;
+                        });
+                      }
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                Radio(value: 2, groupValue: _radioValue, onChanged: onChanged),
+                SizedBox(
+                  width: 300,
+                  child: TextFormField(
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                        contentPadding: new EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 20),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        labelText: "Options 3",
+                        labelStyle:
+                        TextStyle(color: Colors.indigo, fontSize: 18),
+                        hintStyle:
+                        TextStyle(color: Colors.indigo, fontSize: 18)),
+                      onChanged: (option3) {
+                        setState(() {
+                          options[2] = option3;
+                        });
+                      }
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                Radio(value: 3, groupValue: _radioValue, onChanged: onChanged),
+                SizedBox(
+                  width: 300,
+                  child: TextFormField(
+                      maxLines: 2,
+                    decoration: InputDecoration(
+                        contentPadding: new EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 20),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        labelText: "Options 4",
+                        labelStyle:
+                        TextStyle(color: Colors.indigo, fontSize: 18),
+                        hintStyle:
+                        TextStyle(color: Colors.indigo, fontSize: 18)),
+                      onChanged: (option4) {
+                        setState(() {
+                          options[3] = option4;
+
+                        });
+                      }
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+
+
+
+        ],
+      );
+  }
+    else if(dropDownValue == "Doğru-Yanlış"){
+      List<String> labels =["True", "False"];
+      return Padding(
+        padding: const EdgeInsets.only(left: 20.0),
+        child: Row(
+          children: [ToggleSwitch(
+            labels: ["True", "False"],
+            onToggle: (index) => correctAnswer = labels[index],
+
+          ),
+          ]
         ),
       );
     }
   }
 
-  Future kaydet() async {}
+  void kaydet() {
+    debugPrint("$correctAnswer");
+    debugPrint("${options[2]}");
+     /* options.forEach((element) {
+        setState(() {
+          question.options.add(element);
+        });
 
-  void deneme(int value) {}
+      });
+
+
+    debugPrint("${question.options[0]}");
+    debugPrint("${question.options[1]}");
+    debugPrint("${question.options[2]}");
+    debugPrint("${question.options[3]}");*/
+
+  }
+
+  Widget listele(){
+
+  }
+
+  void onChanged(int value) {
+    setState(() {
+      _radioValue = value;
+      correctAnswer = options[_radioValue];
+    });
+
+
+  }
 }

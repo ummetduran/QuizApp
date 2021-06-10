@@ -18,8 +18,9 @@ class MultipleChoiceQuestion implements Question {
   List<String> _choices;
 
 
-  MultipleChoiceQuestion(
-      this.answer, this.point, this.question, this.seconds, this._choices);
+
+
+
 
   List<String> get choices => _choices;
 

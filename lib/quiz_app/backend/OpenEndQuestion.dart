@@ -13,7 +13,7 @@ class OpenEndQuestion implements Question {
   @override
   int seconds;
 
-  OpenEndQuestion(this.answer, this.point, this.question, this.seconds);
+
 
   @override
   String imagePath;

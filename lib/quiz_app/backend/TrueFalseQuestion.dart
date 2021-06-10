@@ -14,7 +14,6 @@ class TrueFalseQuestion implements Question {
   @override
   int seconds;
 
-  TrueFalseQuestion(this.answer, this.point, this.question, this.seconds);
 
   @override
   String imagePath;
