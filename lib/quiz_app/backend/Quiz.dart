@@ -6,6 +6,7 @@ class Quiz {
   List<Question> _questions;
   int _time;
 
+
   int get time => _time;
 
   set time(int value) {

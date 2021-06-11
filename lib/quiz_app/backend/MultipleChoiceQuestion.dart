@@ -14,16 +14,24 @@ class MultipleChoiceQuestion implements Question {
   @override
   int seconds;
 
+
   List<String> _choices;
 
 
-  MultipleChoiceQuestion(
-      this.answer, this.point, this.question, this.seconds, this._choices);
+
+
+
 
   List<String> get choices => _choices;
 
   set choices(List<String> value) {
     _choices = value;
   }
+
+  @override
+  String imagePath;
+
+  @override
+  List<String> options;
 
 }
