@@ -3,6 +3,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:imagebutton/imagebutton.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -48,8 +49,6 @@ class _QuizEkleState extends State<QuizEkle> {
   bool checked = false;
   int _radioValue = -1;
   String correctAnswer;
-
-  var numberPickerValue=5;
 
 
   @override
@@ -170,80 +169,80 @@ class _QuizEkleState extends State<QuizEkle> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 135, bottom: 25),
-                  child: Row(
-                     // mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        DropdownButton<String>(
-                          icon: Icon(Icons.arrow_downward_sharp),
-                          iconSize: 20,
-                          elevation: 16,
-                          value: dropDownValue,
-                          items: <String>[
-                            'Çoktan Seçmeli',
-                            'Doğru-Yanlış',
-                            'Boşluk Doldurma'
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: TextStyle(
-                                      fontSize: 18, color: Colors.indigo),
-                                ));
-                          }).toList(),
-                          onChanged: (newValue) {
-                            {
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      DropdownButton<String>(
+                        icon: Icon(Icons.arrow_downward_sharp),
+                        iconSize: 20,
+                        elevation: 16,
+                        value: dropDownValue,
+                        items: <String>[
+                          'Çoktan Seçmeli',
+                          'Doğru-Yanlış',
+                          'Boşluk Doldurma'
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.indigo),
+                              ));
+                        }).toList(),
+                        onChanged: (newValue) {
+                          {
+                            setState(() {
+                              this.dropDownValue = newValue;
+                             /* if(dropDownValue =="Çoktan Seçmeli")
+                                question = new MultipleChoiceQuestion();
+                              else if(dropDownValue == "Doğru-Yanlış")
+                                question = new TrueFalseQuestion();
+                              else
+                                question = new OpenEndQuestion();*/
+                            });
+                          }
+                        },
+                      ),
+                      Container(
+                        width: 150,
+                        height: 50,
+                        child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                labelText: "Select Time",
+                                labelStyle:
+                                TextStyle(color: Colors.indigo, fontSize: 18),
+                                hintStyle:
+                                TextStyle(color: Colors.indigo, fontSize: 18)),
+                            onSaved:(quizTime) {
                               setState(() {
-                                this.dropDownValue = newValue;
-                               /* if(dropDownValue =="Çoktan Seçmeli")
-                                  question = new MultipleChoiceQuestion();
-                                else if(dropDownValue == "Doğru-Yanlış")
-                                  question = new TrueFalseQuestion();
-                                else
-                                  question = new OpenEndQuestion();*/
+                                if(quizTime == null) quiz.time = 0;
+                                else {
+                                  quiz.time = int.parse(quizTime);
+                                }
                               });
                             }
-                          },
                         ),
-
-
-                      ]),
-                ),
+                      )
+                    ]),
                 SizedBox(
                   height: 20,
                 ),
-                Container(
-                  child: questionType(), // SORU TİPİNE GÖRE WİDGET GELCEK
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 80),
-                        child: Text("Point", style: TextStyle(fontSize: 24,color: Colors.indigo),),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25),
-                        child: Icon(Icons.arrow_circle_down_outlined, size: 30,color: Colors.indigo,),
-                      )
-                    ],
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: questionType(), // SORU TİPİNE GÖRE WİDGET GELCEK
+                    ),
+                  ],
                 ),
 
-                Container(
-                  padding: EdgeInsets.only(bottom: 35),
-                  child: NumberPicker(haptics:false, itemCount:7, axis: Axis.horizontal,itemWidth: 50, step:5, minValue: 5, maxValue: 100, value: numberPickerValue, onChanged: (value){
-                    setState(() {
-                      numberPickerValue = value;
-                      question.point = value;
-                    });
-
-                  }),
-                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 50.0),
                   child: RaisedButton(
