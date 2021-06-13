@@ -41,7 +41,7 @@ class _DersPageState extends State<DersPage> {
             child: RaisedButton(
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute( builder: (context) => QuizEkle()));
+                    context, MaterialPageRoute( builder: (context) => QuizEkle(teacher: widget.ders.getTeacher(),ders: widget.ders)));
               },
               child: Text(
                 "Quiz Ekle",
