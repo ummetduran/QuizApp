@@ -41,6 +41,7 @@ dependencies:
   imagebutton: ^0.0.6
   date_time_picker: ^1.1.1
   fluttertoast: ^8.0.7
+  numberpicker: ^2.1.1
 
 
 dev_dependencies:

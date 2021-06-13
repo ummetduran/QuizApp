@@ -3,7 +3,7 @@ import 'package:untitled1/quiz_app/backend/Student.dart';
 
 class Quiz {
   String _quizName;
-  List<Question> _questions;
+  List<Question> questions=[];
   int _time;
 
 
@@ -21,9 +21,9 @@ class Quiz {
     _quizName = value;
   }
 
-  List<Question> get questions => _questions;
 
-  set questions(List<Question> value) {
-    _questions = value;
+
+  void addElement(Question question){
+    this.questions.add(question);
   }
 }

@@ -1,18 +1,13 @@
 import 'package:untitled1/quiz_app/backend/Student.dart';
 
-abstract class Question {
+ class Question {
   int _point;
   String _question;
   String _answer= " ";
   String _imagePath;
-  List<String> _options;
+  List<String> options = ["a", "b","c","d"];
 
 
-  List<String> get options => _options;
-
-  set options(List<String> value) {
-    _options = value;
-  }
 
   String get imagePath => _imagePath;
 
@@ -20,7 +15,7 @@ abstract class Question {
     _imagePath = value;
   }
 
-  Question(this._point,  this._question, this._answer);
+  //Question(this._point,  this._question, this._answer);
 
   String get answer => _answer;
 

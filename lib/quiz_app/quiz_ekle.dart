@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:imagebutton/imagebutton.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:untitled1/quiz_app/backend/MultipleChoiceQuestion.dart';
 import 'package:untitled1/quiz_app/backend/OpenEndQuestion.dart';
@@ -23,15 +24,23 @@ class QuizEkle extends StatefulWidget {
 }
 
 class _QuizEkleState extends State<QuizEkle> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    listele();
+  }
   final formKey = GlobalKey<FormState>();
   File _image;
   String dropDownValue = 'Çoktan Seçmeli';
   Quiz quiz = new Quiz();
-  Question question;
-  List<String> options = ["a","b","c","d"];
+  Question question = new Question();
+  //List<String> options;
   bool checked = false;
   int _radioValue = -1;
   String correctAnswer;
+
+  var numberPickerValue=5;
 
 
   @override
@@ -109,8 +118,13 @@ class _QuizEkleState extends State<QuizEkle> {
                           TextStyle(color: Colors.indigo, fontSize: 18),
                           hintStyle:
                           TextStyle(color: Colors.indigo, fontSize: 18)),
-                      onSaved: (questionText) =>
-                      question.question = questionText,
+                      onChanged: (questionText) {
+                        setState(() {
+                          question.question = questionText;
+                        });
+
+
+                      }
                     ),
                   ),
                 ),
@@ -144,9 +158,9 @@ class _QuizEkleState extends State<QuizEkle> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 25),
+                  padding: const EdgeInsets.only(left: 135, bottom: 25),
                   child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                     // mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         DropdownButton<String>(
                           icon: Icon(Icons.arrow_downward_sharp),
@@ -170,16 +184,18 @@ class _QuizEkleState extends State<QuizEkle> {
                             {
                               setState(() {
                                 this.dropDownValue = newValue;
-                                if(dropDownValue =="Çoktan Seçmeli")
+                               /* if(dropDownValue =="Çoktan Seçmeli")
                                   question = new MultipleChoiceQuestion();
                                 else if(dropDownValue == "Doğru-Yanlış")
                                   question = new TrueFalseQuestion();
                                 else
-                                  question = new OpenEndQuestion();
+                                  question = new OpenEndQuestion();*/
                               });
                             }
                           },
                         ),
+
+
                       ]),
                 ),
                 SizedBox(
@@ -187,6 +203,33 @@ class _QuizEkleState extends State<QuizEkle> {
                 ),
                 Container(
                   child: questionType(), // SORU TİPİNE GÖRE WİDGET GELCEK
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 80),
+                        child: Text("Point", style: TextStyle(fontSize: 24,color: Colors.indigo),),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25),
+                        child: Icon(Icons.arrow_circle_down_outlined, size: 30,color: Colors.indigo,),
+                      )
+                    ],
+                  ),
+                ),
+
+                Container(
+                  padding: EdgeInsets.only(bottom: 35),
+                  child: NumberPicker(haptics:false, itemCount:7, axis: Axis.horizontal,itemWidth: 50, step:5, minValue: 5, maxValue: 100, value: numberPickerValue, onChanged: (value){
+                    setState(() {
+                      numberPickerValue = value;
+                      question.point = value;
+                    });
+
+                  }),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 50.0),
@@ -225,7 +268,7 @@ class _QuizEkleState extends State<QuizEkle> {
             padding: const EdgeInsets.all(10),
             child: Row(
             children: [
-              Radio(value: 0, groupValue: _radioValue, onChanged: onChanged),
+              Radio(value: 0, groupValue: _radioValue, onChanged: radioChanged),
               SizedBox(
                 width: 300,
                 child: TextFormField(
@@ -242,7 +285,7 @@ class _QuizEkleState extends State<QuizEkle> {
                       TextStyle(color: Colors.indigo, fontSize: 18)),
                   onChanged: (option1) {
               setState(() {
-                options[0] = option1;
+                question.options[0] = option1;
               });
                   }
                 ),
@@ -255,7 +298,7 @@ class _QuizEkleState extends State<QuizEkle> {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                Radio(value: 1, groupValue: _radioValue, onChanged: onChanged),
+                Radio(value: 1, groupValue: _radioValue, onChanged: radioChanged),
                 SizedBox(
                   width: 300,
                   child: TextFormField(
@@ -272,7 +315,7 @@ class _QuizEkleState extends State<QuizEkle> {
                         TextStyle(color: Colors.indigo, fontSize: 18)),
                       onChanged: (option2) {
                         setState(() {
-                          options[1] = option2;
+                          question.options[1] = option2;
                         });
                       }
                   ),
@@ -285,7 +328,7 @@ class _QuizEkleState extends State<QuizEkle> {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                Radio(value: 2, groupValue: _radioValue, onChanged: onChanged),
+                Radio(value: 2, groupValue: _radioValue, onChanged: radioChanged),
                 SizedBox(
                   width: 300,
                   child: TextFormField(
@@ -302,7 +345,7 @@ class _QuizEkleState extends State<QuizEkle> {
                         TextStyle(color: Colors.indigo, fontSize: 18)),
                       onChanged: (option3) {
                         setState(() {
-                          options[2] = option3;
+                          question.options[2] = option3;
                         });
                       }
                   ),
@@ -315,7 +358,9 @@ class _QuizEkleState extends State<QuizEkle> {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                Radio(value: 3, groupValue: _radioValue, onChanged: onChanged),
+                Radio(value: 3, groupValue: _radioValue, onChanged:(value){
+                  debugPrint(value);
+                }),
                 SizedBox(
                   width: 300,
                   child: TextFormField(
@@ -332,7 +377,7 @@ class _QuizEkleState extends State<QuizEkle> {
                         TextStyle(color: Colors.indigo, fontSize: 18)),
                       onChanged: (option4) {
                         setState(() {
-                          options[3] = option4;
+                          question.options[3] = option4;
 
                         });
                       }
@@ -351,8 +396,9 @@ class _QuizEkleState extends State<QuizEkle> {
     else if(dropDownValue == "Doğru-Yanlış"){
       List<String> labels =["True", "False"];
       return Padding(
-        padding: const EdgeInsets.only(left: 20.0),
+        padding: const EdgeInsets.only(bottom: 20),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [ToggleSwitch(
             labels: ["True", "False"],
             onToggle: (index) => correctAnswer = labels[index],
@@ -365,20 +411,11 @@ class _QuizEkleState extends State<QuizEkle> {
   }
 
   void kaydet() {
-    debugPrint("$correctAnswer");
-    debugPrint("${options[2]}");
-     /* options.forEach((element) {
-        setState(() {
-          question.options.add(element);
-        });
 
-      });
-
-
-    debugPrint("${question.options[0]}");
-    debugPrint("${question.options[1]}");
-    debugPrint("${question.options[2]}");
-    debugPrint("${question.options[3]}");*/
+    quiz.addElement(question);
+    debugPrint("${quiz.questions[0].question}");
+    debugPrint("${quiz.questions[0].answer}");
+    debugPrint("${quiz.questions[0].options[1]}");
 
   }
 
@@ -386,10 +423,11 @@ class _QuizEkleState extends State<QuizEkle> {
 
   }
 
-  void onChanged(int value) {
+  void radioChanged(int value) {
     setState(() {
       _radioValue = value;
-      correctAnswer = options[_radioValue];
+      question.answer = question.options[_radioValue];
+      correctAnswer = question.options[_radioValue];
     });
 
 
