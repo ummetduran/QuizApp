@@ -15,10 +15,19 @@ import 'package:untitled1/quiz_app/backend/Question.dart';
 import 'package:untitled1/quiz_app/backend/Quiz.dart';
 import 'package:untitled1/quiz_app/backend/TrueFalseQuestion.dart';
 
+import 'backend/Ders.dart';
+import 'backend/Teacher.dart';
+
+
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
 class QuizEkle extends StatefulWidget {
+  final Teacher teacher;
+  final Ders ders;
+
+  const QuizEkle({Key key, this.teacher, this.ders}) : super(key: key);
+
   @override
   _QuizEkleState createState() => _QuizEkleState();
 }
@@ -65,7 +74,11 @@ class _QuizEkleState extends State<QuizEkle> {
                         TextStyle(color: Colors.indigo, fontSize: 18),
                         hintStyle:
                         TextStyle(color: Colors.indigo, fontSize: 18)),
-                    onSaved: (name) => quiz.quizName = name,
+                    onChanged: (name) {
+                      setState(() {
+                        quiz.quizName = name;
+                      });
+                    },
                   ),
                 ),
                 Padding(
@@ -234,8 +247,8 @@ class _QuizEkleState extends State<QuizEkle> {
                 Padding(
                   padding: const EdgeInsets.only(top: 50.0),
                   child: RaisedButton(
-                    onPressed: kaydet,
-                    child: Text("Kaydet"),
+                    onPressed: addQuestion,
+                    child: Text("Add Question"),
                   ),
                 ),
 
@@ -410,13 +423,13 @@ class _QuizEkleState extends State<QuizEkle> {
     }
   }
 
-  void kaydet() {
-
-    quiz.addElement(question);
-    debugPrint("${quiz.questions[0].question}");
-    debugPrint("${quiz.questions[0].answer}");
-    debugPrint("${quiz.questions[0].options[1]}");
-
+  Future addQuestion() async {
+    Map<String, dynamic> addQuestion = Map();
+    addQuestion["question"] = question.question;
+    addQuestion["cevaplar"] = question.options;
+    addQuestion["dogruCevap"] = question.answer;
+    await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
+        .doc(widget.ders.getName()).collection("quizler").doc("${quiz.quizName}").collection("sorular").doc().set(addQuestion);
   }
 
   Widget listele(){
