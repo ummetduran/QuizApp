@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_format/date_format.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +16,7 @@ import 'dart:io';
 import 'package:untitled1/quiz_app/backend/Question.dart';
 import 'package:untitled1/quiz_app/backend/Quiz.dart';
 import 'package:untitled1/quiz_app/backend/TrueFalseQuestion.dart';
+import 'package:untitled1/quiz_app/ders_ekle.dart';
 
 import 'backend/Ders.dart';
 import 'backend/Teacher.dart';
@@ -106,6 +108,30 @@ class _QuizEkleState extends State<QuizEkle> {
                       return null;
                     },
                     onSaved: (val) => print(val),
+                  ),
+                ),
+
+                Container(
+                  width: 150,
+                  height: 50,
+                  child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          labelText: "Time",
+                          labelStyle:
+                          TextStyle(color: Colors.indigo, fontSize: 18),
+                          hintStyle:
+                          TextStyle(color: Colors.indigo, fontSize: 18)),
+                      onChanged:(quizTime) {
+                        setState(() {
+                          quiz.time= int.parse(quizTime);
+                        });
+                      }
                   ),
                 ),
                 Divider(
@@ -215,17 +241,14 @@ class _QuizEkleState extends State<QuizEkle> {
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(20)),
-                                labelText: "Select Time",
+                                labelText: "Point",
                                 labelStyle:
                                 TextStyle(color: Colors.indigo, fontSize: 18),
                                 hintStyle:
                                 TextStyle(color: Colors.indigo, fontSize: 18)),
-                            onSaved:(quizTime) {
+                            onChanged:(point) {
                               setState(() {
-                                if(quizTime == null) quiz.time = 0;
-                                else {
-                                  quiz.time = int.parse(quizTime);
-                                }
+                                question.point = int.parse(point);
                               });
                             }
                         ),
@@ -252,8 +275,10 @@ class _QuizEkleState extends State<QuizEkle> {
                 ),
 
                 Container(
-                  child: listele(),
+                  //child: listele(),
                 ),
+                
+                RaisedButton(onPressed: saveQuiz, child: Text("Save"),)
               ],
             ),
           ),
@@ -370,9 +395,7 @@ class _QuizEkleState extends State<QuizEkle> {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                Radio(value: 3, groupValue: _radioValue, onChanged:(value){
-                  debugPrint(value);
-                }),
+                Radio(value: 3, groupValue: _radioValue, onChanged: radioChanged,),
                 SizedBox(
                   width: 300,
                   child: TextFormField(
@@ -423,15 +446,27 @@ class _QuizEkleState extends State<QuizEkle> {
   }
 
   Future addQuestion() async {
+    quiz.questions.add(question);
+
     Map<String, dynamic> addQuestion = Map();
     addQuestion["question"] = question.question;
     addQuestion["cevaplar"] = question.options;
+    addQuestion["point"] = question.point;
     addQuestion["dogruCevap"] = question.answer;
     await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
         .doc(widget.ders.getName()).collection("quizler").doc("${quiz.quizName}").collection("sorular").doc().set(addQuestion);
+
   }
 
-  Widget listele(){
+  void saveQuiz() async{
+    ders.quizList.add(quiz);
+    Map<String, dynamic> addQuiz = Map();
+    addQuiz["zaman"] = quiz.time;
+    await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
+        .doc(widget.ders.getName()).collection("quizler").doc("${quiz.quizName}").set(addQuiz);
+  }
+
+  Future<Widget> listele() async{
 
   }
 
@@ -441,7 +476,20 @@ class _QuizEkleState extends State<QuizEkle> {
       question.answer = question.options[_radioValue];
       correctAnswer = question.options[_radioValue];
     });
-
-
+    
   }
+  
+  void getQuizFromDB() async{
+    var fireUser = _auth.currentUser;
+    await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler").
+    doc("${widget.ders.getName()}").collection("quizler").get().then((value){
+      setState(() {
+
+
+      });
+    });
+    
+  }
+  
+
 }
