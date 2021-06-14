@@ -44,7 +44,8 @@ class _QuizEkleState extends State<QuizEkle> {
     super.initState();
 
   }
-  final formKey = GlobalKey<FormState>();
+  final formKey1 = GlobalKey<FormState>();
+  final formKey2 = GlobalKey<FormState>();
   File _image;
   String dropDownValue = 'Çoktan Seçmeli';
   Quiz quiz = new Quiz();
@@ -59,237 +60,252 @@ class _QuizEkleState extends State<QuizEkle> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Form(
-          key: formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              
+              Form(
+                key: formKey1,
+                child: Column(
+                  children: [
+                    Padding(
 
-                  padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
-                  child: TextFormField(
+                      padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            contentPadding: new EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 20),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            labelText: "Quiz Adı",
+                            labelStyle:
+                            TextStyle(color: Colors.indigo, fontSize: 18),
+                            hintStyle:
+                            TextStyle(color: Colors.indigo, fontSize: 18)),
+                        onChanged: (name) {
+                          setState(() {
+                            quiz.quizName = name;
+                          });
+                        },
+                      ),
+                    ),
+
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                child: DateTimePicker(
+                  type: DateTimePickerType.dateTimeSeparate,
+                  dateMask: 'd MMM, yyyy',
+                  initialValue: DateTime.now().toString(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                  icon: Icon(Icons.event),
+                  dateLabelText: 'Gün',
+                  timeLabelText: "Saat",
+                  selectableDayPredicate: (date) {
+                    // Disable weekend days to select from the calendar
+                    if (date.weekday == 6 || date.weekday == 7) {
+                      return false;
+                    }
+
+                    return true;
+                  },
+                  onChanged: (val) => print(val),
+                  validator: (val) {
+                    print(val);
+                    return null;
+                  },
+                  onSaved: (val) => print(val),
+                ),
+              ),
+
+              Container(
+                width: 150,
+                height: 50,
+                child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
                     decoration: InputDecoration(
-                        contentPadding: new EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 20),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20)),
-                        labelText: "Quiz Adı",
+                        labelText: "Time",
                         labelStyle:
                         TextStyle(color: Colors.indigo, fontSize: 18),
                         hintStyle:
                         TextStyle(color: Colors.indigo, fontSize: 18)),
-                    onChanged: (name) {
+                    onChanged:(quizTime) {
                       setState(() {
-                        quiz.quizName = name;
+                        quiz.time= int.parse(quizTime);
                       });
-                    },
-                  ),
+                    }
                 ),
-                Padding(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                  child: DateTimePicker(
-                    type: DateTimePickerType.dateTimeSeparate,
-                    dateMask: 'd MMM, yyyy',
-                    initialValue: DateTime.now().toString(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                    icon: Icon(Icons.event),
-                    dateLabelText: 'Gün',
-                    timeLabelText: "Saat",
-                    selectableDayPredicate: (date) {
-                      // Disable weekend days to select from the calendar
-                      if (date.weekday == 6 || date.weekday == 7) {
-                        return false;
-                      }
-
-                      return true;
-                    },
-                    onChanged: (val) => print(val),
-                    validator: (val) {
-                      print(val);
-                      return null;
-                    },
-                    onSaved: (val) => print(val),
-                  ),
+              ),
+                  ],
                 ),
-
-                Container(
-                  width: 150,
-                  height: 50,
-                  child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          labelText: "Time",
-                          labelStyle:
-                          TextStyle(color: Colors.indigo, fontSize: 18),
-                          hintStyle:
-                          TextStyle(color: Colors.indigo, fontSize: 18)),
-                      onChanged:(quizTime) {
-                        setState(() {
-                          quiz.time= int.parse(quizTime);
-                        });
-                      }
-                  ),
-                ),
-                Divider(
-                  height: 20,
-                  thickness: 2,
-                  indent: 20,
-                  endIndent: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
-                  child: Container(
-                    height: 100,
-                    child: TextFormField(
-                      maxLines: 12,
-                      decoration: InputDecoration(
-                          contentPadding: new EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 20),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          labelText: "Soruyu yazınız.",
-                          labelStyle:
-                          TextStyle(color: Colors.indigo, fontSize: 18),
-                          hintStyle:
-                          TextStyle(color: Colors.indigo, fontSize: 18)),
-                      onChanged: (questionText) {
-                        setState(() {
-                          question = new Question();
-                          question.question = questionText;
-                        });
-
-
-                      }
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 250,
+              ),
+              Divider(
+                height: 20,
+                thickness: 2,
+                indent: 20,
+                endIndent: 20,
+              ),
+              Form(
+                key: formKey2,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
+                      child: Container(
                         height: 100,
-                        child: _image == null
-                            ? Text("")
-                            : (Image.file(
-                          _image,
-                          fit: BoxFit.fill,
-                        )),
-                      ),
-                      Container(
-                        child: FloatingActionButton(
-                          onPressed: getImage,
-                          backgroundColor: Colors.grey.shade200,
-                          child: Icon(
-                            Icons.add_a_photo,
-                            color: Colors.indigo,
-                            size: 35,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      DropdownButton<String>(
-                        icon: Icon(Icons.arrow_downward_sharp),
-                        iconSize: 20,
-                        elevation: 16,
-                        value: dropDownValue,
-                        items: <String>[
-                          'Çoktan Seçmeli',
-                          'Doğru-Yanlış',
-                          'Boşluk Doldurma'
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(
-                                value,
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.indigo),
-                              ));
-                        }).toList(),
-                        onChanged: (newValue) {
-                          {
-                            setState(() {
-                              this.dropDownValue = newValue;
-                             /* if(dropDownValue =="Çoktan Seçmeli")
-                                question = new MultipleChoiceQuestion();
-                              else if(dropDownValue == "Doğru-Yanlış")
-                                question = new TrueFalseQuestion();
-                              else
-                                question = new OpenEndQuestion();*/
-                            });
-                          }
-                        },
-                      ),
-                      Container(
-                        width: 150,
-                        height: 50,
                         child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                labelText: "Point",
-                                labelStyle:
-                                TextStyle(color: Colors.indigo, fontSize: 18),
-                                hintStyle:
-                                TextStyle(color: Colors.indigo, fontSize: 18)),
-                            onChanged:(point) {
-                              setState(() {
-                                question.point = int.parse(point);
-                              });
-                            }
+                          maxLines: 12,
+                          decoration: InputDecoration(
+                              contentPadding: new EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 20),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              labelText: "Soruyu yazınız.",
+                              labelStyle:
+                              TextStyle(color: Colors.indigo, fontSize: 18),
+                              hintStyle:
+                              TextStyle(color: Colors.indigo, fontSize: 18)),
+                          onChanged: (questionText) {
+                            setState(() {
+                              question = new Question();
+                              question.question = questionText;
+                            });
+
+
+                          }
                         ),
-                      )
-                    ]),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
+                      ),
+                    ),
+
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    SizedBox(
+                      width: 250,
+                      height: 100,
+                      child: _image == null
+                          ? Text("")
+                          : (Image.file(
+                        _image,
+                        fit: BoxFit.fill,
+                      )),
+                    ),
                     Container(
-                      child: questionType(), // SORU TİPİNE GÖRE WİDGET GELCEK
+                      child: FloatingActionButton(
+                        onPressed: getImage,
+                        backgroundColor: Colors.grey.shade200,
+                        child: Icon(
+                          Icons.add_a_photo,
+                          color: Colors.indigo,
+                          size: 35,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
-                  child: RaisedButton(
-                    onPressed: addQuestion,
-                    child: Text("Add Question"),
+              ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    DropdownButton<String>(
+                      icon: Icon(Icons.arrow_downward_sharp),
+                      iconSize: 20,
+                      elevation: 16,
+                      value: dropDownValue,
+                      items: <String>[
+                        'Çoktan Seçmeli',
+                        'Doğru-Yanlış',
+                        'Boşluk Doldurma'
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.indigo),
+                            ));
+                      }).toList(),
+                      onChanged: (newValue) {
+                        {
+                          setState(() {
+                            this.dropDownValue = newValue;
+                           /* if(dropDownValue =="Çoktan Seçmeli")
+                              question = new MultipleChoiceQuestion();
+                            else if(dropDownValue == "Doğru-Yanlış")
+                              question = new TrueFalseQuestion();
+                            else
+                              question = new OpenEndQuestion();*/
+                          });
+                        }
+                      },
+                    ),
+                    Container(
+                      width: 150,
+                      height: 50,
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              labelText: "Point",
+                              labelStyle:
+                              TextStyle(color: Colors.indigo, fontSize: 18),
+                              hintStyle:
+                              TextStyle(color: Colors.indigo, fontSize: 18)),
+                          onChanged:(point) {
+                            setState(() {
+                              question.point = int.parse(point);
+                            });
+                          }
+                      ),
+                    )
+                  ]),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: questionType(), // SORU TİPİNE GÖRE WİDGET GELCEK
                   ),
-                ),
+                ],
+              ),
 
-                Container(
-                  child: ListView.builder(itemBuilder: listele,
-                  shrinkWrap: true,
-                  itemCount: quiz.questions.length,),
+              Padding(
+                padding: const EdgeInsets.only(top: 50.0),
+                child: RaisedButton(
+                  onPressed: addQuestion,
+                  child: Text("Add Question"),
                 ),
-                
-                RaisedButton(onPressed: saveQuiz, child: Text("Save"),)
-              ],
-            ),
+              ),
+
+              Container(
+                child: ListView.builder(itemBuilder: listele,
+                shrinkWrap: true,
+                itemCount: quiz.questions.length,),
+              ),
+              
+              RaisedButton(onPressed: saveQuiz, child: Text("Save"),)
+
+            ],
           ),
         ),
-      ),
+      ]
+    )
+    )
+    )
     );
   }
 
@@ -437,7 +453,7 @@ class _QuizEkleState extends State<QuizEkle> {
     else if(dropDownValue == "Doğru-Yanlış"){
       List<String> labels =["True", "False"];
       return Padding(
-        padding: const EdgeInsets.only(bottom: 20),
+        padding: const EdgeInsets.only(bottom: 20,left: 25),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [ToggleSwitch(
@@ -454,7 +470,7 @@ class _QuizEkleState extends State<QuizEkle> {
   Future addQuestion() async {
    setState(() {
      quiz.questions.add(question);
-     formKey.currentState.reset();
+     formKey2.currentState.reset();
    });
 
     Map<String, dynamic> addQuiz = Map();
@@ -479,31 +495,44 @@ class _QuizEkleState extends State<QuizEkle> {
 
  Widget listele(BuildContext context, int index){
 
-    return Container(
-        child: Container(
+    return Dismissible (
+      key: UniqueKey(),
+      direction: DismissDirection.startToEnd,
 
-          decoration: BoxDecoration(
-              border: Border.all(width: 2),
-              borderRadius: BorderRadius.circular(20)),
-          margin: EdgeInsets.all(5),
-          child: ListTile(
-            onTap: (){
-              debugPrint("${quiz.questions[index].question} Basıldı");
-              // Navigator.push(
-              //     context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.teacher.verilenDersler[index])));
-            },
-            leading: Icon(
-              Icons.done,
-              size: 36,
+   /*   onDismissed: (direction) async{
+       await  _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
+            .doc(widget.ders.getName()).collection("quizler").doc("${quiz.quizName}").collection("sorular").
 
+        setState(() {
+          quiz.questions.removeAt(index);
+        });
+      },*/
+      child: Container(
+          child: Container(
+
+            decoration: BoxDecoration(
+                border: Border.all(width: 2),
+                borderRadius: BorderRadius.circular(20)),
+            margin: EdgeInsets.all(5),
+            child: ListTile(
+              onTap: (){
+                debugPrint("${quiz.questions[index].question} Basıldı");
+                // Navigator.push(
+                //     context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.teacher.verilenDersler[index])));
+              },
+              leading: Icon(
+                Icons.done,
+                size: 36,
+
+              ),
+              title: Text(quiz.questions[index].question),
+              trailing: Icon(
+                Icons.keyboard_arrow_right,
+
+              ),
             ),
-            title: Text(quiz.questions[index].question),
-            trailing: Icon(
-              Icons.keyboard_arrow_right,
-
-            ),
-          ),
-        )
+          )
+      ),
     );
 
  }
