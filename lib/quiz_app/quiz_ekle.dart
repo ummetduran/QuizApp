@@ -39,18 +39,20 @@ class _QuizEkleState extends State<QuizEkle> {
   @override
   void initState() {
     // TODO: implement initState
+    // ignore: unnecessary_statements
+    listele;
     super.initState();
-    listele();
+
   }
   final formKey = GlobalKey<FormState>();
   File _image;
   String dropDownValue = 'Çoktan Seçmeli';
   Quiz quiz = new Quiz();
-  Question question = new Question();
+  Question question;
   //List<String> options;
   bool checked = false;
   int _radioValue = -1;
-  String correctAnswer;
+  //String correctAnswer;
 
 
   @override
@@ -63,6 +65,7 @@ class _QuizEkleState extends State<QuizEkle> {
             child: Column(
               children: [
                 Padding(
+
                   padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
                   child: TextFormField(
                     decoration: InputDecoration(
@@ -158,6 +161,7 @@ class _QuizEkleState extends State<QuizEkle> {
                           TextStyle(color: Colors.indigo, fontSize: 18)),
                       onChanged: (questionText) {
                         setState(() {
+                          question = new Question();
                           question.question = questionText;
                         });
 
@@ -275,7 +279,9 @@ class _QuizEkleState extends State<QuizEkle> {
                 ),
 
                 Container(
-                  //child: listele(),
+                  child: ListView.builder(itemBuilder: listele,
+                  shrinkWrap: true,
+                  itemCount: quiz.questions.length,),
                 ),
                 
                 RaisedButton(onPressed: saveQuiz, child: Text("Save"),)
@@ -436,7 +442,7 @@ class _QuizEkleState extends State<QuizEkle> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [ToggleSwitch(
             labels: ["True", "False"],
-            onToggle: (index) => correctAnswer = labels[index],
+            onToggle: (index) => question.answer = labels[index],
 
           ),
           ]
@@ -446,8 +452,15 @@ class _QuizEkleState extends State<QuizEkle> {
   }
 
   Future addQuestion() async {
-    quiz.questions.add(question);
+   setState(() {
+     quiz.questions.add(question);
+     formKey.currentState.reset();
+   });
 
+    Map<String, dynamic> addQuiz = Map();
+    addQuiz["zaman"] = quiz.time;
+    await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
+        .doc(widget.ders.getName()).collection("quizler").doc("${quiz.quizName}").set(addQuiz);
     Map<String, dynamic> addQuestion = Map();
     addQuestion["question"] = question.question;
     addQuestion["cevaplar"] = question.options;
@@ -460,36 +473,73 @@ class _QuizEkleState extends State<QuizEkle> {
 
   void saveQuiz() async{
     ders.quizList.add(quiz);
-    Map<String, dynamic> addQuiz = Map();
-    addQuiz["zaman"] = quiz.time;
-    await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
-        .doc(widget.ders.getName()).collection("quizler").doc("${quiz.quizName}").set(addQuiz);
-  }
-
-  Future<Widget> listele() async{
 
   }
+
+
+ Widget listele(BuildContext context, int index){
+
+    return Container(
+        child: Container(
+
+          decoration: BoxDecoration(
+              border: Border.all(width: 2),
+              borderRadius: BorderRadius.circular(20)),
+          margin: EdgeInsets.all(5),
+          child: ListTile(
+            onTap: (){
+              debugPrint("${quiz.questions[index].question} Basıldı");
+              // Navigator.push(
+              //     context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.teacher.verilenDersler[index])));
+            },
+            leading: Icon(
+              Icons.done,
+              size: 36,
+
+            ),
+            title: Text(quiz.questions[index].question),
+            trailing: Icon(
+              Icons.keyboard_arrow_right,
+
+            ),
+          ),
+        )
+    );
+
+ }
 
   void radioChanged(int value) {
     setState(() {
       _radioValue = value;
       question.answer = question.options[_radioValue];
-      correctAnswer = question.options[_radioValue];
+      //correctAnswer = question.options[_radioValue];
     });
     
   }
   
-  void getQuizFromDB() async{
+  void getQuestionsFromDB() async{
     var fireUser = _auth.currentUser;
     await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler").
-    doc("${widget.ders.getName()}").collection("quizler").get().then((value){
+    doc("${widget.ders.getName()}").collection("quizler").doc("${quiz.quizName}").collection("sorular").get().then((value){
       setState(() {
+        value.docs.forEach((element) {
+          Question questionFromDB = new Question();
+          questionFromDB.question=element.data()["question"];
+          questionFromDB.answer= element.data()["dogruCevap"];
+          questionFromDB.point = element.data()["point"];
+          quiz.questions.add(questionFromDB);
 
+
+        });
+
+        debugPrint("${quiz.questions[0].question}");
 
       });
     });
     
   }
+
+
   
 
 }
