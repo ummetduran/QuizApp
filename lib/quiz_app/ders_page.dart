@@ -71,7 +71,7 @@ class _DersPageState extends State<DersPage> {
   void quizleriGetir() async {
     var fireUser = _auth.currentUser;
     await _fireStore.collection("Users").doc(fireUser.uid).collection("dersler")
-        .doc(widget.ders.getName()).collection("quizler").get()
+        .doc("${widget.ders.getName()}").collection("quizler").get()
         .then((value) {
       setState(() {
         widget.ders.quizList.clear();
