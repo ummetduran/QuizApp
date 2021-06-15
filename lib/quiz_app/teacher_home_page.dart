@@ -124,6 +124,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
         widget.teacher.verilenDersler.clear();
         value.docs.forEach((element) {
           Ders ders = new Ders.empty();
+          ders.key=element.data()["derskodu"];
           ders.setName(element.id);
           ders.setTeacher(widget.teacher);
           widget.teacher.verilenDersler.add(ders);
@@ -168,7 +169,9 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
               size: 36,
 
             ),
-            title: Text(widget.teacher.verilenDersler[index].getName()),
+            title:  Text(widget.teacher.verilenDersler[index].getName()),
+            subtitle: Text(widget.teacher.verilenDersler[index].key.toString()),
+
             trailing: Icon(
               Icons.keyboard_arrow_right,
 

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nanoid/async.dart';
 import 'package:untitled1/quiz_app/teacher_home_page.dart';
 
 import 'backend/Ders.dart';
@@ -15,7 +16,8 @@ class DersEkle extends StatefulWidget {
   @override
   _DersEkleState createState() => _DersEkleState();
 }
- Ders ders = Ders.empty();
+Ders ders;
+
 
 class _DersEkleState extends State<DersEkle> {
   final formKey = GlobalKey<FormState>();
@@ -48,9 +50,10 @@ class _DersEkleState extends State<DersEkle> {
 
                   ),
                   onChanged: (name) {
-                    ders.setName(name);
-                    debugPrint("printli $name");
-                    debugPrint(ders.getName());
+                    setState(() {
+                      ders = new Ders.empty();
+                      ders.setName(name);
+                    });
                   }
                     ),
                     Padding(
@@ -90,6 +93,8 @@ class _DersEkleState extends State<DersEkle> {
 
   Future dersEkle() async {
       Map<String, dynamic> dersEkle = Map();
+
+      dersEkle["derskodu"] = ders.key;
       await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
           .doc(ders.getName()).set(dersEkle);
   }
