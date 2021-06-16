@@ -452,14 +452,23 @@ class _QuizEkleState extends State<QuizEkle> {
   }
     else if(dropDownValue == "Doğru-Yanlış"){
       List<String> labels =["True", "False"];
+setState(() {
+
+  question.options.clear();
+  question.options.add("True");
+  question.options.add("False");
+});
+
       return Padding(
         padding: const EdgeInsets.only(bottom: 20,left: 25),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [ToggleSwitch(
             labels: ["True", "False"],
-            onToggle: (index) => question.answer = labels[index],
+            onToggle: (index) {
+              question.answer = labels[index];
 
+            }
           ),
           ]
         ),
@@ -488,7 +497,10 @@ class _QuizEkleState extends State<QuizEkle> {
   }
 
   void saveQuiz() async{
-    ders.quizList.add(quiz);
+    setState(() {
+      ders.quizList.add(quiz);
+    });
+
 
   }
 

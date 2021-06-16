@@ -10,7 +10,7 @@ class Ders {
   String _name;
   Teacher _teacher;
   List<Student> _dersiAlanOgrenciler;
-  List<Quiz> _quizList;
+  List<Quiz> _quizList=[];
 
 
   String get key => _key;
