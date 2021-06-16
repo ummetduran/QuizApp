@@ -96,6 +96,7 @@ class _DerseKaydolState extends State<DerseKaydol> {
   }
 
   void kaydol() async {
+
     List<String> dersler = new List();
     QuerySnapshot query1 = await _fireStore.collection("Users").where("userType", isEqualTo: 1).get();
     query1.docs.forEach((element) async {
