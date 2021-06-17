@@ -87,13 +87,6 @@ class _DerseKaydolState extends State<DerseKaydol> {
                         child: Text("İptal"),
                       ),
 
-                      RaisedButton(onPressed: (){
-                        sina();
-                      }
-                        ,
-                        child: Text("Sına"),
-                      )
-
                     ],
                   ),
                 )
@@ -105,7 +98,7 @@ class _DerseKaydolState extends State<DerseKaydol> {
     );
   }
 
-  void kaydol() async {
+  Future kaydol() async {
     String dersId;
     List<String> dersler = new List();
     QuerySnapshot teachers = await _fireStore.collection("Users").where("userType", isEqualTo: 1).get();
@@ -154,17 +147,7 @@ class _DerseKaydolState extends State<DerseKaydol> {
   }
  }
 
-  void sina() {
-    for(var element in ders.quizList){
-      print("Quiz Bilgileri: ");
-      print(element.toString());
-      for(var element2 in element.questions){
-        print("SORU BILGILERI");
-        print(element2.toString());
-      }
-    }
 
-  }
 
   void useraDersEkle(String dersId) async{
     Map<String, dynamic> dersEkle = Map();

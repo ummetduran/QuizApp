@@ -10,21 +10,25 @@ FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 class StudentHomePage extends StatefulWidget {
 
-  Student student;
-  StudentHomePage({this.student});
+  final Student student;
+
+  const StudentHomePage({Key key, this.student}) : super(key: key);
   @override
-  _StudentHomePageState createState() => _StudentHomePageState();
+  _StudentHomePageState createState() => _StudentHomePageState(student);
 }
 
 
 class _StudentHomePageState extends State<StudentHomePage> {
+  Student student;
+
+  _StudentHomePageState(this.student);
+
   @override
   void initState() {
     // TODO: implement initState
     dersleriGetir();
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,7 +109,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  void dersleriGetir() async {
+  Future dersleriGetir() async {
 
     var fireUser = _auth.currentUser;
     await _fireStore.collection("Users").doc(fireUser.uid).collection("alinanDersler").get().then((value) {
