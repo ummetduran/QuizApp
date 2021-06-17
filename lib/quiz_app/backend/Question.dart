@@ -8,6 +8,10 @@ import 'package:untitled1/quiz_app/backend/Student.dart';
   List<String> options = ["a", "b","c","d"];
 
 
+  @override
+  String toString() {
+    return 'Question{_point: $_point, _question: $_question, _answer: $_answer, _imagePath: $_imagePath, options: $options}';
+  }
 
   String get imagePath => _imagePath;
 
@@ -36,4 +40,6 @@ import 'package:untitled1/quiz_app/backend/Student.dart';
   set point(int value) {
     _point = value;
   }
+
+
 }
