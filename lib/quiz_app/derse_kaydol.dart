@@ -115,11 +115,18 @@ class _DerseKaydolState extends State<DerseKaydol> {
       dersler.add(dersName);
         var teacherDersler = await _fireStore.collection("Users").doc(userId).collection("dersler")
             .where("derskodu", isEqualTo: ders.key).get();
-        for(var element in teacherDersler.docs){
-          if(element.exists) dersId = element.id.toString();
+      for(var elementTD in teacherDersler.docs){
+        if(elementTD.exists) dersId = elementTD.id.toString();
+        List ogrEkle = List();
+        ogrEkle.add(widget.student.email);
+        Map<String, List> map = new Map();
+        map["kayitliOgrenciler"] = ogrEkle;
+          await _fireStore.collection("Users").doc(userId).collection("dersler").doc(dersId).update(map);
 
-        }
-        var quizler =  await _fireStore.collection("Users").doc(userId).collection("dersler")
+          useraDersEkle(dersId);
+
+      }
+/*        var quizler =  await _fireStore.collection("Users").doc(userId).collection("dersler")
             .doc(dersId).collection("quizler").get();
         for(var element in quizler.docs){
           Quiz quiz = new Quiz();
@@ -142,7 +149,7 @@ class _DerseKaydolState extends State<DerseKaydol> {
       }//her soru için
           ders.quizList.add(quiz);
     }//her quiz için
-      widget.student.alinanDersler.add(ders);
+      widget.student.alinanDersler.add(ders);*/
 
   }
  }
@@ -156,6 +163,14 @@ class _DerseKaydolState extends State<DerseKaydol> {
         print(element2.toString());
       }
     }
+
+  }
+
+  void useraDersEkle(String dersId) async{
+    Map<String, dynamic> dersEkle = Map();
+
+    dersEkle["derskodu"] = ders.key;
+    await _fireStore.collection("Users").doc(widget.student.id).collection("alinanDersler").doc(dersId).set(dersEkle);
 
   }
 
