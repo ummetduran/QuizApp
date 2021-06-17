@@ -85,7 +85,15 @@ class _DerseKaydolState extends State<DerseKaydol> {
                       }
                         ,
                         child: Text("İptal"),
+                      ),
+
+                      RaisedButton(onPressed: (){
+                        sina();
+                      }
+                        ,
+                        child: Text("Sına"),
                       )
+
                     ],
                   ),
                 )
@@ -123,6 +131,7 @@ class _DerseKaydolState extends State<DerseKaydol> {
             Question q = new Question();
             q.question = element.get("question");
             q.answer = element.get("dogruCevap");
+            q.point= element.get("point");
 
             q.options.clear();
             List qOptions = element.get("cevaplar");
@@ -133,18 +142,21 @@ class _DerseKaydolState extends State<DerseKaydol> {
       }//her soru için
           ders.quizList.add(quiz);
     }//her quiz için
+      widget.student.alinanDersler.add(ders);
 
-
-    //Eklendi mi kontrolü
-    ders.quizList.forEach((element) {
-      print("QUIZ BILGILERI");
-      print(element.toString());
-      element.questions.forEach((element) {
-        print("SORU BILGILERI");
-        print(element.toString());
-      });
-    });
   }
- }//end of kaydol
+ }
+
+  void sina() {
+    for(var element in ders.quizList){
+      print("Quiz Bilgileri: ");
+      print(element.toString());
+      for(var element2 in element.questions){
+        print("SORU BILGILERI");
+        print(element2.toString());
+      }
+    }
+
+  }
 
 }

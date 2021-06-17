@@ -76,6 +76,13 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
             ),
 
+            Container(
+              child: Expanded(
+                child: ListView.builder(itemBuilder: listeElemaniOlustur,
+                  itemCount: widget.student.alinanDersler.length ,
+                ),
+              ),
+            ),
 
           ],
 
@@ -83,4 +90,34 @@ class _StudentHomePageState extends State<StudentHomePage> {
       ),
     );
   }
+
+  Widget listeElemaniOlustur(BuildContext context, int index) {
+
+    return Container(
+
+      decoration: BoxDecoration(
+          border: Border.all(width: 2),
+          borderRadius: BorderRadius.circular(20)),
+      margin: EdgeInsets.all(5),
+      child: ListTile(
+        onTap: (){
+          debugPrint("${widget.student.alinanDersler[index]} Basıldı");
+          //Navigator.push(context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.teacher.verilenDersler[index])));
+        },
+        leading: Icon(
+          Icons.done,
+          size: 36,
+
+        ),
+        title:  Text(widget.student.alinanDersler[index].getName()),
+        //subtitle: Text(widget.student.alinanDersler[index].key.toString()),
+
+        trailing: Icon(
+          Icons.keyboard_arrow_right,
+
+        ),
+      ),
+    );
+  }
+
 }

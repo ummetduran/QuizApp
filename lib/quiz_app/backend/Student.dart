@@ -6,8 +6,10 @@ import 'Users.dart';
 
 class Student extends Users{
 
- List<Ders> alinanDersler;
+ List<Ders> alinanDersler=[];
  Student(String id, String name, String email) : super(id,name, email){
-  alinanDersler = []; // ????
+ //alinanDersler = []; // ????
+
+
  }
 }
