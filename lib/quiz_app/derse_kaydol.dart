@@ -85,7 +85,15 @@ class _DerseKaydolState extends State<DerseKaydol> {
                       }
                         ,
                         child: Text("İptal"),
+                      ),
+
+                      RaisedButton(onPressed: (){
+                        sina();
+                      }
+                        ,
+                        child: Text("Sına"),
                       )
+
                     ],
                   ),
                 )
@@ -107,11 +115,18 @@ class _DerseKaydolState extends State<DerseKaydol> {
       dersler.add(dersName);
         var teacherDersler = await _fireStore.collection("Users").doc(userId).collection("dersler")
             .where("derskodu", isEqualTo: ders.key).get();
-        for(var element in teacherDersler.docs){
-          if(element.exists) dersId = element.id.toString();
+      for(var elementTD in teacherDersler.docs){
+        if(elementTD.exists) dersId = elementTD.id.toString();
+        List ogrEkle = List();
+        ogrEkle.add(widget.student.email);
+        Map<String, List> map = new Map();
+        map["kayitliOgrenciler"] = ogrEkle;
+          await _fireStore.collection("Users").doc(userId).collection("dersler").doc(dersId).update(map);
 
-        }
-        var quizler =  await _fireStore.collection("Users").doc(userId).collection("dersler")
+          useraDersEkle(dersId);
+
+      }
+/*        var quizler =  await _fireStore.collection("Users").doc(userId).collection("dersler")
             .doc(dersId).collection("quizler").get();
         for(var element in quizler.docs){
           Quiz quiz = new Quiz();
@@ -123,6 +138,7 @@ class _DerseKaydolState extends State<DerseKaydol> {
             Question q = new Question();
             q.question = element.get("question");
             q.answer = element.get("dogruCevap");
+            q.point= element.get("point");
 
             q.options.clear();
             List qOptions = element.get("cevaplar");
@@ -133,18 +149,29 @@ class _DerseKaydolState extends State<DerseKaydol> {
       }//her soru için
           ders.quizList.add(quiz);
     }//her quiz için
+      widget.student.alinanDersler.add(ders);*/
 
-
-    //Eklendi mi kontrolü
-    ders.quizList.forEach((element) {
-      print("QUIZ BILGILERI");
-      print(element.toString());
-      element.questions.forEach((element) {
-        print("SORU BILGILERI");
-        print(element.toString());
-      });
-    });
   }
- }//end of kaydol
+ }
+
+  void sina() {
+    for(var element in ders.quizList){
+      print("Quiz Bilgileri: ");
+      print(element.toString());
+      for(var element2 in element.questions){
+        print("SORU BILGILERI");
+        print(element2.toString());
+      }
+    }
+
+  }
+
+  void useraDersEkle(String dersId) async{
+    Map<String, dynamic> dersEkle = Map();
+
+    dersEkle["derskodu"] = ders.key;
+    await _fireStore.collection("Users").doc(widget.student.id).collection("alinanDersler").doc(dersId).set(dersEkle);
+
+  }
 
 }
