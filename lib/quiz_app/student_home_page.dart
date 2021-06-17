@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/backend/Student.dart';
 import 'package:untitled1/quiz_app/derse_kaydol.dart';
+import 'package:untitled1/quiz_app/student_ders_page.dart';
 
 import 'backend/Ders.dart';
 
@@ -12,7 +13,7 @@ class StudentHomePage extends StatefulWidget {
 
   final Student student;
 
-  const StudentHomePage({Key key, this.student}) : super(key: key);
+  const StudentHomePage({Key key, this.student, Ders ders}) : super(key: key);
   @override
   _StudentHomePageState createState() => _StudentHomePageState(student);
 }
@@ -118,12 +119,13 @@ class _StudentHomePageState extends State<StudentHomePage> {
         value.docs.forEach((element) {
           Ders ders = new Ders.empty();
           ders.key=element.data()["derskodu"];
-          ders.setName(element.id);
+          ders.name = element.id;
+          ders.teacher = Buradan student Ders page E dersin teachri bilgisi gönderilcecek galiba
           widget.student.alinanDersler.add(ders);
         });
 
       });
-      debugPrint("${widget.student.alinanDersler.first.getName()}");
+      //debugPrint("${widget.student.alinanDersler.first.getName()}");
     });
   }
 
@@ -138,15 +140,15 @@ class _StudentHomePageState extends State<StudentHomePage> {
       margin: EdgeInsets.all(5),
       child: ListTile(
         onTap: (){
-          debugPrint("${widget.student.alinanDersler[index].getName()} Basıldı");
-          //Navigator.push(context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.teacher.verilenDersler[index])));
+          debugPrint("${widget.student.alinanDersler[index].name} Basıldı");
+          Navigator.push(context, MaterialPageRoute( builder: (context) => StudentDersPage(ders: widget.student.alinanDersler[index])));
         },
         leading: Icon(
           Icons.done,
           size: 36,
 
         ),
-        title:  Text(widget.student.alinanDersler[index].getName()),
+        title:  Text(widget.student.alinanDersler[index].name),
         //subtitle: Text(widget.student.alinanDersler[index].key.toString()),
 
         trailing: Icon(

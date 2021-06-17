@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/backend/Quiz.dart';
+import 'package:untitled1/quiz_app/backend/Teacher.dart';
 import 'package:untitled1/quiz_app/student_home_page.dart';
 
 import 'backend/Ders.dart';
@@ -99,17 +100,32 @@ class _DerseKaydolState extends State<DerseKaydol> {
   }
 
   Future kaydol() async {
+    Teacher teacher = new Teacher.empty();
+    var teacherName;
     String dersId;
     List<String> dersler = new List();
     QuerySnapshot teachers = await _fireStore.collection("Users").where("userType", isEqualTo: 1).get();
+    String userId;
     for(var element in teachers.docs ){
-      String userId  = element.id;
+       userId= element.id;
+       print(userId);
+       teacher.id =  element.id.toString();
       String dersName = await _fireStore.collection("Users").doc(userId).collection("dersler").doc().id.toString();
       dersler.add(dersName);
         var teacherDersler = await _fireStore.collection("Users").doc(userId).collection("dersler")
             .where("derskodu", isEqualTo: ders.key).get();
+
       for(var elementTD in teacherDersler.docs){
         if(elementTD.exists) dersId = elementTD.id.toString();
+        await _fireStore.collection("Users").doc(userId).get().then((value){
+          //teacher.id=userId.toString();
+           teacher.name = value.data()["name"];
+           teacher.email=value.data()["email"];
+           ders.teacher = teacher;
+           widget.student.alinanDersler.add(ders);
+        });
+
+        debugPrint("$teacherName **************");
         List ogrEkle = List();
         ogrEkle.add(widget.student.email);
         Map<String, List> map = new Map();
@@ -119,30 +135,7 @@ class _DerseKaydolState extends State<DerseKaydol> {
           useraDersEkle(dersId);
 
       }
-/*        var quizler =  await _fireStore.collection("Users").doc(userId).collection("dersler")
-            .doc(dersId).collection("quizler").get();
-        for(var element in quizler.docs){
-          Quiz quiz = new Quiz();
-          quiz.quizName = element.id;
-          quiz.time = element.get("zaman");
-          var dbQuestions = await _fireStore.collection("Users").doc(userId).collection("dersler")
-              .doc(dersId).collection("quizler").doc(element.id).collection("sorular").get();
-          for(var element in dbQuestions.docs){
-            Question q = new Question();
-            q.question = element.get("question");
-            q.answer = element.get("dogruCevap");
-            q.point= element.get("point");
 
-            q.options.clear();
-            List qOptions = element.get("cevaplar");
-            for(var element in qOptions){
-              q.options.add(element.toString());
-        }//her seçenek için
-            quiz.addQuestion(q);
-      }//her soru için
-          ders.quizList.add(quiz);
-    }//her quiz için
-      widget.student.alinanDersler.add(ders);*/
 
   }
  }

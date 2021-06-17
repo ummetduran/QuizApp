@@ -485,14 +485,14 @@ setState(() {
     Map<String, dynamic> addQuiz = Map();
     addQuiz["zaman"] = quiz.time;
     await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
-        .doc(widget.ders.getName()).collection("quizler").doc("${quiz.quizName}").set(addQuiz);
+        .doc(widget.ders.name).collection("quizler").doc("${quiz.quizName}").set(addQuiz);
     Map<String, dynamic> addQuestion = Map();
     addQuestion["question"] = question.question;
     addQuestion["cevaplar"] = question.options;
     addQuestion["point"] = question.point;
     addQuestion["dogruCevap"] = question.answer;
     await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
-        .doc(widget.ders.getName()).collection("quizler").doc("${quiz.quizName}").collection("sorular").doc().set(addQuestion);
+        .doc(widget.ders.name).collection("quizler").doc("${quiz.quizName}").collection("sorular").doc().set(addQuestion);
 
   }
 
@@ -561,7 +561,7 @@ setState(() {
   void getQuestionsFromDB() async{
     var fireUser = _auth.currentUser;
     await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler").
-    doc("${widget.ders.getName()}").collection("quizler").doc("${quiz.quizName}").collection("sorular").get().then((value){
+    doc("${widget.ders.name}").collection("quizler").doc("${quiz.quizName}").collection("sorular").get().then((value){
       setState(() {
         value.docs.forEach((element) {
           Question questionFromDB = new Question();

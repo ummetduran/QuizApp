@@ -30,7 +30,7 @@ class _DersPageState extends State<DersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.ders.getName()),
+        title: Text(widget.ders.name),
       ),
       body: Container(
         child: Column(children: [
@@ -41,7 +41,7 @@ class _DersPageState extends State<DersPage> {
             child: RaisedButton(
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute( builder: (context) => QuizEkle(teacher: widget.ders.getTeacher(),ders: widget.ders)));
+                    context, MaterialPageRoute( builder: (context) => QuizEkle(teacher: widget.ders.teacher,ders: widget.ders)));
               },
               child: Text(
                 "Quiz Ekle",
@@ -71,7 +71,7 @@ class _DersPageState extends State<DersPage> {
   void quizleriGetir() async {
     var fireUser = _auth.currentUser;
     await _fireStore.collection("Users").doc(fireUser.uid).collection("dersler")
-        .doc("${widget.ders.getName()}").collection("quizler").get()
+        .doc("${widget.ders.name}").collection("quizler").get()
         .then((value) {
       setState(() {
         widget.ders.quizList.clear();

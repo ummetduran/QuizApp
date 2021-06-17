@@ -125,13 +125,13 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
         value.docs.forEach((element) {
           Ders ders = new Ders.empty();
           ders.key=element.data()["derskodu"];
-          ders.setName(element.id);
-          ders.setTeacher(widget.teacher);
+          ders.name = element.id;
+          ders.teacher=widget.teacher;
           widget.teacher.verilenDersler.add(ders);
         });
 
       });
-      debugPrint("${widget.teacher.verilenDersler.first.getName()}");
+      debugPrint("${widget.teacher.verilenDersler.first.name}");
     });
   }
 
@@ -146,7 +146,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
         onDismissed: (direction)  {
   //SİLERKEN İNDEXLERİ KONTROL ET
        _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
-           .doc(widget.teacher.verilenDersler[index].getName()).delete();
+           .doc(widget.teacher.verilenDersler[index].name).delete();
        setState(() {
          widget.teacher.verilenDersler.removeAt(index);
        });
@@ -169,7 +169,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
               size: 36,
 
             ),
-            title:  Text(widget.teacher.verilenDersler[index].getName()),
+            title:  Text(widget.teacher.verilenDersler[index].name),
             subtitle: Text(widget.teacher.verilenDersler[index].key.toString()),
 
             trailing: Icon(

@@ -48,19 +48,15 @@ class Ders {
     _dersiAlanOgrenciler = value;
   }
 
-  Teacher getTeacher(){
-    return _teacher;
-  }
+  Teacher get teacher => _teacher;
 
-  void setTeacher(Teacher value) {
+  set teacher(Teacher value) {
     _teacher = value;
   }
 
-  String getName(){
-    return _name;
-  }
+  String get name => _name;
 
-  void setName(String value) {
+  set name(String value) {
     _name = value;
   }
 }

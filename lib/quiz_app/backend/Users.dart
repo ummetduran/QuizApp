@@ -5,5 +5,7 @@ class Users{
   String name;
   String email;
 
+  Users.empty();
+
   Users(this.id, this.name, this.email);
 }

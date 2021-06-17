@@ -52,7 +52,7 @@ class _DersEkleState extends State<DersEkle> {
                   onChanged: (name) {
                     setState(() {
                       ders = new Ders.empty();
-                      ders.setName(name);
+                      ders.name=name;
                     });
                   }
                     ),
@@ -96,7 +96,7 @@ class _DersEkleState extends State<DersEkle> {
 
       dersEkle["derskodu"] = ders.key;
       await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
-          .doc(ders.getName()).set(dersEkle);
+          .doc(ders.name).set(dersEkle);
   }
 
 
