@@ -22,12 +22,7 @@ void main()async{
     home: Scaffold(
         resizeToAvoidBottomInset: false,
 
-        appBar: AppBar(
 
-          backgroundColor: Color.fromARGB(230, 11, 65, 150),
-          centerTitle: true,
-          title: Text("Quiz App", style: TextStyle(color: Colors.white),),
-        ),
 
       body: SignInPage()
     ),
