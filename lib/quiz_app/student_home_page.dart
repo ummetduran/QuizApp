@@ -24,6 +24,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     dersleriGetir();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
