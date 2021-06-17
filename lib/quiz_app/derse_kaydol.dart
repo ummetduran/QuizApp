@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled1/quiz_app/backend/Quiz.dart';
 import 'package:untitled1/quiz_app/student_home_page.dart';
 
 import 'backend/Ders.dart';
@@ -97,72 +98,53 @@ class _DerseKaydolState extends State<DerseKaydol> {
   }
 
   void kaydol() async {
-
+    String dersId;
     List<String> dersler = new List();
-    List<String> quizler = new List();
-    QuerySnapshot query1 = await _fireStore.collection("Users").where("userType", isEqualTo: 1).get();
-    query1.docs.forEach((element) async {
-      String userId = element.id;
-      String dersName = await _fireStore.collection("Users").doc(userId).collection("dersler").doc().get().toString();
+    QuerySnapshot teachers = await _fireStore.collection("Users").where("userType", isEqualTo: 1).get();
+    for(var element in teachers.docs ){
+      String userId  = element.id;
+      String dersName = await _fireStore.collection("Users").doc(userId).collection("dersler").doc().id.toString();
       dersler.add(dersName);
-      dersler.forEach((element) async {
-        var query2 = await _fireStore.collection("Users").doc(userId).collection("dersler")
+        var teacherDersler = await _fireStore.collection("Users").doc(userId).collection("dersler")
             .where("derskodu", isEqualTo: ders.key).get();
-        query2.docs.forEach((element) {
-          if(element.exists){
-            ders.setName(element.id.toString());
-          }
-        });
-        print(ders.getName());
-        var query3 =  await _fireStore.collection("Users").doc(userId).collection("dersler")
-            .doc(ders.getName()).collection("quizler").get();
-        query3.docs.forEach((element) async {
-          var query4 = await _fireStore.collection("Users").doc(userId).collection("dersler")
-              .doc(ders.getName()).collection("quizler").doc(element.id).collection("sorular").get();
-          query4.docs.forEach((element) {
+        for(var element in teacherDersler.docs){
+          if(element.exists) dersId = element.id.toString();
+
+        }
+        var quizler =  await _fireStore.collection("Users").doc(userId).collection("dersler")
+            .doc(dersId).collection("quizler").get();
+        for(var element in quizler.docs){
+          Quiz quiz = new Quiz();
+          quiz.quizName = element.id;
+          quiz.time = element.get("zaman");
+          var dbQuestions = await _fireStore.collection("Users").doc(userId).collection("dersler")
+              .doc(dersId).collection("quizler").doc(element.id).collection("sorular").get();
+          for(var element in dbQuestions.docs){
             Question q = new Question();
             q.question = element.get("question");
             q.answer = element.get("dogruCevap");
+
             q.options.clear();
-            for(int i=0; i<4; i++){
-              q.options.add(element.data()["cevaplar"][i]);
-              if(element.data()["cevaplar"][i] == null){
-                break;
-              }
-            }
-
-            print(q.toString());
-          });
-        });
-
-        //   debugPrint(query2.docs[].data()["derskodu"]);
+            List qOptions = element.get("cevaplar");
+            for(var element in qOptions){
+              q.options.add(element.toString());
+        }//her seçenek için
+            quiz.addQuestion(q);
+      }//her soru için
+          ders.quizList.add(quiz);
+    }//her quiz için
 
 
-        // await _fireStore.collection("Users").doc(userId).collection("dersler").doc(element).get().then((value) {
-        //   debugPrint(value.data().toString());
-        // });
+    //Eklendi mi kontrolü
+    ders.quizList.forEach((element) {
+      print("QUIZ BILGILERI");
+      print(element.toString());
+      element.questions.forEach((element) {
+        print("SORU BILGILERI");
+        print(element.toString());
       });
     });
-
-
-
-
-  /*    List<String> dersler = new List();
-    QuerySnapshot query1 = await _fireStore.collection("Users").where("userType", isEqualTo: 1).get();
-    query1.docs.forEach((element) async {
-      String userId = element.id;
-      dersler.forEach((element) async {
-
-        var query2 = await _fireStore.collection("Users").doc(userId).collection("dersler").where("derskodu", isEqualTo: ders.key).get();
-
-          ders.setName(query2.docs[0].id.toString());
-          print(ders.getName());
-          var query3 =  await _fireStore.collection("Users").doc(userId).collection("dersler").doc(ders.getName()).collection("quizler").get();
-        query3.docs.forEach((element) {
-
-        });
-      });
-    });
-    debugPrint("Bitti");*/
   }
+ }//end of kaydol
+
 }

@@ -40,4 +40,6 @@ import 'package:untitled1/quiz_app/backend/Student.dart';
   set point(int value) {
     _point = value;
   }
+
+
 }

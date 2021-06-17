@@ -23,7 +23,12 @@ class Quiz {
 
 
 
-  void addElement(Question question){
+  void addQuestion(Question question){
     this.questions.add(question);
+  }
+
+  @override
+  String toString() {
+    return 'Quiz{_quizName: $_quizName, _time: $_time}';
   }
 }
