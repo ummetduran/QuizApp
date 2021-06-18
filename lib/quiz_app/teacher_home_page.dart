@@ -119,16 +119,21 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   void dersleriGetir() async {
 
     var fireUser = _auth.currentUser;
+    var teacherDb = await _fireStore.collection("Users").doc(fireUser.uid).get();
+
     await _fireStore.collection("Users").doc(fireUser.uid).collection("dersler").get().then((value) {
       setState(() {
+        widget.teacher.name = teacherDb.get("name");
+        widget.teacher.email = teacherDb.get("email");
+        widget.teacher.id = teacherDb.id;
         widget.teacher.verilenDersler.clear();
-        value.docs.forEach((element) {
+        for(var element in value.docs) {
           Ders ders = new Ders.empty();
           ders.key=element.data()["derskodu"];
           ders.name = element.id;
           ders.teacher=widget.teacher;
           widget.teacher.verilenDersler.add(ders);
-        });
+        };
 
       });
       debugPrint("${widget.teacher.verilenDersler.first.name}");

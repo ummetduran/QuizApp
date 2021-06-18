@@ -12,7 +12,6 @@ final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 class DersEkle extends StatefulWidget {
   final Teacher teacher;
   const DersEkle({Key key, this.teacher}):super(key: key);
-
   @override
   _DersEkleState createState() => _DersEkleState();
 }
@@ -53,6 +52,7 @@ class _DersEkleState extends State<DersEkle> {
                     setState(() {
                       ders = new Ders.empty();
                       ders.name=name;
+                      ders.teacher = widget.teacher;
                     });
                   }
                     ),
@@ -95,6 +95,7 @@ class _DersEkleState extends State<DersEkle> {
       Map<String, dynamic> dersEkle = Map();
 
       dersEkle["derskodu"] = ders.key;
+      dersEkle["teacherId"] = ders.teacher.id;
       await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
           .doc(ders.name).set(dersEkle);
   }

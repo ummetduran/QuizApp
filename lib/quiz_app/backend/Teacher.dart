@@ -12,11 +12,16 @@ class Teacher extends Users{
     _verilenDersler = []; // ????
   }
 
-Teacher.empty() : super.empty();
+  Teacher.empty() : super.empty();
 
   List<Ders> get verilenDersler => _verilenDersler;
 
   set verilenDersler(List<Ders> value) {
     _verilenDersler = value;
+  }
+
+  @override
+  String toString() {
+    return 'Teacher{_name: $name}';
   }
 }

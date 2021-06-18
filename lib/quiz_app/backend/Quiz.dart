@@ -29,6 +29,6 @@ class Quiz {
 
   @override
   String toString() {
-    return 'Quiz{_quizName: $_quizName, _time: $_time}';
+    return 'Quiz{_quizName: $_quizName, questions: $questions, _time: $_time}';
   }
 }
