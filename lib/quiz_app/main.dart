@@ -10,7 +10,7 @@ void main()async{
   runApp(MaterialApp(
 
     //initialRoute: '/SignIn',
-    title: "Stepper Örnek",
+
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
         primarySwatch: Colors.indigo

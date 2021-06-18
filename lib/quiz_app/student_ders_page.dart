@@ -99,7 +99,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
           child: ListTile(
             onTap: () {
               debugPrint("dasasd");
-              Navigator.push(context, MaterialPageRoute( builder: (context) => StudentQuizPage(ders: widget.ders)));
+              Navigator.push(context, MaterialPageRoute( builder: (context) => StudentQuizPage(quiz: widget.ders.quizList[index])));
             },
 
             title: Text(widget.ders.quizList[index].quizName),

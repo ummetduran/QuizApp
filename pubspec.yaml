@@ -43,6 +43,7 @@ dependencies:
   fluttertoast: ^8.0.7
   numberpicker: ^2.1.1
   nanoid: ^1.0.0
+  simple_timer: ^2.0.0
 
 
 dev_dependencies:
