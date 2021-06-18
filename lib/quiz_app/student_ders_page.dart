@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/ders_ekle.dart';
+import 'package:untitled1/quiz_app/student_quiz_page.dart';
 
 import 'backend/Ders.dart';
 import 'backend/Question.dart';
@@ -98,7 +99,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
           child: ListTile(
             onTap: () {
               debugPrint("dasasd");
-              //Navigator.push(context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.teacher.verilenDersler[index])));
+              Navigator.push(context, MaterialPageRoute( builder: (context) => StudentQuizPage(ders: widget.ders)));
             },
 
             title: Text(widget.ders.quizList[index].quizName),
