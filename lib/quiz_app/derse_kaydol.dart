@@ -101,50 +101,57 @@ class _DerseKaydolState extends State<DerseKaydol> {
 
   Future kaydol() async {
     Teacher teacher = new Teacher.empty();
-    var teacherName;
+
     String dersId;
     List<String> dersler = new List();
     QuerySnapshot teachers = await _fireStore.collection("Users").where("userType", isEqualTo: 1).get();
     String userId;
-    for(var element in teachers.docs ){
-       userId= element.id;
-       print(userId);
-       teacher.id =  element.id.toString();
-      String dersName = await _fireStore.collection("Users").doc(userId).collection("dersler").doc().id.toString();
+    for(var element in teachers.docs ) {
+      userId = element.id;
+      print(userId);
+      teacher.id = element.id.toString();
+      String dersName = await _fireStore
+          .collection("Users")
+          .doc(userId)
+          .collection("dersler")
+          .doc()
+          .id
+          .toString();
       dersler.add(dersName);
-        var teacherDersler = await _fireStore.collection("Users").doc(userId).collection("dersler")
-            .where("derskodu", isEqualTo: ders.key).get();
+      var teacherDersler = await _fireStore.collection("Users").doc(userId)
+          .collection("dersler")
+          .where("derskodu", isEqualTo: ders.key)
+          .get();
 
-      for(var elementTD in teacherDersler.docs){
-        if(elementTD.exists) dersId = elementTD.id.toString();
-        await _fireStore.collection("Users").doc(userId).get().then((value){
+      for (var elementTD in teacherDersler.docs) {
+        if (elementTD.exists) dersId = elementTD.id.toString();
+        await _fireStore.collection("Users").doc(userId).get().then((value) {
           //teacher.id=userId.toString();
-           teacher.name = value.data()["name"];
-           teacher.email=value.data()["email"];
-           ders.teacher = teacher;
-           widget.student.alinanDersler.add(ders);
+          teacher.name = value.data()["name"];
+          teacher.email = value.data()["email"];
+          ders.teacher = teacher;
+          //widget.student.alinanDersler.add(ders);
+
         });
 
-        debugPrint("$teacherName **************");
+
+        await useraDersEkle(dersId);
+
         List ogrEkle = List();
         ogrEkle.add(widget.student.email);
         Map<String, List> map = new Map();
         map["kayitliOgrenciler"] = ogrEkle;
-          await _fireStore.collection("Users").doc(userId).collection("dersler").doc(dersId).update(map);
-
-          useraDersEkle(dersId);
-
+        await _fireStore.collection("Users").doc(userId)
+            .collection("dersler")
+            .doc(dersId)
+            .update(map);
       }
-
-
-  }
+    }
  }
 
-
-
-  void useraDersEkle(String dersId) async{
+  Future useraDersEkle(String dersId) async{
     Map<String, dynamic> dersEkle = Map();
-
+    dersEkle["teacherId"] = ders.teacher.id;
     dersEkle["derskodu"] = ders.key;
     await _fireStore.collection("Users").doc(widget.student.id).collection("alinanDersler").doc(dersId).set(dersEkle);
 

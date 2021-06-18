@@ -20,7 +20,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
 
   @override
   void initState() {
-    print(widget.ders.name);
+    //print(widget.ders.name);
     // TODO: implement initState
     fetchQuizzes();
     super.initState();
@@ -47,7 +47,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
     );
   }
 
-  void fetchQuizzes() async {
+  Future fetchQuizzes() async {
 
     String teacherId = widget.ders.teacher.id;
     String dersId = widget.ders.name;
@@ -73,7 +73,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
         }//her seçenek için
         quiz.addQuestion(q);
       }//her soru için
-      ders.quizList.add(quiz);
+      widget.ders.quizList.add(quiz);
     }//her quiz için
 
 
@@ -88,6 +88,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
           margin: EdgeInsets.all(5),
           child: ListTile(
             onTap: () {
+              debugPrint("dasasd");
               //Navigator.push(context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.teacher.verilenDersler[index])));
             },
 

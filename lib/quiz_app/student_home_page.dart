@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/backend/Student.dart';
+import 'package:untitled1/quiz_app/backend/Teacher.dart';
 import 'package:untitled1/quiz_app/derse_kaydol.dart';
 import 'package:untitled1/quiz_app/student_ders_page.dart';
 
@@ -113,18 +114,23 @@ class _StudentHomePageState extends State<StudentHomePage> {
   Future dersleriGetir() async {
 
     var fireUser = _auth.currentUser;
+    widget.student.alinanDersler.clear();
     await _fireStore.collection("Users").doc(fireUser.uid).collection("alinanDersler").get().then((value) {
-      setState(() {
-        widget.student.alinanDersler.clear();
+
+
         value.docs.forEach((element) {
           Ders ders = new Ders.empty();
           ders.key=element.data()["derskodu"];
           ders.name = element.id;
-          ders.teacher = Buradan student Ders page E dersin teachri bilgisi gönderilcecek galiba
-          widget.student.alinanDersler.add(ders);
+          ders.teacher = new Teacher.empty();
+          ders.teacher.id = element.data()["teacherId"];
+          //Buradan student Ders page E dersin teachri bilgisi gönderilcecek galiba
+          setState(() {
+            widget.student.alinanDersler.add(ders);
+          });
         });
 
-      });
+
       //debugPrint("${widget.student.alinanDersler.first.getName()}");
     });
   }
