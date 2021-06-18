@@ -48,35 +48,44 @@ class _StudentDersPageState extends State<StudentDersPage> {
   }
 
   Future fetchQuizzes() async {
-
+    widget.ders.quizList.clear();
     String teacherId = widget.ders.teacher.id;
     String dersId = widget.ders.name;
 
     var quizler =  await _fireStore.collection("Users").doc(teacherId).collection("dersler")
-        .doc(dersId).collection("quizler").get();
-    for(var element in quizler.docs){
-      Quiz quiz = new Quiz();
-      quiz.quizName = element.id;
-      quiz.time = element.get("zaman");
-      var dbQuestions = await _fireStore.collection("Users").doc(teacherId).collection("dersler")
-          .doc(dersId).collection("quizler").doc(element.id).collection("sorular").get();
-      for(var element in dbQuestions.docs){
-        Question q = new Question();
-        q.question = element.get("question");
-        q.answer = element.get("dogruCevap");
-        q.point= element.get("point");
+        .doc(dersId).collection("quizler");
+    quizler.snapshots().listen((event) async {
+      for(var element in event.docs) {
+        Quiz quiz = new Quiz();
+        quiz.quizName = element.id;
+        quiz.time = element.get("zaman");
+        var dbQuestions = await _fireStore.collection("Users").doc(teacherId).collection("dersler")
+            .doc(dersId).collection("quizler").doc(element.id).collection("sorular");
+        dbQuestions.snapshots().listen((event) {
+          for(var element in event.docs) {
 
-        q.options.clear();
-        List qOptions = element.get("cevaplar");
-        for(var element in qOptions){
-          q.options.add(element.toString());
-        }//her seçenek için
-        quiz.addQuestion(q);
-      }//her soru için
-      widget.ders.quizList.add(quiz);
-    }//her quiz için
+            Question q = new Question();
+            q.question = element.get("question");
+            q.answer = element.get("dogruCevap");
+            q.point= element.get("point");
+
+            q.options.clear();
+            List qOptions = element.get("cevaplar");
+            for(var element in qOptions){
+              q.options.add(element.toString());
+            }//her seçenek için
+            quiz.addQuestion(q);
+          }//her soru için
 
 
+          });
+
+        setState(() {
+          widget.ders.quizList.add(quiz);
+        });
+        }
+
+        });
   }
 
   Widget listeElemaniOlustur(BuildContext context, int index) {

@@ -114,25 +114,28 @@ class _StudentHomePageState extends State<StudentHomePage> {
   Future dersleriGetir() async {
 
     var fireUser = _auth.currentUser;
-    widget.student.alinanDersler.clear();
-    await _fireStore.collection("Users").doc(fireUser.uid).collection("alinanDersler").get().then((value) {
+    var ref = await _fireStore.collection("Users").doc(fireUser.uid).collection("alinanDersler");
+    ref.snapshots().listen((event) {
+      widget.student.alinanDersler.clear();
 
+      for( var element in event.docs){
+        Ders ders = new Ders.empty();
+        ders.key=element.data()["derskodu"];
+        ders.name = element.id;
+        ders.teacher = new Teacher.empty();
+        ders.teacher.id = element.data()["teacherId"];
+        //Buradan student Ders page E dersin teachri bilgisi gönderilcecek galiba
+        setState(() {
+          widget.student.alinanDersler.add(ders);
+        });
+      };
 
-        for( var element in value.docs){
-          Ders ders = new Ders.empty();
-          ders.key=element.data()["derskodu"];
-          ders.name = element.id;
-          ders.teacher = new Teacher.empty();
-          ders.teacher.id = element.data()["teacherId"];
-          //Buradan student Ders page E dersin teachri bilgisi gönderilcecek galiba
-          setState(() {
-            widget.student.alinanDersler.add(ders);
-          });
-        };
+    });
+
 
 
       //debugPrint("${widget.student.alinanDersler.first.getName()}");
-    });
+
   }
 
 
