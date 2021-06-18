@@ -118,7 +118,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     await _fireStore.collection("Users").doc(fireUser.uid).collection("alinanDersler").get().then((value) {
 
 
-        value.docs.forEach((element) {
+        for( var element in value.docs){
           Ders ders = new Ders.empty();
           ders.key=element.data()["derskodu"];
           ders.name = element.id;
@@ -128,7 +128,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
           setState(() {
             widget.student.alinanDersler.add(ders);
           });
-        });
+        };
 
 
       //debugPrint("${widget.student.alinanDersler.first.getName()}");
