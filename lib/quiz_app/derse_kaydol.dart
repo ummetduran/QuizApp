@@ -140,11 +140,19 @@ class _DerseKaydolState extends State<DerseKaydol> {
         List ogrEkle = List();
         ogrEkle.add(widget.student.email);
         Map<String, List> map = new Map();
-        map["kayitliOgrenciler"] = ogrEkle;
-        await _fireStore.collection("Users").doc(userId)
+
+        var dersDb = await _fireStore.collection("Users").doc(userId)
             .collection("dersler")
             .doc(dersId)
-            .update(map);
+            .get();
+        for(var element in dersDb.data()["kayitliOgrenciler"]){
+          ogrEkle.add(element);
+        }
+        map["kayitliOgrenciler"] = ogrEkle;
+        _fireStore.collection("Users").doc(userId)
+            .collection("dersler")
+            .doc(dersId)
+            .set(map);
       }
     }
  }

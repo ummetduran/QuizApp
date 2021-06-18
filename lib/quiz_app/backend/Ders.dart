@@ -59,4 +59,9 @@ class Ders {
   set name(String value) {
     _name = value;
   }
+
+  @override
+  String toString() {
+    return 'Ders{_key: $_key, _name: $_name, _teacher: $_teacher, _dersiAlanOgrenciler: $_dersiAlanOgrenciler, _quizList: $_quizList}';
+  }
 }
