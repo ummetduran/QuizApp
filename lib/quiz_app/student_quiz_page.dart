@@ -11,8 +11,9 @@ final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
 class StudentQuizPage extends StatefulWidget {
   final Quiz quiz;
+  final Ders ders;
 
-  const StudentQuizPage({Key key, this.quiz}) : super(key: key);
+  const StudentQuizPage({Key key, this.quiz, this.ders}) : super(key: key);
 
   @override
   _StudentQuizPageState createState() => _StudentQuizPageState();
@@ -167,7 +168,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
         onPressed: () {
           setState(() {
             debugPrint("Kaydedildi");
-            // QUİZ VE SKOR DB'YE ATILACAK
+              uploadQuizScore();
           });
         },
       );
@@ -186,5 +187,13 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
         },
       );
     }
+  }
+
+  void uploadQuizScore() async {
+    var fireUser = _auth.currentUser;
+    Map<String, int> quizScore = new Map();
+    quizScore["QuizScore"] = score;
+    await _fireStore.collection("Users").doc("${fireUser.uid}").collection("alinanDersler").
+    doc("${widget.ders.name}").collection("quizler").add(quizScore);
   }
 }
