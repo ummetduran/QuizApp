@@ -64,10 +64,10 @@ class _SignInPageState extends State<SignInPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("Login",
+                        Text("QuizApp",
                           style: TextStyle(color: Colors.white, fontSize: 40),),
                         SizedBox(height: 10,),
-                        Text("Welcome to QuizApp!",
+                        Text("Login",
                           style: TextStyle(color: Colors.white, fontSize: 18),),
                       ],
                     ),
