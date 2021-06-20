@@ -35,6 +35,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.cyan.shade600,
         title: Text("Home Page"),
       ),
       drawer: Container(
@@ -43,7 +44,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
           child: ListView(
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(color: Colors.indigo),
+                decoration: BoxDecoration(color: Colors.cyan.shade600),
                 child: Column(
                   children: [
                     ClipRRect(
@@ -82,6 +83,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
               width: 700,
               margin: EdgeInsets.all(10),
               child: RaisedButton(
+
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -90,7 +92,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
                 child: Text("Derse Kaydol", style: TextStyle(fontSize: 20),),
                 textColor: Colors.white,
-                color: Colors.indigo,
+                color: Colors.cyan.shade600,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)),),
 

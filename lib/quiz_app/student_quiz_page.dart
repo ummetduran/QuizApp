@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:countdown_flutter/countdown_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_timer/simple_timer.dart';
 
 import 'backend/Ders.dart';
 import 'backend/Quiz.dart';
@@ -22,7 +24,8 @@ class StudentQuizPage extends StatefulWidget {
 class _StudentQuizPageState extends State<StudentQuizPage> {
   int _radioValue = -1;
   int index = 0;
-  int score =0;
+  int score = 0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -32,15 +35,44 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
-        body: Column(
-          children: [
-            AlertDialog(
+        appBar: AppBar(
+          backgroundColor: Colors.cyan[600],
+        ),
+        body: Column(children: [
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(Icons.timer, size: 22, color: Colors.cyan.shade600),
+                ),
+                CountdownFormatted(
+                    duration: Duration(minutes: widget.quiz.time),
+                    builder: (BuildContext ctx, String remaining){
+                      return Text(
+                        remaining,
+                        style: TextStyle(fontSize: 25, color: Colors.cyan.shade600),
+                      );
+                    }
+
+                ),
+              ],
+            ),
+          ),
+
+          Container(
+            padding: EdgeInsets.only(top: 30),
+            child: Text("Soru ${index+1}", style: TextStyle(color: Colors.cyan.shade600, fontSize: 22),),
+          ),
+          AlertDialog(
             content: Form(
                 //  key: _formKey,
                 child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+
                 Text(
                   widget.quiz.questions[index].question.toString(),
                   maxLines: 3,
@@ -54,8 +86,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
               quiziBitir(),
             ],
           ),
-    ]
-        ));
+        ]));
   }
 
   void radioChanged(int value) {
@@ -164,21 +195,22 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
   Widget quiziBitir() {
     if (index == widget.quiz.questions.length - 1) {
       return TextButton(
-        child: Text('End Quiz'),
+        child: Text('End Quiz', style: TextStyle(color: Colors.cyan.shade600),),
         onPressed: () {
           setState(() {
             debugPrint("Kaydedildi");
-              uploadQuizScore();
+            uploadQuizScore();
           });
         },
       );
     } else {
       return TextButton(
-        child: Text("Next Question"),
+        child: Text("Next Question", style: TextStyle(color: Colors.cyan.shade600)),
         onPressed: () {
           setState(() {
-            if(widget.quiz.questions[index].answer == widget.quiz.questions[index].options[_radioValue]){
-              score+=widget.quiz.questions[index].point;
+            if (widget.quiz.questions[index].answer ==
+                widget.quiz.questions[index].options[_radioValue]) {
+              score += widget.quiz.questions[index].point;
             }
 
             index++;
@@ -193,7 +225,12 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
     var fireUser = _auth.currentUser;
     Map<String, int> quizScore = new Map();
     quizScore["QuizScore"] = score;
-    await _fireStore.collection("Users").doc("${fireUser.uid}").collection("alinanDersler").
-    doc("${widget.ders.name}").collection("quizler").add(quizScore);
+    await _fireStore
+        .collection("Users")
+        .doc("${fireUser.uid}")
+        .collection("alinanDersler")
+        .doc("${widget.ders.name}")
+        .collection("quizler")
+        .add(quizScore);
   }
 }

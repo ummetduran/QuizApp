@@ -79,9 +79,9 @@ class _QuizEkleState extends State<QuizEkle> {
                                 borderRadius: BorderRadius.circular(20)),
                             labelText: "Quiz Adı",
                             labelStyle:
-                            TextStyle(color: Colors.indigo, fontSize: 18),
+                            TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                             hintStyle:
-                            TextStyle(color: Colors.indigo, fontSize: 18)),
+                            TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                         onChanged: (name) {
                           setState(() {
                             quiz.quizName = name;
@@ -132,9 +132,9 @@ class _QuizEkleState extends State<QuizEkle> {
                             borderRadius: BorderRadius.circular(20)),
                         labelText: "Time",
                         labelStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                         hintStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18)),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                     onChanged:(quizTime) {
                       setState(() {
                         quiz.time= int.parse(quizTime);
@@ -168,9 +168,9 @@ class _QuizEkleState extends State<QuizEkle> {
                                   borderRadius: BorderRadius.circular(20)),
                               labelText: "Soruyu yazınız.",
                               labelStyle:
-                              TextStyle(color: Colors.indigo, fontSize: 18),
+                              TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                               hintStyle:
-                              TextStyle(color: Colors.indigo, fontSize: 18)),
+                              TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                           onChanged: (questionText) {
                             setState(() {
                               question = new Question();
@@ -204,7 +204,7 @@ class _QuizEkleState extends State<QuizEkle> {
                         backgroundColor: Colors.grey.shade200,
                         child: Icon(
                           Icons.add_a_photo,
-                          color: Colors.indigo,
+                          color: Colors.cyan.shade600,
                           size: 35,
                         ),
                       ),
@@ -230,7 +230,7 @@ class _QuizEkleState extends State<QuizEkle> {
                             child: Text(
                               value,
                               style: TextStyle(
-                                  fontSize: 18, color: Colors.indigo),
+                                  fontSize: 18, color: Colors.cyan.shade600),
                             ));
                       }).toList(),
                       onChanged: (newValue) {
@@ -260,9 +260,9 @@ class _QuizEkleState extends State<QuizEkle> {
                                   borderRadius: BorderRadius.circular(20)),
                               labelText: "Point",
                               labelStyle:
-                              TextStyle(color: Colors.indigo, fontSize: 18),
+                              TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                               hintStyle:
-                              TextStyle(color: Colors.indigo, fontSize: 18)),
+                              TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                           onChanged:(point) {
                             setState(() {
                               question.point = int.parse(point);
@@ -284,10 +284,11 @@ class _QuizEkleState extends State<QuizEkle> {
               ),
 
               Padding(
-                padding: const EdgeInsets.only(top: 50.0),
+                padding: const EdgeInsets.only(top: 40.0),
                 child: RaisedButton(
+                  color: Colors.cyan.shade600,
                   onPressed: addQuestion,
-                  child: Text("Add Question"),
+                  child: Text("Add Question",style: TextStyle(color: Colors.white),),
                 ),
               ),
 
@@ -339,9 +340,9 @@ class _QuizEkleState extends State<QuizEkle> {
                           borderRadius: BorderRadius.circular(20)),
                       labelText: "Options 1",
                       labelStyle:
-                      TextStyle(color: Colors.indigo, fontSize: 18),
+                      TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                       hintStyle:
-                      TextStyle(color: Colors.indigo, fontSize: 18)),
+                      TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                   onChanged: (option1) {
               setState(() {
                 question.options[0] = option1;
@@ -369,9 +370,9 @@ class _QuizEkleState extends State<QuizEkle> {
                             borderRadius: BorderRadius.circular(20)),
                         labelText: "Options 2",
                         labelStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                         hintStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18)),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                       onChanged: (option2) {
                         setState(() {
                           question.options[1] = option2;
@@ -399,9 +400,9 @@ class _QuizEkleState extends State<QuizEkle> {
                             borderRadius: BorderRadius.circular(20)),
                         labelText: "Options 3",
                         labelStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                         hintStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18)),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                       onChanged: (option3) {
                         setState(() {
                           question.options[2] = option3;
@@ -429,9 +430,9 @@ class _QuizEkleState extends State<QuizEkle> {
                             borderRadius: BorderRadius.circular(20)),
                         labelText: "Options 4",
                         labelStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                         hintStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18)),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                       onChanged: (option4) {
                         setState(() {
                           question.options[3] = option4;
@@ -464,6 +465,7 @@ setState(() {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [ToggleSwitch(
+            activeBgColor: Colors.cyan.shade600,
             labels: ["True", "False"],
             onToggle: (index) {
               question.answer = labels[index];

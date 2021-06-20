@@ -41,18 +41,12 @@ class _LoginSignUpState extends State<LoginSignUp> {
     return Scaffold(
       appBar: AppBar(
 
-        backgroundColor: Color.fromARGB(230, 11, 65, 150),
+        backgroundColor: Colors.cyan,
         centerTitle: true,
         title: Text("Quiz App", style: TextStyle(color: Colors.white),),
       ),
       body: Stack(children: [
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/solid-color-1.jpg'),
-                fit: BoxFit.cover),
-          ),
-        ),
+
         Form(
           key: formKey,
           autovalidate: otoControl,
@@ -66,15 +60,19 @@ class _LoginSignUpState extends State<LoginSignUp> {
                     'assets/images/logo2.png',
                     width: 225,
                     height: 225,
+                    color: Colors.cyan.shade900,
                   ),
+
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    ToggleSwitch(minWidth: 100,labels: ["Öğrenci", "Öğretmen"], initialLabelIndex: 0, onToggle: (index){
-                      userType = index;
-                      debugPrint("$userType");
-                    },fontSize: 16, ),
+                    ToggleSwitch(activeBgColor: Colors.cyan,
+                      inactiveBgColor: Colors.black12,
+                      minWidth: 100,labels: ["Öğrenci", "Öğretmen"], initialLabelIndex: 0, onToggle: (index){
+                        userType = index;
+                        debugPrint("$userType");
+                      },fontSize: 16, ),
                   ],
                 ),
                 SizedBox(height: 15),
@@ -82,12 +80,12 @@ class _LoginSignUpState extends State<LoginSignUp> {
                   decoration: InputDecoration(
                       prefixIcon: Icon(
                         Icons.account_circle,
-                        color: Colors.indigo,
+                        color: Colors.cyan,
                       ),
                       labelText: "Full Name",
                       hintText: "Enter your full name",
-                      labelStyle: TextStyle(color: Colors.indigo, fontSize: 18),
-                      hintStyle: TextStyle(color: Colors.indigo, fontSize: 18)),
+                      labelStyle: TextStyle(color: Colors.cyan, fontSize: 18),
+                      hintStyle: TextStyle(color: Colors.cyan, fontSize: 18)),
                   validator: _nameControl,
                   onSaved: (deger) => fullName = deger,
                 ),
@@ -97,12 +95,12 @@ class _LoginSignUpState extends State<LoginSignUp> {
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       Icons.email,
-                      color: Colors.indigo,
+                      color: Colors.cyan,
                     ),
                     labelText: "Email",
                     hintText: "Enter your email adress",
-                    labelStyle: TextStyle(color: Colors.indigo, fontSize: 18),
-                    hintStyle: TextStyle(color: Colors.indigo, fontSize: 18),
+                    labelStyle: TextStyle(color: Colors.cyan, fontSize: 18),
+                    hintStyle: TextStyle(color: Colors.cyan, fontSize: 18),
                     //suffixStyle: TextStyle(color: Colors.white)
                   ),
                   validator: _emailControl,
@@ -113,20 +111,20 @@ class _LoginSignUpState extends State<LoginSignUp> {
                     keyboardType: TextInputType.text,
                     obscureText: true,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.lock, color: Colors.indigo),
+                      prefixIcon: Icon(Icons.lock, color: Colors.cyan),
                       labelText: "Password",
-                      labelStyle: TextStyle(color: Colors.indigo, fontSize: 18),
-                      hintStyle: TextStyle(color: Colors.indigo, fontSize: 18),
+                      labelStyle: TextStyle(color: Colors.cyan, fontSize: 18),
+                      hintStyle: TextStyle(color: Colors.cyan, fontSize: 18),
                     ),
                     validator: (girilenVeri) {
                       if (girilenVeri.length < 6)
                         return "En az 6 karakter gerekli";
                     },
                     onSaved: (girilenVeri) => _sifre = girilenVeri),
-                SizedBox(height: 30),
+                SizedBox(height: 60),
                 SizedBox(
                   height: 50,
-                  width: 150,
+                  width: 200,
                   child: RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)),
@@ -135,7 +133,7 @@ class _LoginSignUpState extends State<LoginSignUp> {
                         style: TextStyle(fontSize: 20),
                       ),
                       // icon: Icon(Icons.save),
-                      color: Colors.indigo,
+                      color: Colors.cyan,
                       textColor: Colors.white,
                       onPressed: () {
 
@@ -205,7 +203,7 @@ class _LoginSignUpState extends State<LoginSignUp> {
 
         //debugPrint(_newUser.toString());
       }catch(e){
-        debugPrint("***********HATA**********");
+        debugPrint("****HATA***");
         debugPrint(e.toString());
 
       }
