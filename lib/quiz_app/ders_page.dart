@@ -30,6 +30,7 @@ class _DersPageState extends State<DersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor:Colors.cyan.shade600 ,
         title: Text(widget.ders.name),
       ),
       body: Container(
@@ -44,11 +45,11 @@ class _DersPageState extends State<DersPage> {
                     context, MaterialPageRoute( builder: (context) => QuizEkle(teacher: widget.ders.teacher,ders: widget.ders)));
               },
               child: Text(
-                "Quiz Ekle",
+                "Add Quiz",
                 style: TextStyle(fontSize: 20),
               ),
               textColor: Colors.white,
-              color: Colors.indigo,
+              color: Colors.cyan.shade600,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50)),
             ),

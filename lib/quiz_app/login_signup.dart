@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:untitled1/quiz_app/home_page.dart';
 import 'package:untitled1/quiz_app/sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -69,7 +68,7 @@ class _LoginSignUpState extends State<LoginSignUp> {
                   children: [
                     ToggleSwitch(activeBgColor: Colors.cyan,
                       inactiveBgColor: Colors.black12,
-                      minWidth: 100,labels: ["Öğrenci", "Öğretmen"], initialLabelIndex: 0, onToggle: (index){
+                      minWidth: 100,labels: ["Student", "Teacher"], initialLabelIndex: 0, onToggle: (index){
                         userType = index;
                         debugPrint("$userType");
                       },fontSize: 16, ),
@@ -118,7 +117,7 @@ class _LoginSignUpState extends State<LoginSignUp> {
                     ),
                     validator: (girilenVeri) {
                       if (girilenVeri.length < 6)
-                        return "En az 6 karakter gerekli";
+                        return "Password must contain minimum 6 characters.";
                     },
                     onSaved: (girilenVeri) => _sifre = girilenVeri),
                 SizedBox(height: 60),
@@ -154,7 +153,7 @@ class _LoginSignUpState extends State<LoginSignUp> {
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(mail))
-      return "Geçersiz Mail";
+      return "Invalid email";
     else
       return null;
   }
@@ -162,7 +161,7 @@ class _LoginSignUpState extends State<LoginSignUp> {
   String _nameControl(String isim) {
     RegExp regex = RegExp("^[a-zA-Z ]+\$");
     if (!regex.hasMatch(isim))
-      return "İsim numara içermemeli";
+      return "Name cannot contain number.";
     else
       return null;
   }

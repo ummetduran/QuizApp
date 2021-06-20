@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/backend/Teacher.dart';
-import 'package:untitled1/quiz_app/home_page.dart';
+
 import 'package:untitled1/quiz_app/login_signup.dart';
 import 'package:untitled1/quiz_app/student_home_page.dart';
 import 'package:untitled1/quiz_app/teacher_home_page.dart';
@@ -32,12 +32,7 @@ class _SignInPageState extends State<SignInPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-/*    _auth.authStateChanges().listen((User user){
-      if(user==null)
-        print("Kullanııc oturumu kapatıı");
-      else
-        print("Kullanıcı oturum açtı");
-    });*/
+
   }
   @override  Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +104,10 @@ class _SignInPageState extends State<SignInPage> {
                                         child: TextFormField(
                                           keyboardType: TextInputType.emailAddress,
                                           decoration: InputDecoration(
-
+                                              prefixIcon: Icon(
+                                                Icons.email,
+                                                color: Colors.cyan,
+                                              ),
                                               hintText: "Email",
                                               labelStyle: TextStyle(color: Colors.grey, fontSize: 20),
                                               border: InputBorder.none
@@ -126,7 +124,7 @@ class _SignInPageState extends State<SignInPage> {
                                         child: TextFormField(
                                           obscureText: true,
                                           decoration: InputDecoration(
-
+                                              prefixIcon: Icon(Icons.lock, color: Colors.cyan),
                                               hintText: "Password",
                                               labelStyle: TextStyle(
                                                   color: Colors.grey,fontSize: 20),
@@ -135,7 +133,11 @@ class _SignInPageState extends State<SignInPage> {
                                           onSaved: (sifre) => password = sifre,
                                         ),
 
-                                      )
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only( top: 15),
+                                        child: err,
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -250,13 +252,17 @@ class _SignInPageState extends State<SignInPage> {
 
 
         }else{
-          debugPrint("Lütfen emailinizi onaylayınız");
+          setState(() {
+            err = Text("Please confirm your email.", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
+          });
+
+          debugPrint("Please confirm your email");
           _auth.signOut();
         }
 
       } catch (e) {
         setState(() {
-          err=Text("Kullanıcı bulunamadı!", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
+          err=Text("User not found!", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
         });
 
         debugPrint("********** HATA *********");
@@ -270,8 +276,16 @@ class _SignInPageState extends State<SignInPage> {
     await Firebase.initializeApp();
     try{
       await _auth.sendPasswordResetEmail(email: _email);
+      setState(() {
+        err = Text("Reset link has been sent to your email.", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
+      });
+
       debugPrint("Resetleme maili gönderildi.");
     }catch(e){
+      setState(() {
+        err = Text("Error!", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
+      });
+
       debugPrint("Şifre resetlenirken hata $e");
 
     }

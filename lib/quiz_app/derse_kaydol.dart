@@ -34,9 +34,9 @@ class _DerseKaydolState extends State<DerseKaydol> {
 
       appBar: AppBar(
 
-        backgroundColor: Color.fromARGB(230, 11, 65, 150),
+        backgroundColor: Colors.cyan.shade600,
         centerTitle: true,
-        title: Text("Derse Kaydol", style: TextStyle(color: Colors.white),),
+        title: Text("Enroll the Lesson", style: TextStyle(color: Colors.white),),
       ),
 
       body: Form(
@@ -48,12 +48,12 @@ class _DerseKaydolState extends State<DerseKaydol> {
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         Icons.book_outlined,
-                        color: Colors.indigo,
+                        color: Colors.cyan.shade600,
                       ),
-                      labelText: "Ders Kodu",
-                      hintText: "Ders Kodunu Giriniz",
-                      labelStyle: TextStyle(color: Colors.indigo, fontSize: 18),
-                      hintStyle: TextStyle(color: Colors.indigo, fontSize: 18),
+                      labelText: "Lesson Code",
+                      hintText: "Enter Lesson Code",
+                      labelStyle: TextStyle(color: Colors.cyan.shade600, fontSize: 18),
+                      hintStyle: TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                       //suffixStyle: TextStyle(color: Colors.white)
 
                     ),
@@ -76,7 +76,7 @@ class _DerseKaydolState extends State<DerseKaydol> {
                             context, MaterialPageRoute( builder: (context) => StudentHomePage(student: widget.student)));
 
                       },
-                        child: Text("Kaydol"),
+                        child: Text("Enroll"),
 
                       ),
                       SizedBox(width: 15,),
@@ -85,7 +85,7 @@ class _DerseKaydolState extends State<DerseKaydol> {
                             context, MaterialPageRoute( builder: (context) => StudentHomePage(student: widget.student,)));
                       }
                         ,
-                        child: Text("İptal"),
+                        child: Text("Cancel"),
                       ),
 
                     ],

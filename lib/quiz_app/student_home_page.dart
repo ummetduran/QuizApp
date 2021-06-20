@@ -53,6 +53,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                         'assets/images/logo2.png',
                         width: 110,
                         height: 110,
+                        color: Colors.white,
                       ),
                     ),
                     Padding(
@@ -90,7 +91,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       MaterialPageRoute(builder: (context) => DerseKaydol(student: widget.student)));
                 },
 
-                child: Text("Derse Kaydol", style: TextStyle(fontSize: 20),),
+                child: Text("Enroll the Lesson", style: TextStyle(fontSize: 20),),
                 textColor: Colors.white,
                 color: Colors.cyan.shade600,
                 shape: RoundedRectangleBorder(

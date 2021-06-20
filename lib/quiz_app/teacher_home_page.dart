@@ -42,6 +42,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.cyan.shade600,
         title: Text("Home Page"),
       ),
       drawer: Container(
@@ -50,7 +51,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
           child: ListView(
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(color: Colors.indigo),
+                decoration: BoxDecoration(color: Colors.cyan.shade600),
                 child: Column(
                   children: [
                     ClipRRect(
@@ -59,6 +60,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                         'assets/images/logo2.png',
                         width: 110,
                         height: 110,
+                        color: Colors.white,
                       ),
                     ),
                     Padding(
@@ -94,9 +96,9 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                         MaterialPageRoute(builder: (context) => DersEkle(teacher: widget.teacher)));
                   },
 
-                  child: Text("Ders Ekle", style: TextStyle(fontSize: 20),),
+                  child: Text("Add Lesson", style: TextStyle(fontSize: 20),),
                   textColor: Colors.white,
-                  color: Colors.indigo,
+                  color: Colors.cyan.shade600,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50)),),
 

@@ -26,9 +26,9 @@ class _DersEkleState extends State<DersEkle> {
     return Scaffold(
       appBar: AppBar(
 
-        backgroundColor: Color.fromARGB(230, 11, 65, 150),
+        backgroundColor: Colors.cyan.shade600,
         centerTitle: true,
-        title: Text("Ders Ekle", style: TextStyle(color: Colors.white),),
+        title: Text("Add Lesson", style: TextStyle(color: Colors.white),),
       ),
       body: Form(
         child: SingleChildScrollView(
@@ -39,12 +39,12 @@ class _DersEkleState extends State<DersEkle> {
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       Icons.book_outlined,
-                      color: Colors.indigo,
+                      color: Colors.cyan.shade600,
                     ),
-                    labelText: "Ders Adı",
-                    hintText: "Ders Adını Giriniz",
-                    labelStyle: TextStyle(color: Colors.indigo, fontSize: 18),
-                    hintStyle: TextStyle(color: Colors.indigo, fontSize: 18),
+                    labelText: "Lesson Name",
+
+                    labelStyle: TextStyle(color: Colors.cyan.shade600, fontSize: 18),
+                    hintStyle: TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                     //suffixStyle: TextStyle(color: Colors.white)
 
                   ),
@@ -68,16 +68,18 @@ class _DersEkleState extends State<DersEkle> {
                         context, MaterialPageRoute( builder: (context) => TeacherHomePage(teacher: widget.teacher,)));
 
                     },
-                    child: Text("Kaydet"),
+                      color: Colors.cyan.shade900,
+                    child: Text("Save", style: TextStyle(color: Colors.white),),
 
                     ),
                     SizedBox(width: 15,),
                     RaisedButton(onPressed: (){
                       Navigator.push(
                           context, MaterialPageRoute( builder: (context) => TeacherHomePage(teacher: widget.teacher,)));
-                    }
-                  ,
-                        child: Text("İptal"),
+                    },
+
+                      color: Colors.grey.shade600,
+                      child: Text("Cancel", style: TextStyle(color: Colors.white),),
                       )
                     ],
                   ),

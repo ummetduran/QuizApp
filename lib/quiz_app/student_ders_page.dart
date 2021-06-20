@@ -29,6 +29,13 @@ class _StudentDersPageState extends State<StudentDersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+
+        title: Text(
+          widget.ders.name.toString(),
+        ),
+        backgroundColor: Colors.cyan.shade600,
+      ),
       body: Container(
         child: Column(
           children: [

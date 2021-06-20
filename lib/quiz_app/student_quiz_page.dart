@@ -3,6 +3,9 @@ import 'package:countdown_flutter/countdown_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_timer/simple_timer.dart';
+import 'package:untitled1/quiz_app/ders_page.dart';
+import 'package:untitled1/quiz_app/student_ders_page.dart';
+import 'package:untitled1/quiz_app/student_home_page.dart';
 
 import 'backend/Ders.dart';
 import 'backend/Quiz.dart';
@@ -25,7 +28,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
   int _radioValue = -1;
   int index = 0;
   int score = 0;
-
+  Student student = new Student(_auth.currentUser.uid, _auth.currentUser.displayName, _auth.currentUser.email);
   @override
   void initState() {
     // TODO: implement initState
@@ -46,25 +49,27 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
-                  child: Icon(Icons.timer, size: 22, color: Colors.cyan.shade600),
+                  child:
+                      Icon(Icons.timer, size: 22, color: Colors.cyan.shade600),
                 ),
                 CountdownFormatted(
                     duration: Duration(minutes: widget.quiz.time),
-                    builder: (BuildContext ctx, String remaining){
+                    builder: (BuildContext ctx, String remaining) {
                       return Text(
                         remaining,
-                        style: TextStyle(fontSize: 25, color: Colors.cyan.shade600),
+                        style: TextStyle(
+                            fontSize: 25, color: Colors.cyan.shade600),
                       );
-                    }
-
-                ),
+                    }),
               ],
             ),
           ),
-
           Container(
             padding: EdgeInsets.only(top: 30),
-            child: Text("Soru ${index+1}", style: TextStyle(color: Colors.cyan.shade600, fontSize: 22),),
+            child: Text(
+              "Soru ${index + 1}",
+              style: TextStyle(color: Colors.cyan.shade600, fontSize: 22),
+            ),
           ),
           AlertDialog(
             content: Form(
@@ -72,7 +77,6 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                 child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-
                 Text(
                   widget.quiz.questions[index].question.toString(),
                   maxLines: 3,
@@ -195,17 +199,25 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
   Widget quiziBitir() {
     if (index == widget.quiz.questions.length - 1) {
       return TextButton(
-        child: Text('End Quiz', style: TextStyle(color: Colors.cyan.shade600),),
+        child: Text(
+          'End Quiz',
+          style: TextStyle(color: Colors.cyan.shade600),
+        ),
         onPressed: () {
           setState(() {
             debugPrint("Kaydedildi");
             uploadQuizScore();
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StudentHomePage(student: student,ders: widget.ders)));
           });
         },
       );
     } else {
       return TextButton(
-        child: Text("Next Question", style: TextStyle(color: Colors.cyan.shade600)),
+        child: Text("Next Question",
+            style: TextStyle(color: Colors.cyan.shade600)),
         onPressed: () {
           setState(() {
             if (widget.quiz.questions[index].answer ==
