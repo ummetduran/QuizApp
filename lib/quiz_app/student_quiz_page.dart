@@ -39,6 +39,8 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+            title: Text("Soru ${index + 1}"),
+            toolbarTextStyle: TextStyle(color: Colors.cyan.shade600, fontSize: 22),
           backgroundColor: Colors.cyan[600],
         ),
         body: Column(children: [
@@ -64,13 +66,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(top: 30),
-            child: Text(
-              "Soru ${index + 1}",
-              style: TextStyle(color: Colors.cyan.shade600, fontSize: 22),
-            ),
-          ),
+
           AlertDialog(
             content: Form(
                 //  key: _formKey,
@@ -81,7 +77,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                   widget.quiz.questions[index].question.toString(),
                   maxLines: 3,
                 ),
-                // Buraya image picker gelecek
+                 imageWidget(),
 
                 optionsWidget(),
               ],
@@ -205,6 +201,11 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
         ),
         onPressed: () {
           setState(() {
+            if (widget.quiz.questions[index].answer ==  widget.quiz.questions[index].options[_radioValue]) {
+              debugPrint("${widget.quiz.questions[index].answer}");
+              debugPrint("${widget.quiz.questions[index].options[_radioValue]}");
+              score += widget.quiz.questions[index].point;
+            }
             debugPrint("Kaydedildi");
             uploadQuizScore();
             Navigator.push(
@@ -220,8 +221,9 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
             style: TextStyle(color: Colors.cyan.shade600)),
         onPressed: () {
           setState(() {
-            if (widget.quiz.questions[index].answer ==
-                widget.quiz.questions[index].options[_radioValue]) {
+            if (widget.quiz.questions[index].answer ==  widget.quiz.questions[index].options[_radioValue]) {
+              debugPrint("${widget.quiz.questions[index].answer}");
+              debugPrint("${widget.quiz.questions[index].options[_radioValue]}");
               score += widget.quiz.questions[index].point;
             }
 
@@ -242,7 +244,20 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
         .doc("${fireUser.uid}")
         .collection("alinanDersler")
         .doc("${widget.ders.name}")
-        .collection("quizler")
-        .add(quizScore);
+        .collection("quizler").doc("${widget.quiz.quizName}").set(quizScore);
+  }
+
+  Widget imageWidget() {
+    if (widget.quiz.questions[index].imagePath == "") {
+      return Text("");
+    }
+    else {
+      return Container(
+          padding: EdgeInsets.only(top: 25),
+          height: 200,
+          width: 200,
+          child: Image.network(widget.quiz.questions[index].imagePath));
+
+  }
   }
 }

@@ -76,6 +76,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
             q.question = element.get("question");
             q.answer = element.get("dogruCevap");
             q.point= element.get("point");
+            q.imagePath = element.get("imagePath");
 
             q.options.clear();
             List qOptions = element.get("cevaplar");

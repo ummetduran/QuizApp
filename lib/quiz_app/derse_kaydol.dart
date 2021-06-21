@@ -145,14 +145,21 @@ class _DerseKaydolState extends State<DerseKaydol> {
             .collection("dersler")
             .doc(dersId)
             .get();
-        for(var element in dersDb.data()["kayitliOgrenciler"]){
-          ogrEkle.add(element);
+        var liste = dersDb.data()["kayitliOgrenciler"];
+        if (liste != null) {
+          for (var element in dersDb.data()["kayitliOgrenciler"]) {
+            ogrEkle.add(element);
+          }
         }
+
+
+
+        //map["derkodu"] = widget.ders.kodu
         map["kayitliOgrenciler"] = ogrEkle;
-        _fireStore.collection("Users").doc(userId)
+        await _fireStore.collection("Users").doc(userId)
             .collection("dersler")
             .doc(dersId)
-            .set(map);
+            .update(map);
       }
     }
  }

@@ -12,16 +12,18 @@ import 'package:toggle_switch/toggle_switch.dart';
 import 'package:untitled1/quiz_app/backend/MultipleChoiceQuestion.dart';
 import 'package:untitled1/quiz_app/backend/OpenEndQuestion.dart';
 import 'dart:io';
-
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:untitled1/quiz_app/backend/Question.dart';
 import 'package:untitled1/quiz_app/backend/Quiz.dart';
 import 'package:untitled1/quiz_app/backend/TrueFalseQuestion.dart';
 import 'package:untitled1/quiz_app/ders_ekle.dart';
+import 'package:untitled1/quiz_app/student_ders_page.dart';
 
 import 'backend/Ders.dart';
 import 'backend/Teacher.dart';
+import 'ders_page.dart';
 
-
+FirebaseStorage storage = FirebaseStorage.instance;
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
@@ -36,6 +38,8 @@ class QuizEkle extends StatefulWidget {
 }
 
 class _QuizEkleState extends State<QuizEkle> {
+  String _uplodedFileURL;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -46,6 +50,7 @@ class _QuizEkleState extends State<QuizEkle> {
   }
   final formKey1 = GlobalKey<FormState>();
   final formKey2 = GlobalKey<FormState>();
+  final imageKey = GlobalKey<FormState>();
   File _image;
   String dropDownValue = 'Çoktan Seçmeli';
   Quiz quiz = new Quiz();
@@ -194,7 +199,9 @@ class _QuizEkleState extends State<QuizEkle> {
                       child: _image == null
                           ? Text("")
                           : (Image.file(
+
                         _image,
+                      //  key: imageKey,
                         fit: BoxFit.fill,
                       )),
                     ),
@@ -297,7 +304,7 @@ class _QuizEkleState extends State<QuizEkle> {
                 shrinkWrap: true,
                 itemCount: quiz.questions.length,),
               ),
-              
+
               RaisedButton(onPressed: saveQuiz, child: Text("Save"),)
 
             ],
@@ -316,7 +323,26 @@ class _QuizEkleState extends State<QuizEkle> {
     setState(() {
       _image = image;
     });
+
+    Reference reference = storage.ref().child(widget.ders.name)
+        .child(quiz.quizName)
+        .child(question.question)
+        .child(_image.path);
+   UploadTask uploadTask = reference.putFile(_image);
+   await uploadTask.whenComplete((){
+     print("resim eklendi");
+   });
+   reference.getDownloadURL().then((fileURL) =>{
+   setState(() {
+   _uplodedFileURL = fileURL;
+   print(_uplodedFileURL);
+   })
+   });
+
+
   }
+
+
 
   Widget questionType() {
 
@@ -479,10 +505,6 @@ setState(() {
   }
 
   Future addQuestion() async {
-   setState(() {
-     quiz.questions.add(question);
-     formKey2.currentState.reset();
-   });
 
     Map<String, dynamic> addQuiz = Map();
     addQuiz["zaman"] = quiz.time;
@@ -493,16 +515,27 @@ setState(() {
     addQuestion["cevaplar"] = question.options;
     addQuestion["point"] = question.point;
     addQuestion["dogruCevap"] = question.answer;
+    addQuestion["imagePath"] = _uplodedFileURL;
     await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
         .doc(widget.ders.name).collection("quizler").doc("${quiz.quizName}").collection("sorular").doc().set(addQuestion);
 
+
+    setState(() {
+      quiz.questions.add(question);
+      formKey2.currentState.reset();
+      //   imageKey.currentState.reset();
+      _image = null;
+      _uplodedFileURL = "";
+      _radioValue = -1;
+    });
   }
 
-  void saveQuiz() async{
-    setState(() {
-      ders.quizList.add(quiz);
-    });
-
+  void saveQuiz(){
+    // setState(() {
+    // ders.quizList.add(quiz);
+    // });
+    Navigator.push(
+          context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.ders)));
 
   }
 
