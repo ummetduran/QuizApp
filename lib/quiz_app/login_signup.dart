@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:untitled1/quiz_app/backend/Users.dart';
 
+
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
@@ -15,28 +16,28 @@ final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 class LoginSignUp extends StatefulWidget {
   @override
   _LoginSignUpState createState() => _LoginSignUpState();
+
 }
 
 class _LoginSignUpState extends State<LoginSignUp> {
   String fullName, _sifre, _email = "";
   int userType=0;
-
+  List<Color> list = new List();
 
   //Color switchButton= Colors.grey;
   //List<String> switched=["/SignIn","/SignUp"];
   //int switchIndex=1;
   final formKey = GlobalKey<FormState>();
   bool otoControl=false;
-
   @override
   void initState() {
     // TODO: implement initState
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    list.add(Colors.amber);
     return Scaffold(
       appBar: AppBar(
 
@@ -66,8 +67,8 @@ class _LoginSignUpState extends State<LoginSignUp> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    ToggleSwitch(activeBgColor: Colors.cyan,
-                      inactiveBgColor: Colors.black12,
+                    ToggleSwitch(//activeBgColor: Colors.amber,
+                      inactiveBgColor: list.first,
                       minWidth: 100,labels: ["Student", "Teacher"], initialLabelIndex: 0, onToggle: (index){
                         userType = index;
                         debugPrint("$userType");
@@ -167,7 +168,7 @@ class _LoginSignUpState extends State<LoginSignUp> {
   }
 
   Future<User> _girisBilgileriniOnayla() async{
-    await Firebase.initializeApp();
+
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
       debugPrint("Girilen isim: $fullName mail: $_email şifre: $_sifre");

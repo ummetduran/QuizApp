@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,7 @@ import 'backend/Ders.dart';
 import 'backend/Teacher.dart';
 import 'ders_page.dart';
 
+
 FirebaseStorage storage = FirebaseStorage.instance;
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
@@ -39,7 +41,7 @@ class QuizEkle extends StatefulWidget {
 
 class _QuizEkleState extends State<QuizEkle> {
   String _uplodedFileURL;
-
+  List<Color> list = new List();
   @override
   void initState() {
     // TODO: implement initState
@@ -51,7 +53,7 @@ class _QuizEkleState extends State<QuizEkle> {
   final formKey1 = GlobalKey<FormState>();
   final formKey2 = GlobalKey<FormState>();
   final imageKey = GlobalKey<FormState>();
-  File _image;
+  PickedFile _image;
   String dropDownValue = 'Çoktan Seçmeli';
   Quiz quiz = new Quiz();
   Question question;
@@ -59,10 +61,11 @@ class _QuizEkleState extends State<QuizEkle> {
   bool checked = false;
   int _radioValue = -1;
   //String correctAnswer;
-
+  var colorList = List<Color>();
 
   @override
   Widget build(BuildContext context) {
+    list.add(Colors.amber);
     return Scaffold(
       body: Container(
         child: SingleChildScrollView(
@@ -107,20 +110,30 @@ class _QuizEkleState extends State<QuizEkle> {
                   icon: Icon(Icons.event),
                   dateLabelText: 'Gün',
                   timeLabelText: "Saat",
-                  selectableDayPredicate: (date) {
+                  /*selectableDayPredicate: (date) {
                     // Disable weekend days to select from the calendar
                     if (date.weekday == 6 || date.weekday == 7) {
                       return false;
                     }
 
                     return true;
+                  },*/
+                  onChanged: (startDate) {
+                    setState(() {
+                      quiz.startDate= startDate;
+                      debugPrint("Start Date: "+ startDate);
+                    });
                   },
-                  onChanged: (val) => print(val),
                   validator: (val) {
                     print(val);
                     return null;
                   },
-                  onSaved: (val) => print(val),
+                  onSaved:(startDate) {
+                    setState(() {
+                      quiz.startDate= startDate;
+                      debugPrint("Start Date: "+ startDate);
+                    });
+                  }
                 ),
               ),
 
@@ -200,7 +213,7 @@ class _QuizEkleState extends State<QuizEkle> {
                           ? Text("")
                           : (Image.file(
 
-                        _image,
+                        File(_image.path),
                       //  key: imageKey,
                         fit: BoxFit.fill,
                       )),
@@ -318,7 +331,7 @@ class _QuizEkleState extends State<QuizEkle> {
   }
 
   Future<File> getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
     setState(() {
       _image = image;
@@ -328,7 +341,7 @@ class _QuizEkleState extends State<QuizEkle> {
         .child(quiz.quizName)
         .child(question.question)
         .child(_image.path);
-   UploadTask uploadTask = reference.putFile(_image);
+   UploadTask uploadTask = reference.putFile(File(_image.path));
    await uploadTask.whenComplete((){
      print("resim eklendi");
    });
@@ -491,7 +504,7 @@ setState(() {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [ToggleSwitch(
-            activeBgColor: Colors.cyan.shade600,
+            //activeBgColor: [Colors.green],
             labels: ["True", "False"],
             onToggle: (index) {
               question.answer = labels[index];
@@ -508,6 +521,7 @@ setState(() {
 
     Map<String, dynamic> addQuiz = Map();
     addQuiz["zaman"] = quiz.time;
+    addQuiz["startDate"] = quiz.startDate;
     await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
         .doc(widget.ders.name).collection("quizler").doc("${quiz.quizName}").set(addQuiz);
     Map<String, dynamic> addQuestion = Map();

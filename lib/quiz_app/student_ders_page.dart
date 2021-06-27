@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:untitled1/quiz_app/ders_ekle.dart';
 import 'package:untitled1/quiz_app/student_quiz_page.dart';
 
@@ -66,6 +67,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
       for(var element in event.docs) {
         Quiz quiz = new Quiz();
         quiz.quizName = element.id;
+        quiz.startDate = element.get("startDate");
         quiz.time = element.get("zaman");
         var dbQuestions = await _fireStore.collection("Users").doc(teacherId).collection("dersler")
             .doc(dersId).collection("quizler").doc(element.id).collection("sorular");
@@ -98,9 +100,16 @@ class _StudentDersPageState extends State<StudentDersPage> {
   }
 
   Widget listeElemaniOlustur(BuildContext context, int index) {
+    Color colorL;
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
+    DateTime quizStartDate = dateFormat.parse(widget.ders.quizList[index].startDate);
+    //İf'in içi kontrol edilmeli
+    if( quizStartDate.isBefore(DateTime.now())) colorL = Colors.greenAccent[700];
+    else colorL = Colors.redAccent[700];
     return SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
+              color: colorL,
               border: Border.all(width: 2),
               borderRadius: BorderRadius.circular(20)),
           margin: EdgeInsets.all(5),
@@ -110,7 +119,8 @@ class _StudentDersPageState extends State<StudentDersPage> {
               Navigator.push(context, MaterialPageRoute( builder: (context) => StudentQuizPage(quiz: widget.ders.quizList[index], ders: widget.ders)));
             },
 
-            title: Text(widget.ders.quizList[index].quizName),
+            title: Text(widget.ders.quizList[index].quizName, style: TextStyle(color: Colors.white),),
+
 
           ),
         ));

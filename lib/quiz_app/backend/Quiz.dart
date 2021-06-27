@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:untitled1/quiz_app/backend/Question.dart';
 import 'package:untitled1/quiz_app/backend/Student.dart';
 
@@ -5,6 +6,7 @@ class Quiz {
   String _quizName;
   List<Question> questions=[];
   int _time;
+  String startDate;
 
 
   int get time => _time;

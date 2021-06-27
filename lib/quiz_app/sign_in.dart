@@ -35,6 +35,7 @@ class _SignInPageState extends State<SignInPage> {
 
   }
   @override  Widget build(BuildContext context) {
+    Firebase.initializeApp();
     return Scaffold(
         body: Container(
 
