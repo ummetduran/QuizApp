@@ -245,7 +245,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
   }
 
   Widget imageWidget() {
-    if (widget.quiz.questions[index].imagePath == "") {
+    if (widget.quiz.questions[index].imagePath == null) {
       return Text("");
     }
     else {

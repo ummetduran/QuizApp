@@ -101,28 +101,67 @@ class _StudentDersPageState extends State<StudentDersPage> {
 
   Widget listeElemaniOlustur(BuildContext context, int index) {
     Color colorL;
+    String entryText;
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
     DateTime quizStartDate = dateFormat.parse(widget.ders.quizList[index].startDate);
-    //İf'in içi kontrol edilmeli
-    if( quizStartDate.isBefore(DateTime.now())) colorL = Colors.greenAccent[700];
-    else colorL = Colors.redAccent[700];
-    return SingleChildScrollView(
-        child: Container(
-          decoration: BoxDecoration(
-              color: colorL,
-              border: Border.all(width: 2),
-              borderRadius: BorderRadius.circular(20)),
-          margin: EdgeInsets.all(5),
-          child: ListTile(
-            onTap: () {
-              debugPrint("dasasd");
-              Navigator.push(context, MaterialPageRoute( builder: (context) => StudentQuizPage(quiz: widget.ders.quizList[index], ders: widget.ders)));
-            },
+    DateTime quizEndDate = quizStartDate.add(Duration(minutes: widget.ders.quizList[index].time));
+    print("QuizBaslangic: "+ quizStartDate.toString()+" Simdi: "+DateTime.now().toString());
+    print("Boolean: "+ DateTime.now().isAfter(quizStartDate).toString());
+    if( (DateTime.now().isAfter(quizStartDate)) && DateTime.now().isBefore(quizEndDate)){
+      colorL = Colors.tealAccent[700];
+      entryText = "Enter!";
+    }
+    else if(DateTime.now().isAfter(quizEndDate)){
+      colorL = Colors.redAccent[700];
+      entryText = "Finished!";
+    }
+    else {
+      colorL = Colors.orangeAccent[700];
+      entryText = "Please wait!";
+    }
+      return SingleChildScrollView(
+          child: Container(
+            decoration: BoxDecoration(
+                color: colorL,
+                border: Border.all(width: 2),
+                borderRadius: BorderRadius.circular(20)),
+            margin: EdgeInsets.all(5),
+            child: ListTile(
+              onTap: () {
+                if(entryText=="Enter!"){
+                Navigator.push(context, MaterialPageRoute( builder: (context) => StudentQuizPage(quiz: widget.ders.quizList[index], ders: widget.ders)));
+                }
+                else showAlertDialog(context);;
+              },
 
-            title: Text(widget.ders.quizList[index].quizName, style: TextStyle(color: Colors.white),),
+              title: Text(widget.ders.quizList[index].quizName, style: TextStyle(color: Colors.white),),
+              subtitle: Text(entryText,style: TextStyle(color: Colors.white),),
 
 
-          ),
-        ));
+            ),
+          ));
+    }
+
+
+
+  void showAlertDialog(BuildContext context) {
+     AlertDialog alert  = AlertDialog(
+      content: Text("Quiz has not started or time is up!"),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'OK'),
+          child: const Text('OK'),
+        ),
+      ],
+    );
+     showDialog(
+       context: context,
+       builder: (BuildContext context) {
+         return alert;
+       },
+     );
   }
+
+
 }
+
