@@ -1,4 +1,4 @@
-import 'package:untitled1/quiz_app/backend/Student.dart';
+import 'package:untitled1/quiz_app/model/Student.dart';
 
  class Question {
   int _point;

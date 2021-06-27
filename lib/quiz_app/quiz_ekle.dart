@@ -1,27 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_format/date_format.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:imagebutton/imagebutton.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:untitled1/quiz_app/backend/MultipleChoiceQuestion.dart';
-import 'package:untitled1/quiz_app/backend/OpenEndQuestion.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:untitled1/quiz_app/backend/Question.dart';
-import 'package:untitled1/quiz_app/backend/Quiz.dart';
-import 'package:untitled1/quiz_app/backend/TrueFalseQuestion.dart';
-import 'package:untitled1/quiz_app/ders_ekle.dart';
-import 'package:untitled1/quiz_app/student_ders_page.dart';
+import 'package:untitled1/quiz_app/model/Question.dart';
+import 'package:untitled1/quiz_app/model/Quiz.dart';
 
-import 'backend/Ders.dart';
-import 'backend/Teacher.dart';
+
+import 'model/Ders.dart';
+import 'model/Teacher.dart';
 import 'ders_page.dart';
 
 

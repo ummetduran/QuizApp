@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled1/quiz_app/backend/Quiz.dart';
+import 'package:untitled1/quiz_app/model/Quiz.dart';
 import 'package:untitled1/quiz_app/quiz_ekle.dart';
 
-import 'backend/Ders.dart';
+import 'model/Ders.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;

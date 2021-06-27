@@ -2,14 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:countdown_flutter/countdown_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:simple_timer/simple_timer.dart';
-import 'package:untitled1/quiz_app/ders_page.dart';
-import 'package:untitled1/quiz_app/student_ders_page.dart';
 import 'package:untitled1/quiz_app/student_home_page.dart';
 
-import 'backend/Ders.dart';
-import 'backend/Quiz.dart';
-import 'backend/Student.dart';
+import 'model/Ders.dart';
+import 'model/Quiz.dart';
+import 'model/Student.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;

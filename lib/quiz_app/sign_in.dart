@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled1/quiz_app/backend/Teacher.dart';
+import 'model/Teacher.dart';
 
 import 'package:untitled1/quiz_app/login_signup.dart';
 import 'package:untitled1/quiz_app/student_home_page.dart';
 import 'package:untitled1/quiz_app/teacher_home_page.dart';
 
-import 'backend/Student.dart';
-import 'backend/Users.dart';
+import 'model/Student.dart';
+import 'model/Users.dart';
 
 
 FirebaseAuth _auth = FirebaseAuth.instance;

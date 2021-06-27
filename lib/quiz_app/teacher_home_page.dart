@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/ders_ekle.dart';
 
-import 'backend/Ders.dart';
+import 'model/Ders.dart';
 
-import 'backend/Teacher.dart';
+import 'model/Teacher.dart';
 import 'ders_page.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;

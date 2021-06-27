@@ -5,9 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:untitled1/quiz_app/ders_ekle.dart';
 import 'package:untitled1/quiz_app/student_quiz_page.dart';
 
-import 'backend/Ders.dart';
-import 'backend/Question.dart';
-import 'backend/Quiz.dart';
+import 'model/Ders.dart';
+import 'model/Question.dart';
+import 'model/Quiz.dart';
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 class StudentDersPage extends StatefulWidget {

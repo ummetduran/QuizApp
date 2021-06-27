@@ -1,4 +1,4 @@
-import 'package:untitled1/quiz_app/backend/Question.dart';
+import 'package:untitled1/quiz_app/model/Question.dart';
 
 class MultipleChoiceQuestion implements Question {
 

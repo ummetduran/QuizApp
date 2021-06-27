@@ -6,7 +6,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 import 'package:untitled1/quiz_app/sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:untitled1/quiz_app/backend/Users.dart';
+import 'package:untitled1/quiz_app/model/Users.dart';
 
 
 FirebaseAuth _auth = FirebaseAuth.instance;
