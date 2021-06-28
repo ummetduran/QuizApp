@@ -44,7 +44,7 @@ class _QuizResultsPageState extends State<QuizResultsPage> {
             Container(
               child: Expanded(
                 child: ListView.builder(itemBuilder: listElementBuilder,
-                  itemCount: scoreMap.keys.length ,
+                  itemCount: scoreMap.length ,
                 ),
               ),
             ),
@@ -57,28 +57,39 @@ class _QuizResultsPageState extends State<QuizResultsPage> {
     );
   }
 
-  void fetchResults() async {
+  Future fetchResults() async {
     scoreMap.clear();
+    String email;
     String teacherId = widget.ders.teacher.id;
     String dersId = widget.ders.name;
     String quizName = widget.quiz.quizName;
     var dersler =  await _fireStore.collection("Users").doc(teacherId).collection("dersler")
         .doc(dersId).get();
     var enrolledStudentsMails = dersler.data()["kayitliOgrenciler"];
-      for(var element in enrolledStudentsMails) {
+      for(var element in enrolledStudentsMails){
+        email = element.toString();
         QuerySnapshot enrolledStudents = await _fireStore.collection("Users").where("email", isEqualTo: element.toString()).get();
         for(var element in enrolledStudents.docs){
             var studentID = element.id;
             var quiz = await _fireStore.collection("Users").doc(studentID).collection("alinanDersler").doc(dersId)
-            .collection("quizler").doc(quizName).get();
-            //Bura düzeltilecek
-              scoreMap[element.get("email")] = quiz.data()["QuizScore"];
-              print(scoreMap.toString());
+            .collection("quizler");
+            quiz.snapshots().listen((event) {
+              for(var element in event.docs) {
+              //element.
+                if(element.id == quizName){
+                  scoreMap[email] = element.data()["QuizScore"];
+                  print(element.data().toString());
+                }
 
+            }
+          });
         }
+      }
 
-    }
   }
+
+
+
     Widget listElementBuilder(BuildContext context, int index) {
       return SingleChildScrollView(
           child: Container(
@@ -91,7 +102,7 @@ class _QuizResultsPageState extends State<QuizResultsPage> {
                   //Navigator.push(context, MaterialPageRoute( builder: (context) => StudentQuizPage(quiz: widget.ders.quizList[index], ders: widget.ders)));
               },
 
-              title: Text(scoreMap.keys.elementAt(index),
+              title: Text(scoreMap.keys.elementAt(index).toString(),
                 style: TextStyle(color: Colors.black),
               ),
               subtitle: Text("Quiz Score: "+scoreMap.values.elementAt(index).toString(),
