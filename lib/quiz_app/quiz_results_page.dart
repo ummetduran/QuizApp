@@ -77,8 +77,11 @@ class _QuizResultsPageState extends State<QuizResultsPage> {
               for(var element in event.docs) {
               //element.
                 if(element.id == quizName){
-                  scoreMap[email] = element.data()["QuizScore"];
-                  print(element.data().toString());
+                  setState(() {
+                    scoreMap[email] = element.data()["QuizScore"];
+                    print(element.data().toString());
+                  });
+
                 }
 
             }
