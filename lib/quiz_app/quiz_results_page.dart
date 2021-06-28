@@ -69,11 +69,12 @@ class _QuizResultsPageState extends State<QuizResultsPage> {
         QuerySnapshot enrolledStudents = await _fireStore.collection("Users").where("email", isEqualTo: element.toString()).get();
         for(var element in enrolledStudents.docs){
             var studentID = element.id;
-            await _fireStore.collection("Users").doc(studentID).collection("alinanDersler").doc(dersId)
-            .collection("quizler").doc(quizName).get().then((value){
-              scoreMap[element.get("email")] = value.data()["QuizScore"];
+            var quiz = await _fireStore.collection("Users").doc(studentID).collection("alinanDersler").doc(dersId)
+            .collection("quizler").doc(quizName).get();
+            //Bura düzeltilecek
+              scoreMap[element.get("email")] = quiz.data()["QuizScore"];
               print(scoreMap.toString());
-            });
+
         }
 
     }
