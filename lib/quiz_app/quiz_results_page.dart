@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:untitled1/quiz_app/ders_ekle.dart';
 
 import 'model/Ders.dart';
 import 'model/Quiz.dart';
@@ -18,6 +20,7 @@ class QuizResultsPage extends StatefulWidget {
 }
 
 class _QuizResultsPageState extends State<QuizResultsPage> {
+  Map<String, int> scoreMap = Map();
 
   void initState() {
     // TODO: implement initState
@@ -27,21 +30,77 @@ class _QuizResultsPageState extends State<QuizResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+
+        title: Text(
+          widget.ders.name.toString() + " Results",
+        ),
+        backgroundColor: Colors.cyan.shade600,
+      ),
+      body: Container(
+        child: Column(
+          children: [
+            Container(
+              child: Expanded(
+                child: ListView.builder(itemBuilder: listElementBuilder,
+                  itemCount: scoreMap.keys.length ,
+                ),
+              ),
+            ),
+
+
+
+          ],
+        ),
+      ),
+    );
   }
 
   void fetchResults() async {
-    /*var fireUser = _auth.currentUser;
-    var className  =await _fireStore.collection("Users").doc(fireUser.uid)
-        .collection("dersler").doc("${widget.ders.name}").get();
-    var enrolledStudents = className.get("kayitliOgrenciler");
-    for(String e in enrolledStudents){
-      var data  =await _fireStore.collection("Users").doc()
-          .collection("alinanDersler").where("derkodu" == widget.ders.key).get();
-      print(data.toString());
+    scoreMap.clear();
+    String teacherId = widget.ders.teacher.id;
+    String dersId = widget.ders.name;
+    String quizName = widget.quiz.quizName;
+    var dersler =  await _fireStore.collection("Users").doc(teacherId).collection("dersler")
+        .doc(dersId).get();
+    var enrolledStudentsMails = dersler.data()["kayitliOgrenciler"];
+      for(var element in enrolledStudentsMails) {
+        QuerySnapshot enrolledStudents = await _fireStore.collection("Users").where("email", isEqualTo: element.toString()).get();
+        for(var element in enrolledStudents.docs){
+            var studentID = element.id;
+            await _fireStore.collection("Users").doc(studentID).collection("alinanDersler").doc(dersId)
+            .collection("quizler").doc(quizName).get().then((value){
+              scoreMap[element.get("email")] = value.data()["QuizScore"];
+              print(scoreMap.toString());
+            });
+        }
+
+    }
+  }
+    Widget listElementBuilder(BuildContext context, int index) {
+      return SingleChildScrollView(
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(width: 2),
+                borderRadius: BorderRadius.circular(20)),
+            margin: EdgeInsets.all(5),
+            child: ListTile(
+              onTap: () {
+                  //Navigator.push(context, MaterialPageRoute( builder: (context) => StudentQuizPage(quiz: widget.ders.quizList[index], ders: widget.ders)));
+              },
+
+              title: Text(scoreMap.keys.elementAt(index),
+                style: TextStyle(color: Colors.black),
+              ),
+              subtitle: Text("Quiz Score: "+scoreMap.values.elementAt(index).toString(),
+                style: TextStyle(color: Colors.black),
+              ),
+
+
+            ),
+          ));
     }
 
-
-  */}
 }
 
