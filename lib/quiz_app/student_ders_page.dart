@@ -105,8 +105,6 @@ class _StudentDersPageState extends State<StudentDersPage> {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
     DateTime quizStartDate = dateFormat.parse(widget.ders.quizList[index].startDate);
     DateTime quizEndDate = quizStartDate.add(Duration(minutes: widget.ders.quizList[index].time));
-    print("QuizBaslangic: "+ quizStartDate.toString()+" Simdi: "+DateTime.now().toString());
-    print("Boolean: "+ DateTime.now().isAfter(quizStartDate).toString());
     if( (DateTime.now().isAfter(quizStartDate)) && DateTime.now().isBefore(quizEndDate)){
       colorL = Colors.tealAccent[700];
       entryText = "Enter!";
@@ -131,7 +129,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
                 if(entryText=="Enter!"){
                 Navigator.push(context, MaterialPageRoute( builder: (context) => StudentQuizPage(quiz: widget.ders.quizList[index], ders: widget.ders)));
                 }
-                else showAlertDialog(context);;
+                else showAlertDialog(context);
               },
 
               title: Text(widget.ders.quizList[index].quizName, style: TextStyle(color: Colors.white),),

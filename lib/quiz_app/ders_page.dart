@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:untitled1/quiz_app/model/Quiz.dart';
 import 'package:untitled1/quiz_app/quiz_ekle.dart';
+import 'package:untitled1/quiz_app/quiz_results_page.dart';
 
 import 'model/Ders.dart';
 
@@ -79,7 +81,8 @@ class _DersPageState extends State<DersPage> {
         value.docs.forEach((element) {
           Quiz quiz = new Quiz();
           quiz.quizName = element.id;
-          //quiz.time = element['zaman'];
+          quiz.startDate = element.get("startDate");
+          quiz.time = element.get("zaman");
           widget.ders.quizList.add(quiz);
         });
       });
@@ -88,21 +91,59 @@ class _DersPageState extends State<DersPage> {
   }
 
   Widget listeElemaniOlustur(BuildContext context, int index) {
+    Color colorL;
+    String entryText;
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
+    DateTime quizStartDate = dateFormat.parse(widget.ders.quizList[index].startDate);
+    DateTime quizEndDate = quizStartDate.add(Duration(minutes: widget.ders.quizList[index].time));
+    if( (DateTime.now().isAfter(quizStartDate)) && DateTime.now().isBefore(quizEndDate)){
+      colorL = Colors.yellowAccent[700];
+      entryText = "Published!";
+    }
+    else if(DateTime.now().isAfter(quizEndDate)){
+      colorL = Colors.greenAccent[700];
+      entryText = "Finished!";
+    }
+    else {
+      colorL = Colors.lightBlueAccent[700];
+      entryText = "Waiting!";
+    }
     return SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
+              color: colorL,
               border: Border.all(width: 2),
               borderRadius: BorderRadius.circular(20)),
           margin: EdgeInsets.all(5),
           child: ListTile(
             onTap: () {
-              //Navigator.push(context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.teacher.verilenDersler[index])));
+              if(entryText=="Finished!"){
+                Navigator.push(context, MaterialPageRoute( builder: (context) => QuizResultsPage(quiz: widget.ders.quizList[index], ders: widget.ders)));
+              }
+              else showAlertDialog(context);
             },
 
             title: Text(widget.ders.quizList[index].quizName),
 
           ),
         ));
+  }
+  void showAlertDialog(BuildContext context) {
+    AlertDialog alert  = AlertDialog(
+      content: Text("Quiz has not finished and results are not ready!"),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'OK'),
+          child: const Text('OK'),
+        ),
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
 }
