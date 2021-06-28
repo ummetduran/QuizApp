@@ -7,7 +7,14 @@ class Quiz {
   List<Question> questions=[];
   int _time;
   String startDate;
+  bool _hasSolved = false;
 
+
+  bool get hasSolved => _hasSolved;
+
+  set hasSolved(bool value) {
+    _hasSolved = value;
+  }
 
   int get time => _time;
 

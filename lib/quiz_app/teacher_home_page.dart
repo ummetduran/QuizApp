@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/ders_ekle.dart';
+import 'package:untitled1/quiz_app/sign_in.dart';
 
 import 'model/Ders.dart';
 
@@ -77,6 +78,16 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
               ),
               ListTile(
                 title: Text("İtem2"),
+              ),
+              SizedBox(height: 400,),
+              RaisedButton(
+
+                child: TextButton(
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute( builder: (context) => SignInPage()));
+                  },
+                  child: Text("Exit"),
+                ),
               )
             ],
           ),

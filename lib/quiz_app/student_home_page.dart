@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/model/Student.dart';
 import 'package:untitled1/quiz_app/model/Teacher.dart';
 import 'package:untitled1/quiz_app/derse_kaydol.dart';
+import 'package:untitled1/quiz_app/sign_in.dart';
 import 'package:untitled1/quiz_app/student_ders_page.dart';
 
 import 'model/Ders.dart';
@@ -70,6 +72,16 @@ class _StudentHomePageState extends State<StudentHomePage> {
               ),
               ListTile(
                 title: Text("İtem2"),
+              ),
+              SizedBox(height: 400,),
+              RaisedButton(
+
+               child: TextButton(
+                 onPressed: (){
+                   Navigator.push(context, MaterialPageRoute( builder: (context) => SignInPage()));
+                 },
+               child: Text("Exit"),
+               ),
               )
             ],
           ),

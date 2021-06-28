@@ -69,6 +69,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
         quiz.quizName = element.id;
         quiz.startDate = element.get("startDate");
         quiz.time = element.get("zaman");
+
         var dbQuestions = await _fireStore.collection("Users").doc(teacherId).collection("dersler")
             .doc(dersId).collection("quizler").doc(element.id).collection("sorular");
         dbQuestions.snapshots().listen((event) {
@@ -113,6 +114,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
       colorL = Colors.redAccent[700];
       entryText = "Finished!";
     }
+
     else {
       colorL = Colors.orangeAccent[700];
       entryText = "Please wait!";
@@ -128,6 +130,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
               onTap: () {
                 if(entryText=="Enter!"){
                 Navigator.push(context, MaterialPageRoute( builder: (context) => StudentQuizPage(quiz: widget.ders.quizList[index], ders: widget.ders)));
+
                 }
                 else showAlertDialog(context);
               },
