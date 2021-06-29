@@ -93,8 +93,9 @@ class _DersPageState extends State<DersPage> {
   Widget listeElemaniOlustur(BuildContext context, int index) {
     Color colorL;
     String entryText;
-    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
-    DateTime quizStartDate = dateFormat.parse(widget.ders.quizList[index].startDate);
+    DateFormat dateFormat = DateFormat("yyyy-mm-dd HH:mm");
+    print(widget.ders.quizList[index].startDate);
+    DateTime quizStartDate = DateTime.parse(widget.ders.quizList[index].startDate);
     DateTime quizEndDate = quizStartDate.add(Duration(minutes: widget.ders.quizList[index].time));
     if( (DateTime.now().isAfter(quizStartDate)) && DateTime.now().isBefore(quizEndDate)){
       colorL = Colors.yellowAccent[700];

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:countdown_flutter/countdown_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:untitled1/quiz_app/student_home_page.dart';
 
 import 'model/Ders.dart';
@@ -34,6 +35,10 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
 
   @override
   Widget build(BuildContext context) {
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
+    DateTime quizStartDate = dateFormat.parse(widget.quiz.startDate);
+    DateTime nowMinusStart = DateTime.now().subtract(Duration(minutes: quizStartDate.minute));
+    int timer = widget.quiz.time - nowMinusStart.minute;
     return Scaffold(
         appBar: AppBar(
             title: Text("Soru ${index + 1}"),
@@ -52,14 +57,15 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                       Icon(Icons.timer, size: 22, color: Colors.cyan.shade600),
                 ),
                 CountdownFormatted(
-                    duration: Duration(minutes: widget.quiz.time),
+                    duration: Duration(minutes: timer),
                     builder: (BuildContext ctx, String remaining) {
                       return Text(
                         remaining,
                         style: TextStyle(
                             fontSize: 25, color: Colors.cyan.shade600),
                       );
-                    }),
+                    },
+                    onFinish: timeOut),
               ],
             ),
           ),
@@ -237,7 +243,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
     var fireUser = _auth.currentUser;
     Map<String, dynamic> quizScore = new Map();
     quizScore["QuizScore"] = score;
-    quizScore["hasSolved"] = true;
+    //quizScore["hasSolved"] = true;
     await _fireStore
         .collection("Users")
         .doc("${fireUser.uid}")
@@ -258,5 +264,12 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
           child: Image.network(widget.quiz.questions[index].imagePath));
 
   }
+  }
+  void timeOut(){
+    uploadQuizScore();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => StudentHomePage(student: student,ders: widget.ders)));
   }
 }
