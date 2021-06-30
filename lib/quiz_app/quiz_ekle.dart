@@ -492,16 +492,17 @@ setState(() {
 });
 
       return Padding(
-        padding: const EdgeInsets.only(bottom: 20,left: 25),
+        padding: const EdgeInsets.only(bottom: 25, left: 25),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [ToggleSwitch(
-            //activeBgColor: [Colors.green],
+          children: [
+            ToggleSwitch(
+            activeBgColor: [Colors.cyan.shade600],
             labels: ["True", "False"],
             onToggle: (index) {
               question.answer = labels[index];
 
-            }
+            }, totalSwitches: 2,
           ),
           ]
         ),

@@ -37,7 +37,7 @@ class _LoginSignUpState extends State<LoginSignUp> {
 
   @override
   Widget build(BuildContext context) {
-    list.add(Colors.amber);
+    list.add(Colors.cyan.shade600);
     return Scaffold(
       appBar: AppBar(
 
@@ -68,11 +68,12 @@ class _LoginSignUpState extends State<LoginSignUp> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     ToggleSwitch(//activeBgColor: Colors.amber,
-                      inactiveBgColor: list.first,
+                      //inactiveBgColor: list.first
+                      dividerColor: Colors.cyan.shade600,
                       minWidth: 100,labels: ["Student", "Teacher"], initialLabelIndex: 0, onToggle: (index){
                         userType = index;
                         debugPrint("$userType");
-                      },fontSize: 16, ),
+                      },fontSize: 16, totalSwitches: 2, ),
                   ],
                 ),
                 SizedBox(height: 15),
