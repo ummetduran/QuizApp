@@ -30,6 +30,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
   @override
   void initState() {
     // TODO: implement initState
+    widget.quiz.questions.shuffle();
     super.initState();
   }
 
@@ -99,6 +100,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
   }
 
   Widget optionsWidget() {
+
     if (widget.quiz.questions[index].options.length == 2) {
       return Column(
         children: [
@@ -233,6 +235,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
 
             index++;
             _radioValue = -1;
+            widget.quiz.questions[index].options.shuffle();
           });
         },
       );

@@ -150,7 +150,11 @@ class _StudentDersPageState extends State<StudentDersPage> {
       content: Text("Quiz has not started or time is up!"),
       actions: <Widget>[
         TextButton(
-          onPressed: () => Navigator.pop(context, 'OK'),
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).pop('dialog');
+            // Navigator.pop(context, 'OK');
+           // Navigator.push(context, MaterialPageRoute( builder: (context) => StudentDersPage(ders: widget.ders,)));
+          },
           child: const Text('OK'),
         ),
       ],
@@ -160,6 +164,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
        builder: (BuildContext context) {
          return alert;
        },
+
      );
   }
 
