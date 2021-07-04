@@ -1,11 +1,17 @@
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:untitled1/quiz_app/ders_ekle.dart';
-
+import 'dart:io';
+import 'package:path/path.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as P ;
 import 'model/Ders.dart';
 import 'model/Quiz.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
@@ -48,10 +54,15 @@ class _QuizResultsPageState extends State<QuizResultsPage> {
                 ),
               ),
             ),
+            Container(
 
-
-
-          ],
+              child: ElevatedButton(
+                child: Text('Create Excel'),
+                onPressed: (){
+                  createExcel();
+              },
+            )
+            )],
         ),
       ),
     );
@@ -117,5 +128,34 @@ class _QuizResultsPageState extends State<QuizResultsPage> {
           ));
     }
 
+  Future<void> createExcel() async {
+    final P.Workbook workbook = P.Workbook();
+    final P.Worksheet sheet = workbook.worksheets[0];
+    sheet.getRangeByName('A1').setText(widget.quiz.quizName);
+    //Cell style eklencek
+    sheet.getRangeByName('A2').setText("Student emails");
+    sheet.getRangeByName('B2').setText("Student score");
+    int rowIndex = 3;
+    int columnIndex = 1;
+    int columnIndex2 = 2;
+    scoreMap.forEach((key, value) {
+      sheet.getRangeByIndex(rowIndex, columnIndex).setText(key);
+      sheet.getRangeByIndex(rowIndex, columnIndex2).setText(value.toString());
+      rowIndex++;
+    });
+
+    final List<int> bytes = workbook.saveAsStream();
+    workbook.dispose();
+
+
+    //Save and launch the file.
+      final String path = (await getApplicationSupportDirectory()).path;
+      final String fileName =
+      Platform.isWindows ? '$path\\Output.xlsx' : '$path/Output.xlsx';
+      final File file = File(fileName);
+      await file.writeAsBytes(bytes, flush: true);
+      print(fileName);
+      OpenFile.open(fileName);
+    }
 }
 

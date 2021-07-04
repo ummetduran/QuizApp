@@ -21,6 +21,11 @@ void main() async{
       theme: ThemeData(
         primarySwatch: Colors.indigo
       ),
+      darkTheme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        brightness: Brightness.dark
+      ),
+      themeMode: ThemeMode.system,
       routes: {
       '/SignIn' :(context) => SignInPage(),
 
