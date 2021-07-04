@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:imagebutton/imagebutton.dart';
 import 'package:untitled1/quiz_app/ders_ekle.dart';
 import 'dart:io';
 import 'package:path/path.dart';
@@ -43,7 +44,10 @@ class _QuizResultsPageState extends State<QuizResultsPage> {
           widget.ders.name.toString() + " Results",
         ),
         backgroundColor: Colors.cyan.shade600,
+      
       ),
+
+
       body: Container(
         child: Column(
           children: [
@@ -55,14 +59,17 @@ class _QuizResultsPageState extends State<QuizResultsPage> {
               ),
             ),
             Container(
+              margin: EdgeInsets.only(left: 280, bottom: 50),
+              child: FloatingActionButton(onPressed: createExcel,
+                  backgroundColor: Colors.green,
 
-              child: ElevatedButton(
-                child: Text('Create Excel'),
-                onPressed: (){
-                  createExcel();
-              },
+                  child: Image.asset('assets/images/excel.png',
+                    height: 40,
+                    width: 40,
+                  )
+              ),
             )
-            )],
+          ],
         ),
       ),
     );
