@@ -41,14 +41,10 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
     DateTime nowMinusStart = DateTime.now().subtract(Duration(minutes: quizStartDate.minute));
     int timer = widget.quiz.time - nowMinusStart.minute;
     return Scaffold(
-        appBar: AppBar(
-            title: Text("Soru ${index + 1}"),
-            toolbarTextStyle: TextStyle(color: Colors.cyan.shade600, fontSize: 22),
-          backgroundColor: Colors.cyan[600],
-        ),
+
         body: Column(children: [
           Padding(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.only(left: 15,right: 15, top: 60,bottom: 50),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -71,6 +67,8 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
             ),
           ),
 
+          Text("Soru ${index + 1}"+"/${widget.quiz.questions.length}",style: TextStyle(fontSize: 25),),
+
           AlertDialog(
             content: Form(
                 //  key: _formKey,
@@ -79,7 +77,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
               children: [
                 Text(
                   widget.quiz.questions[index].question.toString(),
-                  maxLines: 3,
+                  maxLines: 3,style: TextStyle(fontSize: 20),
                 ),
                  imageWidget(),
 
@@ -113,7 +111,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                 SizedBox(
                   width: 200,
                   child:
-                      Text(widget.quiz.questions[index].options[0].toString()),
+                      Text(widget.quiz.questions[index].options[0].toString(), style: TextStyle(fontSize: 20),),
                 ),
               ],
             ),
@@ -127,7 +125,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                 SizedBox(
                     width: 200,
                     child: Text(
-                        widget.quiz.questions[index].options[1].toString())),
+                        widget.quiz.questions[index].options[1].toString(),style: TextStyle(fontSize: 20),)),
               ],
             ),
           ),
@@ -145,7 +143,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                 SizedBox(
                   width: 200,
                   child:
-                      Text(widget.quiz.questions[index].options[0].toString()),
+                      Text(widget.quiz.questions[index].options[0].toString(), style: TextStyle(fontSize: 20),),
                 ),
               ],
             ),
@@ -159,7 +157,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                 SizedBox(
                     width: 200,
                     child: Text(
-                        widget.quiz.questions[index].options[1].toString())),
+                        widget.quiz.questions[index].options[1].toString(), style: TextStyle(fontSize: 20))),
               ],
             ),
           ),
@@ -172,7 +170,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                 SizedBox(
                     width: 200,
                     child: Text(
-                        widget.quiz.questions[index].options[2].toString())),
+                        widget.quiz.questions[index].options[2].toString(), style: TextStyle(fontSize: 20))),
               ],
             ),
           ),
@@ -188,7 +186,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
                 SizedBox(
                     width: 200,
                     child: Text(
-                        widget.quiz.questions[index].options[3].toString())),
+                        widget.quiz.questions[index].options[3].toString(), style: TextStyle(fontSize: 20))),
               ],
             ),
           )
@@ -210,8 +208,10 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
               debugPrint("${widget.quiz.questions[index].answer}");
               debugPrint("${widget.quiz.questions[index].options[_radioValue]}");
               score += widget.quiz.questions[index].point;
+             // widget.quiz.hasSolved = true;
             }
-            //widget.quiz.hasSolved = true;
+            widget.quiz.hasSolved = true;
+            debugPrint("${widget.quiz.hasSolved}");
             debugPrint("Kaydedildi");
             uploadQuizScore();
             Navigator.push(

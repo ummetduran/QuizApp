@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:untitled1/quiz_app/model/Question.dart';
 import 'package:untitled1/quiz_app/model/Quiz.dart';
+import 'package:untitled1/quiz_app/teacher_home_page.dart';
 
 
 import 'model/Ders.dart';
@@ -542,7 +543,7 @@ setState(() {
     // ders.quizList.add(quiz);
     // });
     Navigator.push(
-          context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.ders)));
+          context, MaterialPageRoute( builder: (context) => TeacherHomePage(teacher: widget.teacher,)));
 
   }
 

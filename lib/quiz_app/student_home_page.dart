@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:untitled1/quiz_app/model/Student.dart';
 import 'package:untitled1/quiz_app/model/Teacher.dart';
 import 'package:untitled1/quiz_app/derse_kaydol.dart';
@@ -12,15 +13,15 @@ import 'model/Ders.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-class StudentHomePage extends StatefulWidget {
 
+class StudentHomePage extends StatefulWidget {
   final Student student;
 
   const StudentHomePage({Key key, this.student, Ders ders}) : super(key: key);
+
   @override
   _StudentHomePageState createState() => _StudentHomePageState(student);
 }
-
 
 class _StudentHomePageState extends State<StudentHomePage> {
   Student student;
@@ -33,6 +34,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     dersleriGetir();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,26 +70,34 @@ class _StudentHomePageState extends State<StudentHomePage> {
               ),
               ListTile(
                 title: Text("İtem1"),
-                onTap: () {},
+                onTap: () {
+                  showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2021),
+                      lastDate: DateTime(2022));
+
+                },
               ),
               ListTile(
                 title: Text("İtem2"),
               ),
-              SizedBox(height: 400,),
+              SizedBox(
+                height: 400,
+              ),
               RaisedButton(
-
-               child: TextButton(
-                 onPressed: (){
-                   Navigator.push(context, MaterialPageRoute( builder: (context) => SignInPage()));
-                 },
-               child: Text("Exit"),
-               ),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SignInPage()));
+                  },
+                  child: Text("Exit"),
+                ),
               )
             ],
           ),
         ),
       ),
-
       body: Container(
         child: Column(
           children: [
@@ -96,46 +106,49 @@ class _StudentHomePageState extends State<StudentHomePage> {
               width: 700,
               margin: EdgeInsets.all(10),
               child: RaisedButton(
-
                 onPressed: () {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => DerseKaydol(student: widget.student)));
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              DerseKaydol(student: widget.student)));
                 },
-
-                child: Text("Enroll the Lesson", style: TextStyle(fontSize: 20),),
+                child: Text(
+                  "Enroll the Lesson",
+                  style: TextStyle(fontSize: 20),
+                ),
                 textColor: Colors.white,
                 color: Colors.cyan.shade600,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)),),
-
+                    borderRadius: BorderRadius.circular(50)),
+              ),
             ),
-
             Container(
               child: Expanded(
-                child: ListView.builder(itemBuilder: listeElemaniOlustur,
-                  itemCount: widget.student.alinanDersler.length ,
+                child: ListView.builder(
+                  itemBuilder: listeElemaniOlustur,
+                  itemCount: widget.student.alinanDersler.length,
                 ),
               ),
             ),
-
           ],
-
         ),
       ),
     );
   }
 
   Future dersleriGetir() async {
-
     var fireUser = _auth.currentUser;
-    var ref = await _fireStore.collection("Users").doc(fireUser.uid).collection("alinanDersler");
+    var ref = await _fireStore
+        .collection("Users")
+        .doc(fireUser.uid)
+        .collection("alinanDersler");
     ref.snapshots().listen((event) {
       widget.student.alinanDersler.clear();
 
-      for( var element in event.docs){
+      for (var element in event.docs) {
         Ders ders = new Ders.empty();
-        ders.key=element.data()["derskodu"];
+        ders.key = element.data()["derskodu"];
         ders.name = element.id;
         ders.teacher = new Teacher.empty();
         ders.teacher.id = element.data()["teacherId"];
@@ -143,44 +156,39 @@ class _StudentHomePageState extends State<StudentHomePage> {
         setState(() {
           widget.student.alinanDersler.add(ders);
         });
-      };
-
+      }
+      ;
     });
 
-
-
-      //debugPrint("${widget.student.alinanDersler.first.getName()}");
-
+    //debugPrint("${widget.student.alinanDersler.first.getName()}");
   }
 
-
   Widget listeElemaniOlustur(BuildContext context, int index) {
-
     return Container(
-
       decoration: BoxDecoration(
           border: Border.all(width: 2),
           borderRadius: BorderRadius.circular(20)),
       margin: EdgeInsets.all(5),
       child: ListTile(
-        onTap: (){
+        onTap: () {
           debugPrint("${widget.student.alinanDersler[index].name} Basıldı");
-          Navigator.push(context, MaterialPageRoute( builder: (context) => StudentDersPage(ders: widget.student.alinanDersler[index])));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => StudentDersPage(
+                      ders: widget.student.alinanDersler[index])));
         },
         leading: Icon(
           Icons.done,
           size: 36,
-
         ),
-        title:  Text(widget.student.alinanDersler[index].name),
+        title: Text(widget.student.alinanDersler[index].name),
         //subtitle: Text(widget.student.alinanDersler[index].key.toString()),
 
         trailing: Icon(
           Icons.keyboard_arrow_right,
-
         ),
       ),
     );
   }
-
 }

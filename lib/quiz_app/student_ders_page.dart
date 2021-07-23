@@ -110,7 +110,7 @@ class _StudentDersPageState extends State<StudentDersPage> {
       colorL = Colors.tealAccent[700];
       entryText = "Enter!";
     }
-    else if(DateTime.now().isAfter(quizEndDate)){
+    else if(DateTime.now().isAfter(quizEndDate) || widget.ders.quizList[index].hasSolved == true){
       colorL = Colors.redAccent[700];
       entryText = "Finished!";
     }
