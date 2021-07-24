@@ -208,10 +208,9 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
               debugPrint("${widget.quiz.questions[index].answer}");
               debugPrint("${widget.quiz.questions[index].options[_radioValue]}");
               score += widget.quiz.questions[index].point;
-             // widget.quiz.hasSolved = true;
+
             }
-            widget.quiz.hasSolved = true;
-            debugPrint("${widget.quiz.hasSolved}");
+
             debugPrint("Kaydedildi");
             uploadQuizScore();
             Navigator.push(
@@ -243,10 +242,11 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
   }
 
   void uploadQuizScore() async {
+
     var fireUser = _auth.currentUser;
     Map<String, dynamic> quizScore = new Map();
     quizScore["QuizScore"] = score;
-    //quizScore["hasSolved"] = true;
+    quizScore["hasSolved"] = true;
     await _fireStore
         .collection("Users")
         .doc("${fireUser.uid}")

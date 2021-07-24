@@ -22,11 +22,16 @@ class _StudentDersPageState extends State<StudentDersPage> {
 
   @override
   void initState() {
-    //print(widget.ders.name);
+
+
     // TODO: implement initState
     fetchQuizzes();
+
+    fetchSolvedDB();
+
     super.initState();
   }
+  static List<bool> solvedList = <bool>[];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,16 +106,22 @@ class _StudentDersPageState extends State<StudentDersPage> {
   }
 
   Widget listeElemaniOlustur(BuildContext context, int index) {
+
     Color colorL;
     String entryText;
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm");
     DateTime quizStartDate = dateFormat.parse(widget.ders.quizList[index].startDate);
     DateTime quizEndDate = quizStartDate.add(Duration(minutes: widget.ders.quizList[index].time));
-    if( (DateTime.now().isAfter(quizStartDate)) && DateTime.now().isBefore(quizEndDate)){
+    for(int i = 0; i<solvedList.length;i++){
+      print("Liste ${solvedList[i]}");
+    }
+
+    if( (DateTime.now().isAfter(quizStartDate)) && DateTime.now().isBefore(quizEndDate) && solvedList.elementAt(index)== false ){
       colorL = Colors.tealAccent[700];
       entryText = "Enter!";
     }
-    else if(DateTime.now().isAfter(quizEndDate) || widget.ders.quizList[index].hasSolved == true){
+
+    else if(solvedList.elementAt(index)== true || DateTime.now().isAfter(quizEndDate) ){
       colorL = Colors.redAccent[700];
       entryText = "Finished!";
     }
@@ -144,6 +155,45 @@ class _StudentDersPageState extends State<StudentDersPage> {
     }
 
 
+    Future fetchSolvedDB() async {
+
+      var fireUser = _auth.currentUser;
+      await _fireStore.collection("Users").doc(fireUser.uid).collection("alinanDersler").
+      doc(widget.ders.name).collection("quizler").snapshots().listen((event) {
+        solvedList.clear();
+        for( var element in event.docs){
+          bool hasSolved = element.data()["hasSolved"];
+          print(hasSolved);
+          setState(() {
+            solvedList.add(hasSolved);
+          });
+        }
+        if(widget.ders.quizList.length>solvedList.length){
+          int count = widget.ders.quizList.length - solvedList.length;
+          for(int i = 0 ; i< count;i++){
+            setState(() {
+              solvedList.add(false);
+            });
+
+          }
+        }
+      });
+
+
+    }
+
+/*  Future<bool> hasSolved(int index) async{
+    bool hasSolved = false;
+    var fireUser = _auth.currentUser;
+    var ref = await _fireStore.collection("Users").doc(fireUser.uid).collection("alinanDersler").
+    doc(widget.ders.key).collection("quizler").doc(widget.ders.quizList.elementAt(index).quizName).get();
+
+
+      hasSolved = ref.get("hasSolved");
+
+      print("has solved" + hasSolved.toString());
+      return hasSolved;
+  }*/
 
   void showAlertDialog(BuildContext context) {
      AlertDialog alert  = AlertDialog(
