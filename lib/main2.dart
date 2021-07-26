@@ -1,54 +1,42 @@
-import 'package:flutter/material.dart';
 
-void main() {
-  runApp(new MaterialApp(
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:untitled1/quiz_app/model/ThemeManager.dart';
+import 'package:untitled1/quiz_app/sign_in.dart';
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  return runApp(ChangeNotifierProvider<ThemeNotifier>(
+      create: (_) => new ThemeNotifier(),
+
+      child: MyApp(),
+  ));
+
+}
+class MyApp extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+
+      //initialRoute: '/SignIn',
+
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.teal, accentColor: Colors.black),
-      home: new Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Denemeler",
-              style: TextStyle(fontSize: 36, color: Colors.white),
-            ),
-          ),
-          floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                debugPrint("FAB tıklandı");
-              },
-              //backgroundColor: Colors.orange,
-              child: new Icon(
-                Icons.access_alarms,
-                color: Colors.white,
-                size: 48.0,
-              )),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          body: Container(
-            color: Colors.red,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Icon(Icons.waves, size: 64, color: Colors.yellow),
-                Icon(Icons.add_circle, size: 64, color: Colors.blue),
-                Icon(Icons.add_circle, size: 64, color: Colors.orange),
-                Icon(Icons.add_circle, size: 64, color: Colors.purple),
-                Expanded(
-                  child: Icon(
-                    Icons.add_circle, size: 64, color: Colors.purple,
-                  )
-                ),
-                Expanded(
-                    child: Icon(
-                      Icons.add_circle, size: 64, color: Colors.purple,
-                    )
-                ),
-                Expanded(
-                    child: Icon(
-                      Icons.add_circle, size: 64, color: Colors.purple,
-                    )
-                ),
-                
-              ],
-            ),
-          ))));
+      theme: ThemeData(
+          primarySwatch: Colors.indigo
+      ),
+      routes: {
+        '/SignIn' :(context) => SignInPage(),
+
+      },
+      home: Scaffold(
+          resizeToAvoidBottomInset: false,
+
+
+
+          body: SignInPage()
+      ),
+    );
+  }
 }

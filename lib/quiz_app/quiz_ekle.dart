@@ -1,27 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_format/date_format.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:imagebutton/imagebutton.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:untitled1/quiz_app/backend/MultipleChoiceQuestion.dart';
-import 'package:untitled1/quiz_app/backend/OpenEndQuestion.dart';
 import 'dart:io';
-
-import 'package:untitled1/quiz_app/backend/Question.dart';
-import 'package:untitled1/quiz_app/backend/Quiz.dart';
-import 'package:untitled1/quiz_app/backend/TrueFalseQuestion.dart';
-import 'package:untitled1/quiz_app/ders_ekle.dart';
-
-import 'backend/Ders.dart';
-import 'backend/Teacher.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:untitled1/quiz_app/model/Question.dart';
+import 'package:untitled1/quiz_app/model/Quiz.dart';
+import 'package:untitled1/quiz_app/teacher_home_page.dart';
 
 
+import 'model/Ders.dart';
+import 'model/Teacher.dart';
+import 'ders_page.dart';
+
+
+FirebaseStorage storage = FirebaseStorage.instance;
 FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
@@ -36,6 +33,8 @@ class QuizEkle extends StatefulWidget {
 }
 
 class _QuizEkleState extends State<QuizEkle> {
+  String _uplodedFileURL;
+  List<Color> list = new List();
   @override
   void initState() {
     // TODO: implement initState
@@ -46,7 +45,8 @@ class _QuizEkleState extends State<QuizEkle> {
   }
   final formKey1 = GlobalKey<FormState>();
   final formKey2 = GlobalKey<FormState>();
-  File _image;
+  final imageKey = GlobalKey<FormState>();
+  PickedFile _image;
   String dropDownValue = 'Çoktan Seçmeli';
   Quiz quiz = new Quiz();
   Question question;
@@ -54,10 +54,11 @@ class _QuizEkleState extends State<QuizEkle> {
   bool checked = false;
   int _radioValue = -1;
   //String correctAnswer;
-
+  var colorList = List<Color>();
 
   @override
   Widget build(BuildContext context) {
+    list.add(Colors.amber);
     return Scaffold(
       body: Container(
         child: SingleChildScrollView(
@@ -79,9 +80,9 @@ class _QuizEkleState extends State<QuizEkle> {
                                 borderRadius: BorderRadius.circular(20)),
                             labelText: "Quiz Adı",
                             labelStyle:
-                            TextStyle(color: Colors.indigo, fontSize: 18),
+                            TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                             hintStyle:
-                            TextStyle(color: Colors.indigo, fontSize: 18)),
+                            TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                         onChanged: (name) {
                           setState(() {
                             quiz.quizName = name;
@@ -102,20 +103,30 @@ class _QuizEkleState extends State<QuizEkle> {
                   icon: Icon(Icons.event),
                   dateLabelText: 'Gün',
                   timeLabelText: "Saat",
-                  selectableDayPredicate: (date) {
+                  /*selectableDayPredicate: (date) {
                     // Disable weekend days to select from the calendar
                     if (date.weekday == 6 || date.weekday == 7) {
                       return false;
                     }
 
                     return true;
+                  },*/
+                  onChanged: (startDate) {
+                    setState(() {
+                      quiz.startDate= startDate;
+                      debugPrint("Start Date: "+ startDate);
+                    });
                   },
-                  onChanged: (val) => print(val),
                   validator: (val) {
                     print(val);
                     return null;
                   },
-                  onSaved: (val) => print(val),
+                  onSaved:(startDate) {
+                    setState(() {
+                      quiz.startDate= startDate;
+                      debugPrint("Start Date: "+ startDate);
+                    });
+                  }
                 ),
               ),
 
@@ -132,9 +143,9 @@ class _QuizEkleState extends State<QuizEkle> {
                             borderRadius: BorderRadius.circular(20)),
                         labelText: "Time",
                         labelStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                         hintStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18)),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                     onChanged:(quizTime) {
                       setState(() {
                         quiz.time= int.parse(quizTime);
@@ -168,9 +179,9 @@ class _QuizEkleState extends State<QuizEkle> {
                                   borderRadius: BorderRadius.circular(20)),
                               labelText: "Soruyu yazınız.",
                               labelStyle:
-                              TextStyle(color: Colors.indigo, fontSize: 18),
+                              TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                               hintStyle:
-                              TextStyle(color: Colors.indigo, fontSize: 18)),
+                              TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                           onChanged: (questionText) {
                             setState(() {
                               question = new Question();
@@ -194,7 +205,9 @@ class _QuizEkleState extends State<QuizEkle> {
                       child: _image == null
                           ? Text("")
                           : (Image.file(
-                        _image,
+
+                        File(_image.path),
+                      //  key: imageKey,
                         fit: BoxFit.fill,
                       )),
                     ),
@@ -204,7 +217,7 @@ class _QuizEkleState extends State<QuizEkle> {
                         backgroundColor: Colors.grey.shade200,
                         child: Icon(
                           Icons.add_a_photo,
-                          color: Colors.indigo,
+                          color: Colors.cyan.shade600,
                           size: 35,
                         ),
                       ),
@@ -230,7 +243,7 @@ class _QuizEkleState extends State<QuizEkle> {
                             child: Text(
                               value,
                               style: TextStyle(
-                                  fontSize: 18, color: Colors.indigo),
+                                  fontSize: 18, color: Colors.cyan.shade600),
                             ));
                       }).toList(),
                       onChanged: (newValue) {
@@ -260,9 +273,9 @@ class _QuizEkleState extends State<QuizEkle> {
                                   borderRadius: BorderRadius.circular(20)),
                               labelText: "Point",
                               labelStyle:
-                              TextStyle(color: Colors.indigo, fontSize: 18),
+                              TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                               hintStyle:
-                              TextStyle(color: Colors.indigo, fontSize: 18)),
+                              TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                           onChanged:(point) {
                             setState(() {
                               question.point = int.parse(point);
@@ -284,10 +297,11 @@ class _QuizEkleState extends State<QuizEkle> {
               ),
 
               Padding(
-                padding: const EdgeInsets.only(top: 50.0),
+                padding: const EdgeInsets.only(top: 40.0),
                 child: RaisedButton(
+                  color: Colors.cyan.shade600,
                   onPressed: addQuestion,
-                  child: Text("Add Question"),
+                  child: Text("Add Question",style: TextStyle(color: Colors.white),),
                 ),
               ),
 
@@ -296,7 +310,7 @@ class _QuizEkleState extends State<QuizEkle> {
                 shrinkWrap: true,
                 itemCount: quiz.questions.length,),
               ),
-              
+
               RaisedButton(onPressed: saveQuiz, child: Text("Save"),)
 
             ],
@@ -310,12 +324,31 @@ class _QuizEkleState extends State<QuizEkle> {
   }
 
   Future<File> getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
     setState(() {
       _image = image;
     });
+
+    Reference reference = storage.ref().child(widget.ders.name)
+        .child(quiz.quizName)
+        .child(question.question)
+        .child(_image.path);
+   UploadTask uploadTask = reference.putFile(File(_image.path));
+   await uploadTask.whenComplete((){
+     print("resim eklendi");
+   });
+   reference.getDownloadURL().then((fileURL) =>{
+   setState(() {
+   _uplodedFileURL = fileURL;
+   print(_uplodedFileURL);
+   })
+   });
+
+
   }
+
+
 
   Widget questionType() {
 
@@ -339,9 +372,9 @@ class _QuizEkleState extends State<QuizEkle> {
                           borderRadius: BorderRadius.circular(20)),
                       labelText: "Options 1",
                       labelStyle:
-                      TextStyle(color: Colors.indigo, fontSize: 18),
+                      TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                       hintStyle:
-                      TextStyle(color: Colors.indigo, fontSize: 18)),
+                      TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                   onChanged: (option1) {
               setState(() {
                 question.options[0] = option1;
@@ -369,9 +402,9 @@ class _QuizEkleState extends State<QuizEkle> {
                             borderRadius: BorderRadius.circular(20)),
                         labelText: "Options 2",
                         labelStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                         hintStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18)),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                       onChanged: (option2) {
                         setState(() {
                           question.options[1] = option2;
@@ -399,9 +432,9 @@ class _QuizEkleState extends State<QuizEkle> {
                             borderRadius: BorderRadius.circular(20)),
                         labelText: "Options 3",
                         labelStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                         hintStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18)),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                       onChanged: (option3) {
                         setState(() {
                           question.options[2] = option3;
@@ -429,9 +462,9 @@ class _QuizEkleState extends State<QuizEkle> {
                             borderRadius: BorderRadius.circular(20)),
                         labelText: "Options 4",
                         labelStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                         hintStyle:
-                        TextStyle(color: Colors.indigo, fontSize: 18)),
+                        TextStyle(color: Colors.cyan.shade600, fontSize: 18)),
                       onChanged: (option4) {
                         setState(() {
                           question.options[3] = option4;
@@ -460,15 +493,17 @@ setState(() {
 });
 
       return Padding(
-        padding: const EdgeInsets.only(bottom: 20,left: 25),
+        padding: const EdgeInsets.only(bottom: 25, left: 25),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [ToggleSwitch(
+          children: [
+            ToggleSwitch(
+            activeBgColor: [Colors.cyan.shade600],
             labels: ["True", "False"],
             onToggle: (index) {
               question.answer = labels[index];
 
-            }
+            }, totalSwitches: 2,
           ),
           ]
         ),
@@ -477,30 +512,38 @@ setState(() {
   }
 
   Future addQuestion() async {
-   setState(() {
-     quiz.questions.add(question);
-     formKey2.currentState.reset();
-   });
 
     Map<String, dynamic> addQuiz = Map();
     addQuiz["zaman"] = quiz.time;
+    addQuiz["startDate"] = quiz.startDate;
     await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
-        .doc(widget.ders.getName()).collection("quizler").doc("${quiz.quizName}").set(addQuiz);
+        .doc(widget.ders.name).collection("quizler").doc("${quiz.quizName}").set(addQuiz);
     Map<String, dynamic> addQuestion = Map();
     addQuestion["question"] = question.question;
     addQuestion["cevaplar"] = question.options;
     addQuestion["point"] = question.point;
     addQuestion["dogruCevap"] = question.answer;
+    addQuestion["imagePath"] = _uplodedFileURL;
     await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
-        .doc(widget.ders.getName()).collection("quizler").doc("${quiz.quizName}").collection("sorular").doc().set(addQuestion);
+        .doc(widget.ders.name).collection("quizler").doc("${quiz.quizName}").collection("sorular").doc().set(addQuestion);
 
+
+    setState(() {
+      quiz.questions.add(question);
+      formKey2.currentState.reset();
+      //   imageKey.currentState.reset();
+      _image = null;
+      _uplodedFileURL = "";
+      _radioValue = -1;
+    });
   }
 
-  void saveQuiz() async{
-    setState(() {
-      ders.quizList.add(quiz);
-    });
-
+  void saveQuiz(){
+    // setState(() {
+    // ders.quizList.add(quiz);
+    // });
+    Navigator.push(
+          context, MaterialPageRoute( builder: (context) => TeacherHomePage(teacher: widget.teacher,)));
 
   }
 
@@ -561,7 +604,7 @@ setState(() {
   void getQuestionsFromDB() async{
     var fireUser = _auth.currentUser;
     await _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler").
-    doc("${widget.ders.getName()}").collection("quizler").doc("${quiz.quizName}").collection("sorular").get().then((value){
+    doc("${widget.ders.name}").collection("quizler").doc("${quiz.quizName}").collection("sorular").get().then((value){
       setState(() {
         value.docs.forEach((element) {
           Question questionFromDB = new Question();

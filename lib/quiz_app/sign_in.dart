@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled1/quiz_app/backend/Teacher.dart';
-import 'package:untitled1/quiz_app/home_page.dart';
+import 'model/Teacher.dart';
+
 import 'package:untitled1/quiz_app/login_signup.dart';
 import 'package:untitled1/quiz_app/student_home_page.dart';
 import 'package:untitled1/quiz_app/teacher_home_page.dart';
 
-import 'backend/Student.dart';
-import 'backend/Users.dart';
+import 'model/Student.dart';
+import 'model/Users.dart';
 
 
 FirebaseAuth _auth = FirebaseAuth.instance;
@@ -32,107 +32,184 @@ class _SignInPageState extends State<SignInPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-/*    _auth.authStateChanges().listen((User user){
-      if(user==null)
-        print("Kullanııc oturumu kapatıı");
-      else
-        print("Kullanıcı oturum açtı");
-    });*/
+
   }
-  @override
-  Widget build(BuildContext context) {
+  @override  Widget build(BuildContext context) {
+    Firebase.initializeApp();
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
+        body: Container(
+
+            width: double.infinity,
             decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/images/solid-color-1.jpg'),
-                  fit: BoxFit.cover
-              ),
-            ),
-          ),
-          SingleChildScrollView(
-            child: Form(
-                key: formKey,
-                child: Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                        //borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          'assets/images/logo2.png', width: 225, height: 225,),
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.mail),
-                            labelText: "Email",
-                            labelStyle: TextStyle(fontSize: 20)
-
-                        ),
-                        onChanged: (mail) => _email = mail,
-
-                      ),
-                      SizedBox(height: 20,),
-                      TextFormField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.lock),
-                            labelText: "Password",
-                            labelStyle: TextStyle(fontSize: 20)
-                        ),
-                        onSaved: (sifre) => password = sifre,
-
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 160, top: 15),
-                        child: err,
-                      ),
-                      Padding(
-
-                        padding: const EdgeInsets.only(top: 10,right: 160),
-                        child: TextButton(onPressed: (){
-                          _resetPassword();
-                        }, child: Text("Forgot my password", style: TextStyle(decoration: TextDecoration.underline)),),
-                      ),
-                      SizedBox(height: 25,),
-                      SizedBox(
-                        height: 50,
-                        width: 150,
-                        child: RaisedButton(onPressed: () {
-                          _girisYap();
-                        },
-
-                          child: Text("Sign In", style: TextStyle(fontSize: 20),),
-                          textColor: Colors.white,
-                          color: Colors.indigo,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50)), ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: TextButton(onPressed: (){
-                          Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => LoginSignUp()));
-                        }, child: Text("If you are not registered tap here to sign up")),
-                      ),
-
-
-
-                    ],
-                  ),
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    colors: [
+                      Colors.cyan[400],
+                      Colors.cyan[800],
+                      Colors.cyan[400]
+                    ]
                 )
-
-
             ),
-          )
-        ],
-      ),
+            child: Form( key: formKey,
+              child: Column(
 
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: 80,),
+                  Padding(padding: EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text("QuizApp",
+                          style: TextStyle(color: Colors.white, fontSize: 40),),
+                        SizedBox(height: 10,),
+                        Text("Login",
+                          style: TextStyle(color: Colors.white, fontSize: 18),),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(60),
+                              topRight: Radius.circular(60))
+                      ),
+                      child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(height: 60,),
+                                Container(
+                                  padding: EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                      boxShadow: [BoxShadow(
+                                          color: Colors.cyan,
+                                          blurRadius: 20,
+                                          offset: Offset(0, 2)
+                                      )
+                                      ]
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container(
+                                        padding: EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                            border: Border(bottom: BorderSide(
+                                                color: Colors.grey[200]))
+                                        ),
+                                        child: TextFormField(
+                                          keyboardType: TextInputType.emailAddress,
+                                          decoration: InputDecoration(
+                                              prefixIcon: Icon(
+                                                Icons.email,
+                                                color: Colors.cyan,
+                                              ),
+                                              hintText: "Email",
+                                              labelStyle: TextStyle(color: Colors.grey, fontSize: 20),
+                                              border: InputBorder.none
+                                          ),
+                                          onChanged: (mail) => _email = mail,
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.all(15),
+                                        decoration: BoxDecoration(
+                                            border: Border(bottom: BorderSide(
+                                                color: Colors.grey[200]))
+                                        ),
+                                        child: TextFormField(
+                                          obscureText: true,
+                                          decoration: InputDecoration(
+                                              prefixIcon: Icon(Icons.lock, color: Colors.cyan),
+                                              hintText: "Password",
+                                              labelStyle: TextStyle(
+                                                  color: Colors.grey,fontSize: 20),
+                                              border: InputBorder.none
+                                          ),
+                                          onSaved: (sifre) => password = sifre,
+                                        ),
+
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only( top: 15),
+                                        child: err,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 40,),
+                                Padding(
+
+                                  padding: const EdgeInsets.only(),
+                                  child: TextButton(onPressed: () {
+                                    _resetPassword();
+                                  }, child: Text("Forgot password?",
+                                      style: TextStyle(color: Colors.grey)),),
+                                ),
+
+
+                                SizedBox(height: 40,),
+                                Container(
+
+
+                                  height: 50,
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: Colors.cyan[900]
+                                  ),
+                                  child: TextButton(onPressed: () {
+                                    _girisYap();
+                                  },
+
+                                    child: Text("Login", style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),),
+
+                                  ),
+                                ),
+                                SizedBox(height: 40,),
+                                Container(
+
+                                  height: 50,
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: Colors.cyan[600]
+                                  ),
+                                  child: TextButton(onPressed: () {
+                                    Navigator.push(
+                                        context, MaterialPageRoute(
+                                        builder: (context) => LoginSignUp()));
+                                  },
+
+                                    child: Text("Signup", style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),),
+
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                          )
+
+
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
+        )
     );
   }
+
 
 
 
@@ -151,11 +228,11 @@ class _SignInPageState extends State<SignInPage> {
 
           String name;
           var fireUser= _auth.currentUser;
-         await _fireStore.collection("Users").doc(fireUser.uid).get().then((value){
+          await _fireStore.collection("Users").doc(fireUser.uid).get().then((value){
             debugPrint("${value.data()["userType"]}");
 
-              userType=value.data()["userType"];
-              name = value.data()["name"];
+            userType=value.data()["userType"];
+            name = value.data()["name"];
 
 
             debugPrint("${value.data()["name"]}");
@@ -176,13 +253,17 @@ class _SignInPageState extends State<SignInPage> {
 
 
         }else{
-          debugPrint("Lütfen emailinizi onaylayınız");
+          setState(() {
+            err = Text("Please confirm your email.", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
+          });
+
+          debugPrint("Please confirm your email");
           _auth.signOut();
         }
 
       } catch (e) {
         setState(() {
-          err=Text("Kullanıcı bulunamadı!", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
+          err=Text("User not found!", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
         });
 
         debugPrint("********** HATA *********");
@@ -196,8 +277,16 @@ class _SignInPageState extends State<SignInPage> {
     await Firebase.initializeApp();
     try{
       await _auth.sendPasswordResetEmail(email: _email);
+      setState(() {
+        err = Text("Reset link has been sent to your email.", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
+      });
+
       debugPrint("Resetleme maili gönderildi.");
     }catch(e){
+      setState(() {
+        err = Text("Error!", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
+      });
+
       debugPrint("Şifre resetlenirken hata $e");
 
     }

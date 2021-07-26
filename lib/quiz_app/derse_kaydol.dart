@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled1/quiz_app/backend/Quiz.dart';
+import 'package:untitled1/quiz_app/model/Quiz.dart';
+import 'package:untitled1/quiz_app/model/Teacher.dart';
 import 'package:untitled1/quiz_app/student_home_page.dart';
 
-import 'backend/Ders.dart';
-import 'backend/Question.dart';
-import 'backend/Student.dart';
+import 'model/Ders.dart';
+import 'model/Question.dart';
+import 'model/Student.dart';
 
 
 FirebaseAuth _auth = FirebaseAuth.instance;
@@ -33,9 +34,9 @@ class _DerseKaydolState extends State<DerseKaydol> {
 
       appBar: AppBar(
 
-        backgroundColor: Color.fromARGB(230, 11, 65, 150),
+        backgroundColor: Colors.cyan.shade600,
         centerTitle: true,
-        title: Text("Derse Kaydol", style: TextStyle(color: Colors.white),),
+        title: Text("Enroll the Lesson", style: TextStyle(color: Colors.white),),
       ),
 
       body: Form(
@@ -47,12 +48,12 @@ class _DerseKaydolState extends State<DerseKaydol> {
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         Icons.book_outlined,
-                        color: Colors.indigo,
+                        color: Colors.cyan.shade600,
                       ),
-                      labelText: "Ders Kodu",
-                      hintText: "Ders Kodunu Giriniz",
-                      labelStyle: TextStyle(color: Colors.indigo, fontSize: 18),
-                      hintStyle: TextStyle(color: Colors.indigo, fontSize: 18),
+                      labelText: "Lesson Code",
+                      hintText: "Enter Lesson Code",
+                      labelStyle: TextStyle(color: Colors.cyan.shade600, fontSize: 18),
+                      hintStyle: TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                       //suffixStyle: TextStyle(color: Colors.white)
 
                     ),
@@ -75,7 +76,7 @@ class _DerseKaydolState extends State<DerseKaydol> {
                             context, MaterialPageRoute( builder: (context) => StudentHomePage(student: widget.student)));
 
                       },
-                        child: Text("Kaydol"),
+                        child: Text("Enroll"),
 
                       ),
                       SizedBox(width: 15,),
@@ -84,15 +85,8 @@ class _DerseKaydolState extends State<DerseKaydol> {
                             context, MaterialPageRoute( builder: (context) => StudentHomePage(student: widget.student,)));
                       }
                         ,
-                        child: Text("İptal"),
+                        child: Text("Cancel"),
                       ),
-
-                      RaisedButton(onPressed: (){
-                        sina();
-                      }
-                        ,
-                        child: Text("Sına"),
-                      )
 
                     ],
                   ),
@@ -105,70 +99,74 @@ class _DerseKaydolState extends State<DerseKaydol> {
     );
   }
 
-  void kaydol() async {
+  Future kaydol() async {
+    Teacher teacher = new Teacher.empty();
+
     String dersId;
     List<String> dersler = new List();
     QuerySnapshot teachers = await _fireStore.collection("Users").where("userType", isEqualTo: 1).get();
-    for(var element in teachers.docs ){
-      String userId  = element.id;
-      String dersName = await _fireStore.collection("Users").doc(userId).collection("dersler").doc().id.toString();
+    String userId;
+    for(var element in teachers.docs ) {
+      userId = element.id;
+      print(userId);
+      teacher.id = element.id.toString();
+      String dersName = await _fireStore
+          .collection("Users")
+          .doc(userId)
+          .collection("dersler")
+          .doc()
+          .id
+          .toString();
       dersler.add(dersName);
-        var teacherDersler = await _fireStore.collection("Users").doc(userId).collection("dersler")
-            .where("derskodu", isEqualTo: ders.key).get();
-      for(var elementTD in teacherDersler.docs){
-        if(elementTD.exists) dersId = elementTD.id.toString();
+      var teacherDersler = await _fireStore.collection("Users").doc(userId)
+          .collection("dersler")
+          .where("derskodu", isEqualTo: ders.key)
+          .get();
+
+      for (var elementTD in teacherDersler.docs) {
+        if (elementTD.exists) dersId = elementTD.id.toString();
+        await _fireStore.collection("Users").doc(userId).get().then((value) {
+          //teacher.id=userId.toString();
+          teacher.name = value.data()["name"];
+          teacher.email = value.data()["email"];
+          ders.teacher = teacher;
+          //widget.student.alinanDersler.add(ders);
+
+        });
+
+
+        await useraDersEkle(dersId);
+
         List ogrEkle = List();
         ogrEkle.add(widget.student.email);
         Map<String, List> map = new Map();
+
+        var dersDb = await _fireStore.collection("Users").doc(userId)
+            .collection("dersler")
+            .doc(dersId)
+            .get();
+        var liste = dersDb.data()["kayitliOgrenciler"];
+        if (liste != null) {
+          for (var element in dersDb.data()["kayitliOgrenciler"]) {
+            ogrEkle.add(element);
+          }
+        }
+
+
+
+        //map["derkodu"] = widget.ders.kodu
         map["kayitliOgrenciler"] = ogrEkle;
-          await _fireStore.collection("Users").doc(userId).collection("dersler").doc(dersId).update(map);
-
-          useraDersEkle(dersId);
-
-      }
-/*        var quizler =  await _fireStore.collection("Users").doc(userId).collection("dersler")
-            .doc(dersId).collection("quizler").get();
-        for(var element in quizler.docs){
-          Quiz quiz = new Quiz();
-          quiz.quizName = element.id;
-          quiz.time = element.get("zaman");
-          var dbQuestions = await _fireStore.collection("Users").doc(userId).collection("dersler")
-              .doc(dersId).collection("quizler").doc(element.id).collection("sorular").get();
-          for(var element in dbQuestions.docs){
-            Question q = new Question();
-            q.question = element.get("question");
-            q.answer = element.get("dogruCevap");
-            q.point= element.get("point");
-
-            q.options.clear();
-            List qOptions = element.get("cevaplar");
-            for(var element in qOptions){
-              q.options.add(element.toString());
-        }//her seçenek için
-            quiz.addQuestion(q);
-      }//her soru için
-          ders.quizList.add(quiz);
-    }//her quiz için
-      widget.student.alinanDersler.add(ders);*/
-
-  }
- }
-
-  void sina() {
-    for(var element in ders.quizList){
-      print("Quiz Bilgileri: ");
-      print(element.toString());
-      for(var element2 in element.questions){
-        print("SORU BILGILERI");
-        print(element2.toString());
+        await _fireStore.collection("Users").doc(userId)
+            .collection("dersler")
+            .doc(dersId)
+            .update(map);
       }
     }
+ }
 
-  }
-
-  void useraDersEkle(String dersId) async{
+  Future useraDersEkle(String dersId) async{
     Map<String, dynamic> dersEkle = Map();
-
+    dersEkle["teacherId"] = ders.teacher.id;
     dersEkle["derskodu"] = ders.key;
     await _fireStore.collection("Users").doc(widget.student.id).collection("alinanDersler").doc(dersId).set(dersEkle);
 

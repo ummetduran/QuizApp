@@ -3,10 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/ders_ekle.dart';
+import 'package:untitled1/quiz_app/sign_in.dart';
 
-import 'backend/Ders.dart';
+import 'model/Ders.dart';
 
-import 'backend/Teacher.dart';
+import 'model/Teacher.dart';
 import 'ders_page.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,7 +24,7 @@ class TeacherHomePage extends StatefulWidget {
 
 class _TeacherHomePageState extends State<TeacherHomePage> {
   Teacher teacher;
-  final formKey = GlobalKey<FormState>();
+
 
 
   _TeacherHomePageState(this.teacher);
@@ -42,6 +43,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.cyan.shade600,
         title: Text("Home Page"),
       ),
       drawer: Container(
@@ -50,7 +52,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
           child: ListView(
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(color: Colors.indigo),
+                decoration: BoxDecoration(color: Colors.cyan.shade600),
                 child: Column(
                   children: [
                     ClipRRect(
@@ -59,6 +61,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                         'assets/images/logo2.png',
                         width: 110,
                         height: 110,
+                        color: Colors.white,
                       ),
                     ),
                     Padding(
@@ -75,6 +78,16 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
               ),
               ListTile(
                 title: Text("İtem2"),
+              ),
+              SizedBox(height: 400,),
+              RaisedButton(
+
+                child: TextButton(
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute( builder: (context) => SignInPage()));
+                  },
+                  child: Text("Exit"),
+                ),
               )
             ],
           ),
@@ -94,9 +107,9 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                         MaterialPageRoute(builder: (context) => DersEkle(teacher: widget.teacher)));
                   },
 
-                  child: Text("Ders Ekle", style: TextStyle(fontSize: 20),),
+                  child: Text("Add Lesson", style: TextStyle(fontSize: 20),),
                   textColor: Colors.white,
-                  color: Colors.indigo,
+                  color: Colors.cyan.shade600,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50)),),
 
@@ -119,19 +132,24 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   void dersleriGetir() async {
 
     var fireUser = _auth.currentUser;
+    var teacherDb = await _fireStore.collection("Users").doc(fireUser.uid).get();
+
     await _fireStore.collection("Users").doc(fireUser.uid).collection("dersler").get().then((value) {
       setState(() {
+        widget.teacher.name = teacherDb.get("name");
+        widget.teacher.email = teacherDb.get("email");
+        widget.teacher.id = teacherDb.id;
         widget.teacher.verilenDersler.clear();
-        value.docs.forEach((element) {
+        for(var element in value.docs) {
           Ders ders = new Ders.empty();
           ders.key=element.data()["derskodu"];
-          ders.setName(element.id);
-          ders.setTeacher(widget.teacher);
+          ders.name = element.id;
+          ders.teacher=widget.teacher;
           widget.teacher.verilenDersler.add(ders);
-        });
+        };
 
       });
-      debugPrint("${widget.teacher.verilenDersler.first.getName()}");
+      debugPrint("${widget.teacher.verilenDersler.first.name}");
     });
   }
 
@@ -146,7 +164,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
         onDismissed: (direction)  {
   //SİLERKEN İNDEXLERİ KONTROL ET
        _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
-           .doc(widget.teacher.verilenDersler[index].getName()).delete();
+           .doc(widget.teacher.verilenDersler[index].name).delete();
        setState(() {
          widget.teacher.verilenDersler.removeAt(index);
        });
@@ -169,7 +187,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
               size: 36,
 
             ),
-            title:  Text(widget.teacher.verilenDersler[index].getName()),
+            title:  Text(widget.teacher.verilenDersler[index].name),
             subtitle: Text(widget.teacher.verilenDersler[index].key.toString()),
 
             trailing: Icon(
