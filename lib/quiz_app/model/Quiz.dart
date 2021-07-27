@@ -21,7 +21,12 @@ class Quiz {
   set time(int value) {
     _time = value;
   }
-
+  void setStartDate(String startDate){
+    this.startDate = startDate;
+  }
+  String getStartDate(){
+    return this.startDate;
+  }
   Quiz();
 
   String get quizName => _quizName;
@@ -38,6 +43,6 @@ class Quiz {
 
   @override
   String toString() {
-    return 'Quiz{_quizName: $_quizName, questions: $questions, _time: $_time}';
+    return 'Quiz{_quizName: $_quizName, questions: $questions, _time: $_time, $startDate}';
   }
 }

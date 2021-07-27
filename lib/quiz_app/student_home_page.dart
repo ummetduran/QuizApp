@@ -6,6 +6,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:untitled1/quiz_app/model/Student.dart';
 import 'package:untitled1/quiz_app/model/Teacher.dart';
 import 'package:untitled1/quiz_app/derse_kaydol.dart';
+import 'package:untitled1/quiz_app/quiz_calendar.dart';
 import 'package:untitled1/quiz_app/sign_in.dart';
 import 'package:untitled1/quiz_app/student_ders_page.dart';
 
@@ -71,11 +72,8 @@ class _StudentHomePageState extends State<StudentHomePage> {
               ListTile(
                 title: Text("İtem1"),
                 onTap: () {
-                  showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2021),
-                      lastDate: DateTime(2022));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => QuizCalendar()));
 
                 },
               ),
