@@ -51,6 +51,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
               DrawerHeader(
                 decoration: BoxDecoration(color: Colors.cyan.shade600),
                 child: Column(
+
                   children: [
                     ClipRRect(
                       //borderRadius: BorderRadius.circular(10),
@@ -64,33 +65,30 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text("${widget.student.email}",
-                          style: TextStyle(color: Colors.white)),
+                          style: TextStyle(color: Colors.white, fontSize: 14)),
                     ),
+
                   ],
                 ),
               ),
-              ListTile(
-                title: Text("İtem1"),
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => QuizCalendar()));
+                RaisedButton(
+                  color: Colors.cyan.shade600,
+                    child: Text("Calendar", style: TextStyle(color: Colors.white, fontSize: 22),),
+                    onPressed: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => QuizCalendar()));
+                }),
 
-                },
-              ),
-              ListTile(
-                title: Text("İtem2"),
-              ),
               SizedBox(
                 height: 400,
               ),
               RaisedButton(
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SignInPage()));
-                  },
-                  child: Text("Exit"),
-                ),
+                color: Colors.cyan.shade600,
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SignInPage()));
+                },
+                child: Text("Exit", style: TextStyle(color: Colors.white, fontSize: 22),),
               )
             ],
           ),

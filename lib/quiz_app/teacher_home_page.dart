@@ -46,53 +46,6 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
         backgroundColor: Colors.cyan.shade600,
         title: Text("Home Page"),
       ),
-      drawer: Container(
-        width: 250,
-        child: Drawer(
-          child: ListView(
-            children: [
-              DrawerHeader(
-                decoration: BoxDecoration(color: Colors.cyan.shade600),
-                child: Column(
-                  children: [
-                    ClipRRect(
-                      //borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        'assets/images/logo2.png',
-                        width: 110,
-                        height: 110,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text("${widget.teacher.email}",
-                          style: TextStyle(color: Colors.white)),
-                    ),
-                  ],
-                ),
-              ),
-              ListTile(
-                title: Text("İtem1"),
-                onTap: () {},
-              ),
-              ListTile(
-                title: Text("İtem2"),
-              ),
-              SizedBox(height: 400,),
-              RaisedButton(
-
-                child: TextButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute( builder: (context) => SignInPage()));
-                  },
-                  child: Text("Exit"),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
       body: Container(
         child: Column(
             children: [
