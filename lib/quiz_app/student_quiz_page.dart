@@ -204,12 +204,12 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
           style: TextStyle(color: Colors.cyan.shade600),
         ),
         onPressed: () {
-          setState(() {
+          setState(() async {
             if (widget.quiz.questions[index].answer ==  widget.quiz.questions[index].options[_radioValue]) {
               debugPrint("${widget.quiz.questions[index].answer}");
               debugPrint("${widget.quiz.questions[index].options[_radioValue]}");
               score += widget.quiz.questions[index].point;
-             // widget.quiz.hasSolved = true;
+
             }
             widget.quiz.hasSolved = true;
             debugPrint("${widget.quiz.hasSolved}");
@@ -224,6 +224,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
               return alert;
             });
             uploadQuizScore();
+            await Future.delayed(const Duration(seconds: 3), (){});
             Navigator.push(
                 context,
                 MaterialPageRoute(
