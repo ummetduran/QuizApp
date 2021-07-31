@@ -86,6 +86,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
             )),
             actions: <Widget>[
               quiziBitir(),
+
             ],
           ),
         ]));
@@ -212,7 +213,16 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
             }
             widget.quiz.hasSolved = true;
             debugPrint("${widget.quiz.hasSolved}");
-            debugPrint("Kaydedildi");
+            AlertDialog alert = new AlertDialog(
+              content: Text("Quiz bitti"),
+              actions: [
+                TextButton(onPressed: () => Navigator.pop(context, "OK"), child: Text("OK"))
+              ],
+            );
+            showDialog(context: context, builder: (BuildContext context){
+
+              return alert;
+            });
             uploadQuizScore();
             Navigator.push(
                 context,
