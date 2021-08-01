@@ -41,7 +41,6 @@ class _QuizCalendarState extends State<QuizCalendar> {
 
 
   Future fetchDate() async {
-    // sleep(Duration(milliseconds: 1000));
     var dersler = await _fireStore.collection("Users").doc(
         _auth.currentUser.uid).
     collection("alinanDersler").get();
@@ -61,6 +60,7 @@ class _QuizCalendarState extends State<QuizCalendar> {
       }
       );
     }
+
   }
 
 
