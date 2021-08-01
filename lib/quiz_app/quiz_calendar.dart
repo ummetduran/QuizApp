@@ -1,4 +1,4 @@
-import 'dart:io';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -121,7 +121,6 @@ List<Appointment> getAppointments() {
         endTime: quizEndDate,
         subject: quiz.quizName,
       color: Colors.teal.shade600,
-      //recurrenceRule: 'FREQ=DAILY;COUNT=10',
       isAllDay: false
     ));
 

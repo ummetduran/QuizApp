@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:untitled1/quiz_app/model/Student.dart';
 import 'package:untitled1/quiz_app/model/Teacher.dart';
 import 'package:untitled1/quiz_app/derse_kaydol.dart';
@@ -54,7 +53,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
                   children: [
                     ClipRRect(
-                      //borderRadius: BorderRadius.circular(10),
                       child: Image.asset(
                         'assets/images/logo2.png',
                         width: 110,
@@ -148,7 +146,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
         ders.name = element.id;
         ders.teacher = new Teacher.empty();
         ders.teacher.id = element.data()["teacherId"];
-        //Buradan student Ders page E dersin teachri bilgisi gönderilcecek galiba
         setState(() {
           widget.student.alinanDersler.add(ders);
         });
@@ -156,7 +153,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
       ;
     });
 
-    //debugPrint("${widget.student.alinanDersler.first.getName()}");
   }
 
   Widget listeElemaniOlustur(BuildContext context, int index) {
@@ -167,7 +163,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
       margin: EdgeInsets.all(5),
       child: ListTile(
         onTap: () {
-          debugPrint("${widget.student.alinanDersler[index].name} Basıldı");
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -179,7 +174,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
           size: 36,
         ),
         title: Text(widget.student.alinanDersler[index].name),
-        //subtitle: Text(widget.student.alinanDersler[index].key.toString()),
 
         trailing: Icon(
           Icons.keyboard_arrow_right,

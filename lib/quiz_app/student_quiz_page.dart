@@ -71,7 +71,6 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
 
           AlertDialog(
             content: Form(
-                //  key: _formKey,
                 child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -206,13 +205,11 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
         onPressed: () {
           setState(() async {
             if (widget.quiz.questions[index].answer ==  widget.quiz.questions[index].options[_radioValue]) {
-              debugPrint("${widget.quiz.questions[index].answer}");
-              debugPrint("${widget.quiz.questions[index].options[_radioValue]}");
+
               score += widget.quiz.questions[index].point;
 
             }
             widget.quiz.hasSolved = true;
-            debugPrint("${widget.quiz.hasSolved}");
             AlertDialog alert = new AlertDialog(
               content: Text("Quiz bitti"),
               actions: [
@@ -239,8 +236,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
         onPressed: () {
           setState(() {
             if (widget.quiz.questions[index].answer ==  widget.quiz.questions[index].options[_radioValue]) {
-              debugPrint("${widget.quiz.questions[index].answer}");
-              debugPrint("${widget.quiz.questions[index].options[_radioValue]}");
+
               score += widget.quiz.questions[index].point;
             }
 
@@ -257,7 +253,6 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
     var fireUser = _auth.currentUser;
     Map<String, dynamic> quizScore = new Map();
     quizScore["QuizScore"] = score;
-    //quizScore["hasSolved"] = true;
     await _fireStore
         .collection("Users")
         .doc("${fireUser.uid}")

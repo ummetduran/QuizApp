@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled1/quiz_app/model/Quiz.dart';
 import 'package:untitled1/quiz_app/model/Teacher.dart';
 import 'package:untitled1/quiz_app/student_home_page.dart';
 
 import 'model/Ders.dart';
-import 'model/Question.dart';
 import 'model/Student.dart';
 
 
@@ -130,7 +128,6 @@ class _DerseKaydolState extends State<DerseKaydol> {
           teacher.name = value.data()["name"];
           teacher.email = value.data()["email"];
           ders.teacher = teacher;
-          //widget.student.alinanDersler.add(ders);
 
         });
 
@@ -154,7 +151,6 @@ class _DerseKaydolState extends State<DerseKaydol> {
 
 
 
-        //map["derkodu"] = widget.ders.kodu
         map["kayitliOgrenciler"] = ogrEkle;
         await _fireStore.collection("Users").doc(userId)
             .collection("dersler")

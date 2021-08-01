@@ -15,7 +15,6 @@ import 'package:untitled1/quiz_app/teacher_home_page.dart';
 
 import 'model/Ders.dart';
 import 'model/Teacher.dart';
-import 'ders_page.dart';
 
 
 FirebaseStorage storage = FirebaseStorage.instance;
@@ -50,10 +49,8 @@ class _QuizEkleState extends State<QuizEkle> {
   String dropDownValue = 'Çoktan Seçmeli';
   Quiz quiz = new Quiz();
   Question question;
-  //List<String> options;
   bool checked = false;
   int _radioValue = -1;
-  //String correctAnswer;
   var colorList = List<Color>();
 
   @override
@@ -103,18 +100,10 @@ class _QuizEkleState extends State<QuizEkle> {
                   icon: Icon(Icons.event),
                   dateLabelText: 'Gün',
                   timeLabelText: "Saat",
-                  /*selectableDayPredicate: (date) {
-                    // Disable weekend days to select from the calendar
-                    if (date.weekday == 6 || date.weekday == 7) {
-                      return false;
-                    }
 
-                    return true;
-                  },*/
                   onChanged: (startDate) {
                     setState(() {
                       quiz.startDate= startDate;
-                      debugPrint("Start Date: "+ startDate);
                     });
                   },
                   validator: (val) {
@@ -124,7 +113,6 @@ class _QuizEkleState extends State<QuizEkle> {
                   onSaved:(startDate) {
                     setState(() {
                       quiz.startDate= startDate;
-                      debugPrint("Start Date: "+ startDate);
                     });
                   }
                 ),
@@ -207,7 +195,6 @@ class _QuizEkleState extends State<QuizEkle> {
                           : (Image.file(
 
                         File(_image.path),
-                      //  key: imageKey,
                         fit: BoxFit.fill,
                       )),
                     ),
@@ -236,7 +223,6 @@ class _QuizEkleState extends State<QuizEkle> {
                       items: <String>[
                         'Çoktan Seçmeli',
                         'Doğru-Yanlış',
-                        'Boşluk Doldurma'
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                             value: value,
@@ -250,12 +236,7 @@ class _QuizEkleState extends State<QuizEkle> {
                         {
                           setState(() {
                             this.dropDownValue = newValue;
-                           /* if(dropDownValue =="Çoktan Seçmeli")
-                              question = new MultipleChoiceQuestion();
-                            else if(dropDownValue == "Doğru-Yanlış")
-                              question = new TrueFalseQuestion();
-                            else
-                              question = new OpenEndQuestion();*/
+
                           });
                         }
                       },
@@ -291,7 +272,7 @@ class _QuizEkleState extends State<QuizEkle> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    child: questionType(), // SORU TİPİNE GÖRE WİDGET GELCEK
+                    child: questionType(),
                   ),
                 ],
               ),
@@ -531,7 +512,6 @@ setState(() {
     setState(() {
       quiz.questions.add(question);
       formKey2.currentState.reset();
-      //   imageKey.currentState.reset();
       _image = null;
       _uplodedFileURL = "";
       _radioValue = -1;
@@ -539,9 +519,7 @@ setState(() {
   }
 
   void saveQuiz(){
-    // setState(() {
-    // ders.quizList.add(quiz);
-    // });
+
     Navigator.push(
           context, MaterialPageRoute( builder: (context) => TeacherHomePage(teacher: widget.teacher,)));
 
@@ -554,14 +532,6 @@ setState(() {
       key: UniqueKey(),
       direction: DismissDirection.startToEnd,
 
-   /*   onDismissed: (direction) async{
-       await  _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
-            .doc(widget.ders.getName()).collection("quizler").doc("${quiz.quizName}").collection("sorular").
-
-        setState(() {
-          quiz.questions.removeAt(index);
-        });
-      },*/
       child: Container(
           child: Container(
 
@@ -571,9 +541,7 @@ setState(() {
             margin: EdgeInsets.all(5),
             child: ListTile(
               onTap: (){
-                debugPrint("${quiz.questions[index].question} Basıldı");
-                // Navigator.push(
-                //     context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.teacher.verilenDersler[index])));
+
               },
               leading: Icon(
                 Icons.done,
@@ -596,7 +564,6 @@ setState(() {
     setState(() {
       _radioValue = value;
       question.answer = question.options[_radioValue];
-      //correctAnswer = question.options[_radioValue];
     });
     
   }
@@ -612,18 +579,9 @@ setState(() {
           questionFromDB.answer= element.data()["dogruCevap"];
           questionFromDB.point = element.data()["point"];
           quiz.questions.add(questionFromDB);
-
-
         });
-
-        debugPrint("${quiz.questions[0].question}");
-
       });
     });
     
   }
-
-
-  
-
 }

@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/quiz_app/ders_ekle.dart';
-import 'package:untitled1/quiz_app/sign_in.dart';
 
 import 'model/Ders.dart';
 
@@ -102,7 +101,6 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
         };
 
       });
-      debugPrint("${widget.teacher.verilenDersler.first.name}");
     });
   }
 
@@ -115,7 +113,6 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
         direction: DismissDirection.startToEnd,
 
         onDismissed: (direction)  {
-  //SİLERKEN İNDEXLERİ KONTROL ET
        _fireStore.collection("Users").doc("${widget.teacher.id}").collection("dersler")
            .doc(widget.teacher.verilenDersler[index].name).delete();
        setState(() {
@@ -131,7 +128,6 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
           margin: EdgeInsets.all(5),
           child: ListTile(
             onTap: (){
-              debugPrint("${widget.teacher.verilenDersler[index]} Basıldı");
               Navigator.push(
                   context, MaterialPageRoute( builder: (context) => DersPage(ders: widget.teacher.verilenDersler[index])));
             },
