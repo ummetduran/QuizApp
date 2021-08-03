@@ -69,6 +69,8 @@ class _DersPageState extends State<DersPage> {
     );
   }
 
+// DERSİ SİLİNCE QUİZ SİLİNCEKMİ???
+
   void quizleriGetir() async {
     var fireUser = _auth.currentUser;
     await _fireStore.collection("Users").doc(fireUser.uid).collection("dersler")

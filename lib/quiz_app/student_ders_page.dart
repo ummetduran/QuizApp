@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:untitled1/quiz_app/ders_ekle.dart';
 import 'package:untitled1/quiz_app/student_quiz_page.dart';
 
 import 'model/Ders.dart';
@@ -21,6 +22,8 @@ class _StudentDersPageState extends State<StudentDersPage> {
 
   @override
   void initState() {
+    //print(widget.ders.name);
+    // TODO: implement initState
     fetchQuizzes();
     super.initState();
   }
@@ -149,7 +152,8 @@ class _StudentDersPageState extends State<StudentDersPage> {
         TextButton(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop('dialog');
-
+            // Navigator.pop(context, 'OK');
+           // Navigator.push(context, MaterialPageRoute( builder: (context) => StudentDersPage(ders: widget.ders,)));
           },
           child: const Text('OK'),
         ),

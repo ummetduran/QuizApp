@@ -1,9 +1,13 @@
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:imagebutton/imagebutton.dart';
+import 'package:untitled1/quiz_app/ders_ekle.dart';
 import 'dart:io';
+import 'package:path/path.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as P ;
 import 'model/Ders.dart';
 import 'model/Quiz.dart';
@@ -116,6 +120,7 @@ class _QuizResultsPageState extends State<QuizResultsPage> {
             margin: EdgeInsets.all(5),
             child: ListTile(
               onTap: () {
+                  //Navigator.push(context, MaterialPageRoute( builder: (context) => StudentQuizPage(quiz: widget.ders.quizList[index], ders: widget.ders)));
               },
 
               title: Text(scoreMap.keys.elementAt(index).toString(),
@@ -134,6 +139,7 @@ class _QuizResultsPageState extends State<QuizResultsPage> {
     final P.Workbook workbook = P.Workbook();
     final P.Worksheet sheet = workbook.worksheets[0];
     sheet.getRangeByName('A1').setText(widget.quiz.quizName);
+    //Cell style eklencek
     sheet.getRangeByName('A2').setText("Student emails");
     sheet.getRangeByName('B2').setText("Student score");
     int rowIndex = 3;
