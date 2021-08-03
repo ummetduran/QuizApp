@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 
 
 import 'Ders.dart';
@@ -8,7 +9,7 @@ class Teacher extends Users{
   List<Ders> _verilenDersler;
 
   Teacher(String id, String name, String email) : super(id,name, email){
-    _verilenDersler = [];
+    _verilenDersler = []; // ????
   }
 
   Teacher.empty() : super.empty();

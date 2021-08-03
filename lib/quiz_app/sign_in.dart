@@ -210,6 +210,10 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
+
+
+
+
   void _girisYap() async{
     if(formKey.currentState.validate()) {
       formKey.currentState.save();
@@ -219,16 +223,21 @@ class _SignInPageState extends State<SignInPage> {
             email: _email, password: password)).user;
 
         if(user.emailVerified){
+          debugPrint("Email onaylı");
 
 
           String name;
           var fireUser= _auth.currentUser;
           await _fireStore.collection("Users").doc(fireUser.uid).get().then((value){
+            debugPrint("${value.data()["userType"]}");
 
             userType=value.data()["userType"];
             name = value.data()["name"];
 
 
+            debugPrint("${value.data()["name"]}");
+            debugPrint(name);
+            debugPrint("$userType");
 
           });
           if(userType == 0){
@@ -248,6 +257,7 @@ class _SignInPageState extends State<SignInPage> {
             err = Text("Please confirm your email.", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
           });
 
+          debugPrint("Please confirm your email");
           _auth.signOut();
         }
 
@@ -256,6 +266,7 @@ class _SignInPageState extends State<SignInPage> {
           err=Text("User not found!", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
         });
 
+        debugPrint("********** HATA *********");
 
         debugPrint(e.toString());
       }
@@ -270,11 +281,13 @@ class _SignInPageState extends State<SignInPage> {
         err = Text("Reset link has been sent to your email.", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
       });
 
+      debugPrint("Resetleme maili gönderildi.");
     }catch(e){
       setState(() {
         err = Text("Error!", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),);
       });
 
+      debugPrint("Şifre resetlenirken hata $e");
 
     }
 

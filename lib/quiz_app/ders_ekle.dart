@@ -19,6 +19,7 @@ Ders ders;
 
 class _DersEkleState extends State<DersEkle> {
   final formKey = GlobalKey<FormState>();
+  //Teacher teacher = TeacherHomePage().teacher;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +44,7 @@ class _DersEkleState extends State<DersEkle> {
 
                     labelStyle: TextStyle(color: Colors.cyan.shade600, fontSize: 18),
                     hintStyle: TextStyle(color: Colors.cyan.shade600, fontSize: 18),
+                    //suffixStyle: TextStyle(color: Colors.white)
 
                   ),
                   onChanged: (name) {

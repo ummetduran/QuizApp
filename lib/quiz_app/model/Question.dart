@@ -1,3 +1,4 @@
+import 'package:untitled1/quiz_app/model/Student.dart';
 
  class Question {
   int _point;
@@ -18,6 +19,7 @@
     _imagePath = value;
   }
 
+  //Question(this._point,  this._question, this._answer);
 
   String get answer => _answer;
 

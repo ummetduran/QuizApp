@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:untitled1/quiz_app/model/Student.dart';
 import 'package:untitled1/quiz_app/model/Teacher.dart';
 import 'package:untitled1/quiz_app/derse_kaydol.dart';
-import 'package:untitled1/quiz_app/quiz_calendar.dart';
 import 'package:untitled1/quiz_app/sign_in.dart';
 import 'package:untitled1/quiz_app/student_ders_page.dart';
 
@@ -50,9 +50,9 @@ class _StudentHomePageState extends State<StudentHomePage> {
               DrawerHeader(
                 decoration: BoxDecoration(color: Colors.cyan.shade600),
                 child: Column(
-
                   children: [
                     ClipRRect(
+                      //borderRadius: BorderRadius.circular(10),
                       child: Image.asset(
                         'assets/images/logo2.png',
                         width: 110,
@@ -63,30 +63,36 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text("${widget.student.email}",
-                          style: TextStyle(color: Colors.white, fontSize: 14)),
+                          style: TextStyle(color: Colors.white)),
                     ),
-
                   ],
                 ),
               ),
-                RaisedButton(
-                  color: Colors.cyan.shade600,
-                    child: Text("Calendar", style: TextStyle(color: Colors.white, fontSize: 22),),
-                    onPressed: (){
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => QuizCalendar()));
-                }),
+              ListTile(
+                title: Text("İtem1"),
+                onTap: () {
+                  showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2021),
+                      lastDate: DateTime(2022));
 
+                },
+              ),
+              ListTile(
+                title: Text("İtem2"),
+              ),
               SizedBox(
                 height: 400,
               ),
               RaisedButton(
-                color: Colors.cyan.shade600,
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignInPage()));
-                },
-                child: Text("Exit", style: TextStyle(color: Colors.white, fontSize: 22),),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SignInPage()));
+                  },
+                  child: Text("Exit"),
+                ),
               )
             ],
           ),
@@ -146,6 +152,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
         ders.name = element.id;
         ders.teacher = new Teacher.empty();
         ders.teacher.id = element.data()["teacherId"];
+        //Buradan student Ders page E dersin teachri bilgisi gönderilcecek galiba
         setState(() {
           widget.student.alinanDersler.add(ders);
         });
@@ -153,6 +160,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
       ;
     });
 
+    //debugPrint("${widget.student.alinanDersler.first.getName()}");
   }
 
   Widget listeElemaniOlustur(BuildContext context, int index) {
@@ -163,6 +171,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
       margin: EdgeInsets.all(5),
       child: ListTile(
         onTap: () {
+          debugPrint("${widget.student.alinanDersler[index].name} Basıldı");
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -174,6 +183,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
           size: 36,
         ),
         title: Text(widget.student.alinanDersler[index].name),
+        //subtitle: Text(widget.student.alinanDersler[index].key.toString()),
 
         trailing: Icon(
           Icons.keyboard_arrow_right,
