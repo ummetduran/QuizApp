@@ -71,7 +71,6 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
 
           AlertDialog(
             content: Form(
-                //  key: _formKey,
                 child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -86,6 +85,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
             )),
             actions: <Widget>[
               quiziBitir(),
+
             ],
           ),
         ]));
@@ -203,17 +203,25 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
           style: TextStyle(color: Colors.cyan.shade600),
         ),
         onPressed: () {
-          setState(() {
+          setState(() async {
             if (widget.quiz.questions[index].answer ==  widget.quiz.questions[index].options[_radioValue]) {
-              debugPrint("${widget.quiz.questions[index].answer}");
-              debugPrint("${widget.quiz.questions[index].options[_radioValue]}");
+
               score += widget.quiz.questions[index].point;
-             // widget.quiz.hasSolved = true;
+
             }
             widget.quiz.hasSolved = true;
-            debugPrint("${widget.quiz.hasSolved}");
-            debugPrint("Kaydedildi");
+            AlertDialog alert = new AlertDialog(
+              content: Text("Quiz bitti"),
+              actions: [
+                TextButton(onPressed: () => Navigator.pop(context, "OK"), child: Text("OK"))
+              ],
+            );
+            showDialog(context: context, builder: (BuildContext context){
+
+              return alert;
+            });
             uploadQuizScore();
+            await Future.delayed(const Duration(seconds: 3), (){});
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -228,8 +236,7 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
         onPressed: () {
           setState(() {
             if (widget.quiz.questions[index].answer ==  widget.quiz.questions[index].options[_radioValue]) {
-              debugPrint("${widget.quiz.questions[index].answer}");
-              debugPrint("${widget.quiz.questions[index].options[_radioValue]}");
+
               score += widget.quiz.questions[index].point;
             }
 
@@ -246,7 +253,6 @@ class _StudentQuizPageState extends State<StudentQuizPage> {
     var fireUser = _auth.currentUser;
     Map<String, dynamic> quizScore = new Map();
     quizScore["QuizScore"] = score;
-    //quizScore["hasSolved"] = true;
     await _fireStore
         .collection("Users")
         .doc("${fireUser.uid}")

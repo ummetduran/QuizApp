@@ -1,4 +1,3 @@
-import 'package:untitled1/quiz_app/model/Student.dart';
 
  class Question {
   int _point;
@@ -19,7 +18,6 @@ import 'package:untitled1/quiz_app/model/Student.dart';
     _imagePath = value;
   }
 
-  //Question(this._point,  this._question, this._answer);
 
   String get answer => _answer;
 
